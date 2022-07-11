@@ -1,0 +1,113 @@
+{% load static %}
+<!DOCTYPE html>
+<!--[if lt IE 7]>      <html class="no-js lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
+<!--[if IE 7]>         <html class="no-js lt-ie9 lt-ie8"> <![endif]-->
+<!--[if IE 8]>         <html class="no-js lt-ie9"> <![endif]-->
+<!--[if gt IE 8]>      <html class="no-js"> <!--<![endif]-->
+<html>
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <title>{% block title %}{% endblock %}</title>
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <link href="{% static "bootstrap.min.css" %}" rel="stylesheet">
+        <link href="{% static "slidebars.min.css" %}" rel="stylesheet">
+        <link href="{% static "icons.css" %}" rel="stylesheet">
+        <link href="{% static "menu.css" %}" rel="stylesheet" type="text/css">
+        <link href="{% static "style.css" %}" rel="stylesheet">
+        <link href="{% static "themify-icons.css" %}" rel="stylesheet" type="text/css">
+        {% block css_files %}{% endblock %}
+        <style>
+            @font-face {
+              font-family: themify;
+              src: local('themify'),
+                   url('{% static "fonts/themify.ttf" %} format("truetype")');
+            }
+          </style>
+    </head>
+    <body class="sticky-header">
+        <!--[if lt IE 7]>
+            <p class="browsehappy">You are using an <strong>outdated</strong> browser. Please <a href="#">upgrade your browser</a> to improve your experience.</p>
+        <![endif]-->
+        <!-- <script src="" async defer></script> -->
+        <section>
+
+        <!-- sidebar left start-->
+        <div class="sidebar-left">
+            <div class="sidebar-left-info">
+                <!--sidebar nav start-->
+                <ul class="side-navigation">
+                    <li class="">
+                        <h3 class="navigation-title">Navigation</h3>
+                    </li>
+                    <li class="">
+                        <a href=""><span>Dashboard</span></a>
+                    </li>
+                    <li class="">
+                        <a href="newtask"><span>New Job</span></a>
+                    </li>
+                </ul><!--sidebar nav end-->
+            </div>
+        </div>
+        <!-- sidebar left end-->
+        <!-- body content start-->
+        <div class="body-content">
+
+            <!-- header section start-->
+            <div class="header-section">
+                <!--logo start-->
+                <div class="logo">
+                </div>    
+                <a class="toggle-btn"><i class="ti ti-menu"></i></a>
+                
+                <div class="notification-wrap">
+                    <!--right notification start-->
+                    <div class="right-notification">
+                        <ul class="notification-menu">
+                            <li class="">
+                                <a href="javascript:;" data-toggle="dropdown" aria-expanded="false">
+                                    <img src="{% static "avatar-1.jpg" %}" alt="">
+                                </a>
+                                <div class="dropdown-menu dropdown-menu-right profile-menu" x-placement="bottom-end" style="position: absolute; transform: translate3d(-107px, 60px, 0px); top: 0px; left: 0px; will-change: transform;">
+                                    <a class="dropdown-item" href="#"><i class="mdi mdi-logout m-r-5 text-muted"></i> Logout</a>
+                                </div>
+                            </li>
+                        </ul>
+                    </div><!--right notification end-->
+                </div>
+
+            </div>
+            <!-- header section end-->
+            
+            <div class="container-fluid">                                   
+                {% block content %}
+                {% endblock %}
+            </div><!--end container-->
+           
+            <!--footer section start-->
+            <footer class="footer">
+               
+            </footer>
+            <!--footer section end-->
+
+            <!-- Right Slidebar start -->
+            <div class="sb-slidebar sb-right sb-style-overlay">
+                
+            </div>
+            <!--end Right Slidebar-->
+        </div>
+        <!--end body content-->
+    </section>
+    <script src="{% static "jquery-3.2.1.min.js" %}"></script>
+    <script src="{% static "popper.min.js" %}"></script>
+    <script src="{% static "bootstrap.min.js" %}"></script>
+    <script src="{% static "jquery-migrate.js" %}"></script>
+    <script src="{% static "modernizr.min.js" %}"></script>
+    <script src="{% static "jquery.slimscroll.min.js" %}"></script>
+    <script src="{% static "slidebars.min.js" %}"></script>
+    <!-- app.js -->
+    <script src="{% static "jquery.app.js" %}"></script>
+
+    </body>
+</html>

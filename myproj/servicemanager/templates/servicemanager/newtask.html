@@ -1,0 +1,70 @@
+{% extends "master.html" %}
+
+{% block content %}
+<div class="basic-table">
+    <div class="row">
+        <div class="col-lg-12 col-sm-12">
+            <div class="card m-b-30">
+                <div class="card-body">
+                    <h5 class="header-title">New Job</h5>
+                    <div class="general-label">
+                        <form role="form">
+                            <div class="form-group">
+                                <label for="exampleInputEmail1">Station:</label>
+                                <select class="select2 form-control mb-3 custom-select select2-hidden-accessible" style="width: 100%; height:36px;" tabindex="-1" aria-hidden="true">
+                                    <option value="0">ICX-D2 SW2 sockets 40 cores | JF04WVAW0722</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label for="exampleInputPassword1">Total Iterations:</label>
+                                <input type="password" class="form-control" id="txtIteration" placeholder="Please enter Iterations">
+                            </div>
+                            <div class="form-group">
+                                <label for="exampleInputPassword1">Regression Name:</label>
+                                <input type="password" class="form-control" id="txtRegName" placeholder="Please enter regression name">
+                            </div>
+                            <div class="form-group">
+                                <label for="exampleInputPassword1">Events:</label>
+                                <select class="select2 form-control mb-3 custom-select select2-hidden-accessible" style="width: 100%; height:36px;" tabindex="-1" aria-hidden="true">
+                                    <option value="0">All</option>
+                                    <option value="1">INST_RETIRED_ANY</option>
+                                    <option value="2">CPU_CLK_UNHALTED_THREAD</option>
+                                    <option value="3">CPU_CLK_UNHALTED_REF_TSC</option>
+                                    <option value="4">TOPDOWN_SLOTS</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label for="exampleInputPassword1">Counters:</label>
+                                <select class="select2 form-control mb-3 custom-select select2-hidden-accessible" style="width: 100%; height:36px;" tabindex="-1" aria-hidden="true">
+                                    <option value="0">All</option>
+                                    <option value="1">POC0TO</option>
+                                    <option value="2">POC1TO</option>
+                                    <option value="3">POC2TO</option>
+                                    <option value="4">POC3TO</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label for="exampleInputPassword1">Idea:</label>
+                                <input type="password" class="form-control" id="txtIdea" placeholder="eg: follow_all |follow_max | follow_min">
+                            </div>
+                            <div class="form-group">
+                                <label for="exampleInputPassword1">Splitter:</label>
+                                <input type="password" class="form-control" id="txtSplitter" placeholder="eg: random | best">
+                            </div>
+                            <div class="form-group">
+                                <label for="exampleInputPassword1">Min Impurity decrease:</label>
+                                <input type="password" class="form-control" id="txtImpurity" placeholder="eg: 0.1 <= your_value <= 1.0">
+                            </div>
+                            <div class="form-group">
+                                <label for="exampleInputPassword1">Max Features:</label>
+                                <input type="password" class="form-control" id="txtFeatures" placeholder="eg: 0.1 <= your_value <= 1.0">
+                            </div>
+                            <button type="submit" class="btn btn-primary">Submit</button>
+                        </form>                                    
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div>
+{% endblock %}
