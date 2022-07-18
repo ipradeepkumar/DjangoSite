@@ -17,14 +17,10 @@
         <link href="{% static "menu.css" %}" rel="stylesheet" type="text/css">
         <link href="{% static "style.css" %}" rel="stylesheet">
         <link href="{% static "themify-icons.css" %}" rel="stylesheet" type="text/css">
+        <link href="{% static "bootstrap-select.min.css" %}" rel="stylesheet" type="text/css" />
+        <link href="{% static "multi-select.css" %}" rel="stylesheet" type="text/css">
         {% block css_files %}{% endblock %}
-        <style>
-            @font-face {
-              font-family: themify;
-              src: local('themify'),
-                   url('{% static "fonts/themify.ttf" %} format("truetype")');
-            }
-          </style>
+        
     </head>
     <body class="sticky-header">
         <!--[if lt IE 7]>
@@ -42,10 +38,25 @@
                         <h3 class="navigation-title">Navigation</h3>
                     </li>
                     <li class="">
-                        <a href=""><span>Dashboard</span></a>
+                        <a href="{% url "index"%}"><span>Dashboard</span></a>
                     </li>
                     <li class="">
-                        <a href="newtask"><span>New Job</span></a>
+                        <a href="{% url "newtask" %}"><span>New Job</span></a>
+                    </li>
+                    <li class="">
+                        <a href="{% url "jobhistory" %}"><span>Job History</span></a>
+                    </li>
+                    <li class="">
+                        <h3 class="navigation-title">Resources</h3>
+                    </li>
+                    <li class="">
+                        <a href=""><span>Report Issues</span></a>
+                    </li>
+                    <li class="">
+                        <a href="newtask"><span>User Guide</span></a>
+                    </li>
+                    <li class="">
+                        <a href=""><span>Eowyn Dashboard</span></a>
                     </li>
                 </ul><!--sidebar nav end-->
             </div>
@@ -58,6 +69,13 @@
             <div class="header-section">
                 <!--logo start-->
                 <div class="logo">
+                    <a href="index.html">
+                        <span class="logo-img">
+                            <!-- Logo Image here -->
+                        </span>
+                        <!--<i class="fa fa-maxcdn"></i>-->
+                        <span class="brand-name">Project</span>
+                    </a>
                 </div>    
                 <a class="toggle-btn"><i class="ti ti-menu"></i></a>
                 
@@ -70,7 +88,7 @@
                                     <img src="{% static "avatar-1.jpg" %}" alt="">
                                 </a>
                                 <div class="dropdown-menu dropdown-menu-right profile-menu" x-placement="bottom-end" style="position: absolute; transform: translate3d(-107px, 60px, 0px); top: 0px; left: 0px; will-change: transform;">
-                                    <a class="dropdown-item" href="#"><i class="mdi mdi-logout m-r-5 text-muted"></i> Logout</a>
+                                    <a class="dropdown-item" href="#"><i class="ti ti-bag m-r-5 text-muted"></i> Logout</a>
                                 </div>
                             </li>
                         </ul>
@@ -106,6 +124,9 @@
     <script src="{% static "modernizr.min.js" %}"></script>
     <script src="{% static "jquery.slimscroll.min.js" %}"></script>
     <script src="{% static "slidebars.min.js" %}"></script>
+    <script src="{% static "jquery.quicksearch.js" %}"></script>
+    <script src="{% static "jquery.multi-select.js" %}"></script>
+    <script src="{% static "bootstrap-select.min.js" %}"></script>
     <!-- app.js -->
     <script src="{% static "jquery.app.js" %}"></script>
 

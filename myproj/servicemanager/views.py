@@ -8,7 +8,7 @@ def newtask(request):
     return render(request, "servicemanager/newtask.html")
 
 def jobhistory(request):
-    pass
+    return render(request, "servicemanager/jobhistory.html")
 
 
 def jobhistory_detail(request, jobid):
