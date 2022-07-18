@@ -101,7 +101,25 @@
 
     $(function(){
         $.slidebars();
+        $('#ddlEvents').multiselect(
+            {
+                includeSelectAllOption: true,
+                selectAllText: 'Select all',
+                enableFiltering: true,
+                enableCaseInsensitiveFiltering: true
+            }
+        );
+
+        $('#ddlCounter').multiselect(
+            {
+                includeSelectAllOption: true,
+                selectAllText: 'Select all',
+                enableFiltering: true,
+                enableCaseInsensitiveFiltering: true
+            }
+        );
     });
+
 
     $(".notification-scroll").slimScroll({
         height: "240px"
