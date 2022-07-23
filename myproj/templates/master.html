@@ -11,14 +11,15 @@
         <title>{% block title %}{% endblock %}</title>
         <meta name="description" content="">
         <meta name="viewport" content="width=device-width, initial-scale=1">
-        <link href="{% static "bootstrap.min.css" %}" rel="stylesheet">
-        <link href="{% static "slidebars.min.css" %}" rel="stylesheet">
-        <link href="{% static "icons.css" %}" rel="stylesheet">
-        <link href="{% static "menu.css" %}" rel="stylesheet" type="text/css">
-        <link href="{% static "style.css" %}" rel="stylesheet">
-        <link href="{% static "themify-icons.css" %}" rel="stylesheet" type="text/css">
+        <link href="{% static "bootstrap.min.css" %}" rel="stylesheet" />
+        <link href="{% static "slidebars.min.css" %}" rel="stylesheet" />
+        <link href="{% static "icons.css" %}" rel="stylesheet" />
+        <link href="{% static "menu.css" %}" rel="stylesheet" type="text/css" />
+        <link href="{% static "style.css" %}" rel="stylesheet" />
+        <link href="{% static "themify-icons.css" %}" rel="stylesheet" type="text/css" />
         <link href="{% static "bootstrap-select.min.css" %}" rel="stylesheet" type="text/css" />
-        <link href="{% static "bootstrap-multiselect.css" %}" rel="stylesheet" type="text/css">
+        <link href="{% static "bootstrap-multiselect.css" %}" rel="stylesheet" type="text/css" />
+        <link href="https://cdn.datatables.net/1.12.1/css/dataTables.bootstrap4.min.css" rel="stylesheet" type="text/css" />
         {% block css_files %}{% endblock %}
         
     </head>
@@ -117,17 +118,20 @@
         </div>
         <!--end body content-->
     </section>
-    <script src="{% static "jquery-3.2.1.min.js" %}"></script>
-    <script src="{% static "popper.min.js" %}"></script>
-    <script src="{% static "bootstrap.min.js" %}"></script>
-    <script src="{% static "jquery-migrate.js" %}"></script>
-    <script src="{% static "modernizr.min.js" %}"></script>
-    <script src="{% static "jquery.slimscroll.min.js" %}"></script>
-    <script src="{% static "slidebars.min.js" %}"></script>
-    <script src="{% static "bootstrap-select.min.js" %}"></script>
-    <script src="{% static "bootstrap-multiselect.min.js" %}"></script>
+    <script type="text/javascript" src="{% static "jquery-3.2.1.min.js" %}"></script>
+    <script type="text/javascript" src="{% static "popper.min.js" %}"></script>
+    <script type="text/javascript" src="{% static "bootstrap.min.js" %}"></script>
+    <script type="text/javascript" src="{% static "jquery-migrate.js" %}"></script>
+    <script type="text/javascript" src="{% static "modernizr.min.js" %}"></script>
+    <script type="text/javascript" src="{% static "jquery.slimscroll.min.js" %}"></script>
+    <script type="text/javascript" src="{% static "slidebars.min.js" %}"></script>
+    <script type="text/javascript" src="{% static "bootstrap-select.min.js" %}"></script>
+    <script type="text/javascript" src="{% static "bootstrap-multiselect.min.js" %}"></script>
+    <script src="https://cdn.datatables.net/1.12.1/js/jquery.dataTables.min.js"></script>
+    <script src="https://cdn.datatables.net/1.12.1/js/dataTables.bootstrap4.min.js"></script>
     <!-- app.js -->
-    <script src="{% static "jquery.app.js" %}"></script>
-
+    <script type="text/javascript" src="{% static "jquery.app.js" %}"></script>
+    {% block extrajs %}
+    {% endblock extrajs %}
     </body>
 </html>

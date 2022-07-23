@@ -18,9 +18,9 @@ def newtask(request):
         print(taskFormObj.cleaned_data)
         task = Task(
             Idea = taskFormObj.cleaned_data['Idea'],
-            Station="Test Station",
-            Counter = "1,3",
-            Events = "3,4",
+            Station= taskFormObj.cleaned_data['Stations'],
+            Counter = taskFormObj.cleaned_data['Counters'],
+            Events = taskFormObj.cleaned_data['Events'],
             TotalIterations = taskFormObj.cleaned_data['TotalIterations'],
             RegressionName = taskFormObj.cleaned_data['RegressionName'],
             Splitter = taskFormObj.cleaned_data['Splitter'],
@@ -38,8 +38,10 @@ def newtask(request):
     })
 
 def jobhistory(request):
-    return render(request, "servicemanager/jobhistory.html")
-
+    taskList = Task.objects.all()
+    return render(request, "servicemanager/jobhistory.html", {
+        "tasks": taskList, "colNames" : Task._meta.fields
+    })
 
 def jobhistory_detail(request, jobid):
     pass

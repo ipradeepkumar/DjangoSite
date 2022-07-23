@@ -1,2 +1,46 @@
 {% extends 'master.html' %}
 {% load static%}
+
+{% block content %}
+<div class="page-head">
+    <h4 class="mt-2 mb-2">Job History</h4>
+</div>
+<div class="basic-table">
+    <div class="row">
+        <div class="col-lg-12 col-sm-12">
+            <div class="card m-b-30">
+                <div class="card-body">
+                    <table id="tblTasks" class="table-responsive hover table table-striped table-bordered">
+                        <thead>
+                            <tr>
+                                {% for col in colNames %}
+                                    {% if col.name != "id" %}
+                                        <th>{{ col.name }}</th>
+                                    {% endif %}
+                                {% endfor %}
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for task in tasks %}
+                                <tr>
+                                    <td>{{ task.Station }}</td>
+                                    <td>{{ task.Counter }}</td>
+                                    <td>{{ task.Events }}</td>
+                                    <td>{{ task.TotalIterations}}</td>
+                                    <td>{{ task.RegressionName}}</td>
+                                    <td>{{ task.Idea}}</td>
+                                    <td>{{ task.Splitter}}</td>
+                                    <td>{{ task.MinImpurityDecrease}}</td>
+                                    <td>{{ task.MaxFeatures}}</td>
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                     </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}
+

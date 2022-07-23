@@ -101,7 +101,7 @@
 
     $(function(){
         $.slidebars();
-        $('#ddlEvents').multiselect(
+        $('#id_Counters').multiselect(
             {
                 includeSelectAllOption: true,
                 selectAllText: 'Select all',
@@ -110,7 +110,7 @@
             }
         );
 
-        $('#ddlCounter').multiselect(
+        $('#id_Events').multiselect(
             {
                 includeSelectAllOption: true,
                 selectAllText: 'Select all',
@@ -118,6 +118,49 @@
                 enableCaseInsensitiveFiltering: true
             }
         );
+        
+        $('#tblTasks').DataTable({
+            scrollX: false,
+            "autoWidth": true,
+            columnDefs:[
+                {
+                    title: 'Station',
+                    target: 0
+                },
+                {
+                    title: 'Counter',
+                    target: 1
+                },
+                {
+                    title: 'Event',
+                    target: 2
+                },
+                {
+                    title: 'Iterations',
+                    target: 3
+                },
+                {
+                    title: 'Regression Name',
+                    target: 4
+                },
+                {
+                    title: 'Idea',
+                    target: 5
+                },
+                {
+                    title: 'Splitter',
+                    target: 6
+                },
+                {
+                    title: 'Min Impurity Decrease',
+                    target: 7
+                },
+                {
+                    title: 'Max Features',
+                    target: 8
+                },
+            ]
+        });
     });
 
 
