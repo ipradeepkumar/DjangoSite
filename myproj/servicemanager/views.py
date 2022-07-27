@@ -1,7 +1,11 @@
 from django.http import HttpResponseRedirect
 from django.shortcuts import render
+from django.views.generic.detail import DetailView
 from .forms import TaskForm
 from .models import Task
+
+
+
 
 # Create your views here.
 def index(request):
@@ -43,5 +47,17 @@ def jobhistory(request):
         "tasks": taskList, "colNames" : Task._meta.fields
     })
 
-def jobhistory_detail(request, jobid):
-    pass
+def jobhistory_detail(request, id):
+    task = Task.objects.get(pk = id)
+    return render(request, "servicemanager/jobhistorydetail.html", {
+        "task": task
+    })
+
+
+class TaskDetailView(DetailView):
+    model = Task
+    template_name = "servicemanager/jobhistorydetail.html"
+     
+
+
+  

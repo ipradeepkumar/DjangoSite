@@ -22,7 +22,7 @@
                         </thead>
                         <tbody>
                             {% for task in tasks %}
-                                <tr>
+                                <tr style="cursor:pointer" onclick=showDetail({{ task.id }})>
                                     <td>{{ task.Station }}</td>
                                     <td>{{ task.Counter }}</td>
                                     <td>{{ task.Events }}</td>

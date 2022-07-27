@@ -311,3 +311,6 @@ function($) {
     $.Components.init();
 }(window.jQuery);
 
+function showDetail(id) {
+    window.location.href = "/jobhistory/" + id
+}

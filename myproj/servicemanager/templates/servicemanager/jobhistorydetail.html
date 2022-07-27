@@ -1,0 +1,79 @@
+{% extends 'master.html' %}
+{% load static%}
+
+{% block content %}
+<div class="page-head">
+    <h4 class="mt-2 mb-2">Job Detail</h4>
+</div>
+<div class="basic-table">
+    <div class="row">
+        <div class="col-lg-12 col-sm-12">
+            <div class="card m-b-30">
+                <div class="card-body">
+                    <div class="general-label">
+                    <form role="form">
+                        {% csrf_token %}
+                        <form class="form-horizontal" role="form">                                    
+                            <div class="form-group row">
+                                <label class="col-md-2 control-label">Station: </label>
+                                <div class="col-md-10">
+                                    <input type="text" class="form-control" value="{{ task.Station }}">
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <label class="col-md-2 control-label" for="example-email">Counter: </label>
+                                <div class="col-md-10">
+                                    <input id="txtCounter" name="txtCounter" class="form-control" value="{{ task.Counter }}">
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <label class="col-md-2 control-label">Events: </label>
+                                <div class="col-md-10">
+                                    <input id="txtEvents" name="txtEvents" class="form-control" value="{{ task.Events }}">
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <label class="col-md-2 control-label">Total Iterations:</label>
+                                <div class="col-md-10">
+                                    <input  class="form-control" id="txtTotIterations" name="txtTotIterations" value="{{ task.TotalIterations }}">
+                                </div>
+                            </div>                                    
+                            <div class="form-group row">
+                                <label class="col-md-2 control-label">Regression Name:</label>
+                                <div class="col-md-10">
+                                    <input  class="form-control" id="txtRegressionName" name="txtRegressionName" value="{{ task.RegressionName }}">
+                                </div>
+                            </div>                                    
+                            <div class="form-group row">
+                                <label class="col-md-2 control-label">Idea:</label>
+                                <div class="col-md-10">
+                                    <input  class="form-control" id="txtIdea" name="txtIdea" value="{{ task.Idea }}" />
+                                </div>
+                            </div>                                                                        
+                            <div class="form-group row">
+                                <label class="col-md-2 control-label">Splitter:</label>
+                                <div class="col-md-10">
+                                    <input  class="form-control" id="txtSplitter" name="txtSplitter" value="{{ task.Splitter }}" />
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <label class="col-sm-2 control-label">Minimum Impurity Decrease:</label>
+                                <div class="col-sm-10">
+                                    <input   class="form-control" id="txtMinImpDec" name="txtMinImpDec" value="{{ task.MinImpurityDecrease}}" />
+                                </div>
+                            </div>  
+                            <div class="form-group row">
+                                <label class="col-sm-2 control-label">Max Features:</label>
+                                <div class="col-sm-7">
+                                    <input  class="form-control" id="txtMaxFeatures" name="txtMaxFeatures" value="{{ task.MaxFeatures }}" />
+                                </div>
+                            </div>  
+                        </form>
+                    </form> 
+                </div>
+            </div>
+          </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
