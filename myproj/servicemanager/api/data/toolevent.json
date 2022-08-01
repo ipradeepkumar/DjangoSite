@@ -1,0 +1,38 @@
+[
+    {
+        "ToolEventID": 1,
+        "Name": "Tool Event 1",
+        "toolcounterevents":[
+            { "ToolCounterID": 1, "Name": "Counter 1" },
+            { "ToolCounterID": 2, "Name": "Counter 2" }
+        ]
+    },
+    {
+        "ToolEventID": 2,
+        "Name": "Tool Event 2",
+        "toolcounterevents":[
+            { "ToolCounterID": 1, "Name": "Counter 1" },
+            { "ToolCounterID": 2, "Name": "Counter 2" }
+        ]
+
+    },
+    {
+        "ToolEventID": 3,
+        "Name": "Tool Event 3",
+        "toolcounterevents":[
+            { "ToolCounterID": 1, "Name": "Counter 1" },
+            { "ToolCounterID": 2, "Name": "Counter 2" },
+            { "ToolCounterID": 3, "Name": "Counter 3" }
+        ]
+    },
+    {
+        "ToolEventID": 4,
+        "Name": "Tool Event 4",
+        "toolcounterevents":[
+            { "ToolCounterID": 1, "Name": "Counter 1" },
+            { "ToolCounterID": 2, "Name": "Counter 2" },
+            { "ToolCounterID": 3, "Name": "Counter 3" },
+            { "ToolCounterID": 4, "Name": "Counter 4" }
+        ]
+    }
+]
