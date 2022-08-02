@@ -1,30 +1,10 @@
 import os
 import io
-from django.contrib.auth.models import User, Group
 from rest_framework.response import Response
-from rest_framework import viewsets
-from rest_framework import permissions
 from rest_framework.decorators import api_view
 from rest_framework.parsers import JSONParser
 from rest_framework.decorators import api_view
-from servicemanager.api.serializers import StationSerializer, ToolSerializer, ToolEventSerializer
-
-# class UserViewSet(viewsets.ModelViewSet):
-#     """
-#     API endpoint that allows users to be viewed or edited.
-#     """
-#     queryset = User.objects.all().order_by('-date_joined')
-#     serializer_class = UserSerializer
-#     permission_classes = [permissions.IsAuthenticated]
-
-
-# class GroupViewSet(viewsets.ModelViewSet):
-#     """
-#     API endpoint that allows groups to be viewed or edited.
-#     """
-#     queryset = Group.objects.all()
-#     serializer_class = GroupSerializer
-#     permission_classes = [permissions.IsAuthenticated]
+from servicemanager.api.serializers import PlatformSerializer, StationSerializer, ToolSerializer, TaskStatusSerializer, IdeaSerializer
 
 @api_view(['GET'])
 def StationList(request):
@@ -55,18 +35,56 @@ def ToolList(request):
 
 
 @api_view(['GET'])
-def ToolEventList(request):
+def ToolEventList(request, toolid):
     dirPath = os.path.dirname(os.path.realpath(__file__))
-    filePath = os.path.join(dirPath, "data", "toolevent.json")
+    filePath = os.path.join(dirPath, "data", "tool.json")
     with open(filePath, 'r') as tooleventfile:
         stream = io.BytesIO(str.encode(tooleventfile.read()))
         toolData = JSONParser().parse(stream=stream)
-        serializer = ToolEventSerializer(data=toolData, many=True)
+        serializer = ToolSerializer(data=toolData, many=True)
         if serializer.is_valid():
             return Response(serializer.validated_data)
         else:
             return Response(serializer.errors)
-        
+
+@api_view(['GET'])
+def PlatformList(request):
+    dirPath = os.path.dirname(os.path.realpath(__file__))
+    filePath = os.path.join(dirPath, "data", "platform.json")
+    with open(filePath, 'r') as platformfile:
+        stream = io.BytesIO(str.encode(platformfile.read()))
+        platformData = JSONParser().parse(stream=stream)
+        serializer = PlatformSerializer(data=platformData, many=True)
+        if serializer.is_valid():
+            return Response(serializer.validated_data)
+        else:
+            return Response(serializer.errors)       
+
+@api_view(['GET'])
+def IdeaList(request):
+    dirPath = os.path.dirname(os.path.realpath(__file__))
+    filePath = os.path.join(dirPath, "data", "idea.json")
+    with open(filePath, 'r') as ideafile:
+        stream = io.BytesIO(str.encode(ideafile.read()))
+        ideaData = JSONParser().parse(stream=stream)
+        serializer = IdeaSerializer(data=ideaData, many=True)
+        if serializer.is_valid():
+            return Response(serializer.validated_data)
+        else:
+            return Response(serializer.errors)    
+
+@api_view(['GET'])
+def TaskStatusList(request):
+    dirPath = os.path.dirname(os.path.realpath(__file__))
+    filePath = os.path.join(dirPath, "data", "taskstatus.json")
+    with open(filePath, 'r') as taskstatusfile:
+        stream = io.BytesIO(str.encode(taskstatusfile.read()))
+        taskStatusData = JSONParser().parse(stream=stream)
+        serializer = TaskStatusSerializer(data=taskStatusData, many=True)
+        if serializer.is_valid():
+            return Response(serializer.validated_data)
+        else:
+            return Response(serializer.errors)  
         
     
 

@@ -1,0 +1,14 @@
+[
+    {
+        "TaskStatusID": 1,
+        "Name": "SUCCESS"
+    },
+    {
+        "TaskStatusID": 2,
+        "Name": "ERROR"
+    },
+    {
+        "TaskStatusID": 3,
+        "Name": "IN-PROGRESS"
+    }
+]

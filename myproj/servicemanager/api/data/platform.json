@@ -1,0 +1,62 @@
+[
+    {
+        "PlatformID": 1,
+        "Name": "Platform 1",
+        "emonevents":[
+            {"EmonEventID": 1, "Name": "Emon Event 1", 
+                "emoncounters":[
+                    {"EmonCounterID": 1, "Name": "Emon Counter 1"},
+                    {"EmonCounterID": 2, "Name": "Emon Counter 2"},
+                    {"EmonCounterID": 3, "Name": "Emon Counter 3"},
+                    {"EmonCounterID": 4, "Name": "Emon Counter 4"}
+                ]
+            },
+            {"EmonEventID": 2, "Name": "Emon Event 2", 
+                "emoncounters":[
+                    {"EmonCounterID": 1, "Name": "Emon Counter 1"},
+                    {"EmonCounterID": 2, "Name": "Emon Counter 2"},
+                    {"EmonCounterID": 3, "Name": "Emon Counter 3"},
+                    {"EmonCounterID": 4, "Name": "Emon Counter 4"}
+                ]
+            },
+            {"EmonEventID": 3, "Name": "Emon Event 3",
+                "emoncounters":[
+                    {"EmonCounterID": 1, "Name": "Emon Counter 1"},
+                    {"EmonCounterID": 2, "Name": "Emon Counter 2"},
+                    {"EmonCounterID": 3, "Name": "Emon Counter 3"},
+                    {"EmonCounterID": 4, "Name": "Emon Counter 4"}
+                ]
+            }
+        ]
+    },
+    {
+        "PlatformID": 2,
+        "Name": "Platform 2",
+        "emonevents":[
+            {"EmonEventID": 3, "Name": "Emon Event 3", 
+                "emoncounters":[
+                    {"EmonCounterID": 5, "Name": "Emon Counter 5"},
+                    {"EmonCounterID": 6, "Name": "Emon Counter 6"},
+                    {"EmonCounterID": 7, "Name": "Emon Counter 7"},
+                    {"EmonCounterID": 8, "Name": "Emon Counter 8"}
+                ]
+            },
+            {"EmonEventID": 4, "Name": "Emon Event 4", 
+                "emoncounters":[
+                    {"EmonCounterID": 9, "Name": "Emon Counter 9"},
+                    {"EmonCounterID": 10, "Name": "Emon Counter 10"},
+                    {"EmonCounterID": 11, "Name": "Emon Counter 11"},
+                    {"EmonCounterID": 12, "Name": "Emon Counter 12"}
+                ]
+            },
+            {"EmonEventID": 6, "Name": "Emon Event 6",
+                "emoncounters":[
+                    {"EmonCounterID": 13, "Name": "Emon Counter 13"},
+                    {"EmonCounterID": 24, "Name": "Emon Counter 24"},
+                    {"EmonCounterID": 35, "Name": "Emon Counter 35"},
+                    {"EmonCounterID": 46, "Name": "Emon Counter 46"}
+                ]
+            }
+        ]
+    }
+]

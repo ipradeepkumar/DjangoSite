@@ -1,30 +1,79 @@
+from dataclasses import fields
+from platform import platform
 from pyexpat import model
 from django.contrib.auth.models import User, Group
 from rest_framework import serializers
-from servicemanager.models import Station, Tool, ToolEvent, ToolCounter
+from servicemanager.models import Station, Tool, ToolEvent, ToolCounter, Platform, EmonCounter, EmonEvent, Idea, TaskStatus
 
 
 class StationSerializer(serializers.ModelSerializer):
     class Meta:
         model = Station
         fields = '__all__'
-    # StationID = serializers.IntegerField()
-    # Name = serializers.CharField(max_length=250)
-    # Desc = serializers.CharField(max_length=500)
 
-    # def create(self, validated_data):
-    #     return Station.objects.create(**validated_data)
-
-class ToolCounterSerializer(serializers.ModelSerializer):
+class IdeaSerializer(serializers.ModelSerializer):
     class Meta:
-        model = ToolCounter
+        model = Idea
         fields = '__all__'
 
+class TaskStatusSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = TaskStatus
+        fields = '__all__'
+
+class EmonCounterSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = EmonCounter
+        fields = ['EmonCounterID', 'Name']
+
+class EmonEventSerializer(serializers.ModelSerializer):
+    emoncounters = EmonCounterSerializer(many=True)
+    class Meta:
+        model = EmonEvent
+        fields = ['EmonEventID', 'Name', 'emoncounters']
+    def create(self, validated_data):
+        emoncounters_data = validated_data.pop('emoncounters')
+        emonevent = EmonEvent.objects.create(**validated_data)
+        for emoncounter_data in emoncounters_data:
+            EmonCounter.objects.create(EmonEvent=emonevent, **emoncounter_data)
+        return emonevent
+
+class PlatformSerializer(serializers.ModelSerializer):
+    emonevents = EmonEventSerializer(many=True)
+    class Meta:
+        model = Platform
+        fields=['PlatformID', 'Name', 'emonevents']
+    
+    def create(self, validated_data):
+        emonevents_data = validated_data.pop('emonevents')
+        platform = Platform.objects.create(**validated_data)
+        for emonevent_data in emonevents_data:
+            EmonEvent.objects.create(Platform=platform, **emonevent_data)
+        return platform
+
+
+class ToolCounterSerializer(serializers.ModelSerializer):
+   
+    class Meta:
+        model = ToolCounter
+        fields = ['ToolCounterID', 'Name']
+        extra_kwargs = {
+            'ToolCounterID': {
+                'validators': []
+            }
+        }
 class ToolEventSerializer(serializers.ModelSerializer):
+    
     toolcounterevents = ToolCounterSerializer(many = True)
+
     class Meta:
         model = ToolEvent
         fields = ['ToolEventID', 'Name', 'toolcounterevents']
+        extra_kwargs = {
+            'ToolEventID': {
+                'validators': []
+            }
+        }
     
     def create(self, validated_data):
         toolcounterevents_data = validated_data.pop('toolcounterevents')
@@ -33,18 +82,19 @@ class ToolEventSerializer(serializers.ModelSerializer):
             ToolCounter.objects.create(ToolEvent=toolevent, **toolcounterevent_data)
         return toolevent
 
-    # ToolEventID = serializers.IntegerField()
-    # Name = serializers.CharField(max_length=150)
-
-    # def create(self, validated_data):
-    #     return ToolEvent.objects.create(**validated_data) 
 
 class ToolSerializer(serializers.ModelSerializer):
+    
     toolevents = ToolEventSerializer(many = True)
 
     class Meta:
         model = Tool
         fields = ['ToolID', 'Name', 'toolevents']
+        extra_kwargs = {
+            'ToolID': {
+                'validators': []
+            }
+        }
     
     def create(self, validated_data):
         toolevents_data = validated_data.pop('toolevents')
@@ -52,14 +102,3 @@ class ToolSerializer(serializers.ModelSerializer):
         for toolevent_data in toolevents_data:
             ToolEvent.objects.create(Tool=tool, **toolevent_data)
         return tool
-
-    # ToolID = serializers.IntegerField()
-    # Name = serializers.CharField(max_length=150)
-     
-    # def create(self, validated_data):
-    #     return Tool.objects.create(**validated_data)
-
-
-
-
-       

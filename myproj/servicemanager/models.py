@@ -10,16 +10,16 @@ class Station(models.Model):
     Desc = models.CharField(max_length=500)
 
 class Tool(models.Model):
-    ToolID = models.IntegerField()
+    ToolID = models.IntegerField(primary_key=True, unique=False)
     Name = models.CharField(max_length=150)
 
 class ToolEvent(models.Model):
-    ToolEventID = models.IntegerField()
+    ToolEventID = models.IntegerField(primary_key=True, unique=False)
     Name = models.CharField(max_length=150)
     Tool = models.ForeignKey(Tool, on_delete=models.SET_NULL, null=True, related_name="toolevents")
 
 class ToolCounter(models.Model):
-    ToolCounterID = models.IntegerField()
+    ToolCounterID = models.IntegerField(primary_key=True, unique=False)
     Name = models.CharField(max_length=150)
     ToolEvent = models.ForeignKey(ToolEvent, on_delete=models.SET_NULL, null=True, related_name="toolcounterevents")
 
@@ -30,13 +30,12 @@ class Platform(models.Model):
 class EmonEvent(models.Model):
     EmonEventID = models.IntegerField()
     Name = models.CharField(max_length=150)
-    Platform = models.ForeignKey(Platform, on_delete=models.SET_NULL, null=True)
+    Platform = models.ForeignKey(Platform, on_delete=models.SET_NULL, null=True, related_name="emonevents")
 
 class EmonCounter(models.Model):
     EmonCounterID = models.IntegerField()
     Name = models.CharField(max_length=150)
-    EmonEvent = models.ForeignKey(EmonEvent, on_delete=models.SET_NULL, null=True)
-    Platform = models.ForeignKey(Platform, on_delete=models.SET_NULL, null=True)
+    EmonEvent = models.ForeignKey(EmonEvent, on_delete=models.SET_NULL, null=True, related_name="emoncounters")
 
 class Idea(models.Model):
     IdeaID = models.IntegerField()
