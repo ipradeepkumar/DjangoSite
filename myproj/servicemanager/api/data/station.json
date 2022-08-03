@@ -1,5 +1,10 @@
 [
     {
+        "StationID": 0,
+        "Name": "None",
+        "Desc": "Desc 1"
+    },
+    {
         "StationID": 1,
         "Name": "Station 1",
         "Desc": "Desc 1"

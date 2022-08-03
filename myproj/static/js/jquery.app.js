@@ -118,6 +118,8 @@
                 enableCaseInsensitiveFiltering: true
             }
         );
+
+       
         
         $('#tblTasks').DataTable({
             scrollX: false,

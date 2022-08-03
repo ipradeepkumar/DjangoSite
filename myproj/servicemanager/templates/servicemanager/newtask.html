@@ -16,7 +16,7 @@ from TaskForm import TaskForm
                             {% csrf_token %}
                             {% for field in taskForm %}
                             <div class="form-group">
-                                <label>{{ field.label_tag }}</label>
+                                <label id="{{ field.auto_id }}">{{ field.label_tag }}</label>
                                  {{ field }}
                             </div>
                             {% endfor %}
