@@ -34,8 +34,7 @@ def newtask(request):
         task.save()
        
         return HttpResponseRedirect("jobhistory")
-    else:    
-        taskFormObj = TaskForm()
+   
 
     return render(request, "servicemanager/newtask.html", {
         "taskForm": taskFormObj

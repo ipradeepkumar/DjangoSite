@@ -1,9 +1,12 @@
 var platformData;
 $(function(){
+    setEmonCounters([0]);
     $('#id_EmonEvents').hide();
     $('#ddlEmonEvents').hide();
     $('#id_EmonCounters').hide();
     $('#ddlEmonCounters').hide();
+    $('.multiselect-native-select').hide();
+    
     //ajax call for fetching stations
     $.ajax({  
         type: "GET",  
@@ -97,6 +100,7 @@ $(function(){
                 success: function (data) {  
                     isPlatformChanged = true;
                     SetEmonEvents(data);
+                    setEmonCounters([0]);
                 }, //End of AJAX Success function  
                 failure: function (data) {  
                     alert(data.responseText);  
@@ -106,8 +110,11 @@ $(function(){
                 }
             }); 
         }
-        else
+        else{
             SetEmonEvents(platformData);
+            setEmonCounters([0]);
+        }
+            
 
     });
     
@@ -118,7 +125,8 @@ $(function(){
             $('#ddlEmonEvents').show();
             $('#id_EmonCounters').show();
             $('#ddlEmonCounters').show();
-            SetEmonEvents(platformData);
+            $('.multiselect-native-select').show();
+            
         }
         else
         {
@@ -126,12 +134,35 @@ $(function(){
             $('#ddlEmonEvents').hide();
             $('#id_EmonCounters').hide();
             $('#ddlEmonCounters').hide();
+            $('.multiselect-native-select').hide();
         }
+        SetEmonEvents(platformData);
+        setEmonCounters($('#ddlEmonEvents').val());
     });
-    $('.btn').on('click', function(){
-        alert('Hi');
-    });
-    
+
+    //ajax call for fetching stations
+    $.ajax({  
+        type: "GET",  
+        url: "/api/ideas",  
+        contentType: "application/json; charset=utf-8",  
+        dataType: "json",  
+        success: function (data) {  
+            $.each(data, function (key, item) {  
+                $('#ddlIdea')
+                    .append($("<option></option>")
+                    .attr("value", item.IdeaID)
+                    .text(item.Name)); 
+            }); //End of foreach Loop   
+        }, //End of AJAX Success function  
+
+        failure: function (data) {  
+            alert(data.responseText);  
+        }, //End of AJAX failure function  
+        error: function (data) {  
+            alert(data.responseText);  
+        } //End of AJAX error function  
+
+    });  
     
 });
 
@@ -158,10 +189,62 @@ function SetEmonEvents(result){
             selectAllText: 'Select all',
             enableFiltering: true,
             enableCaseInsensitiveFiltering: true,
+            onChange: function(element, checked){
+                console.log(element.val());
+                if (checked)
+                    $("#ddlEmonEvents").multiselect('select', element.val());
+                else
+                    $("#ddlEmonEvents").multiselect('deselect', element.val());
+                setEmonCounters($("#ddlEmonEvents").val());
+                return false;
+            },
+            onSelectAll: function(){
+                setEmonCounters($("#ddlEmonEvents").val());
+            },
+            onDeselectAll: function(){
+                setEmonCounters($("#ddlEmonEvents").val());
+            },
+
         }
     );
     $('#ddlEmonEvents').multiselect('rebuild');
     }
+}
+
+function setEmonCounters(selectedArray){
+    if (platformData != undefined &&  $('#chkEmon').attr('checked') === 'checked'){
+        $('#ddlEmonCounters').find('option').remove();
+        $.each(selectedArray, function(index, obj){
+            $.each(platformData, function(key, platformItem){
+                if (platformItem.PlatformID == selectedOptions){
+                    emonEvents = platformItem.emonevents
+                    $.each(emonEvents, function(key, eventItem){
+                        if (eventItem.EmonEventID == obj)
+                        {
+                            emonCounters = eventItem.emoncounters;
+                            $.each(emonCounters, function(idx, counterItem){
+                                $('#ddlEmonCounters')
+                                    .append($("<option></option>")
+                                    .attr("value", counterItem.EmonCounterID)
+                                    .text(counterItem.Name));  
+                                });
+                        }
+                    });
+                }
+            });
+
+        });
+    }
+    
+    $('#ddlEmonCounters').multiselect(
+        {
+            includeSelectAllOption: true,
+            selectAllText: 'Select all',
+            enableFiltering: true,
+            enableCaseInsensitiveFiltering: true
+        }
+    );
+    $('#ddlEmonCounters').multiselect('rebuild');
 }
 
 
