@@ -17,7 +17,7 @@ $(function(){
             $.each(data, function (key, item) {  
                 $('#ddlStation')
                     .append($("<option></option>")
-                    .attr("value", item.StationID)
+                    .attr("value", item.Name)
                     .text(item.Name)); 
             }); //End of foreach Loop   
         }, //End of AJAX Success function  
@@ -40,7 +40,7 @@ $(function(){
             $.each(data, function (key, item) { 
                 $('#ddlToolName')
                     .append($("<option></option>")
-                    .attr("value", item.ToolID)
+                    .attr("value", item.Name)
                     .text(item.Name));  
                
             }); //End of foreach Loop   
@@ -74,7 +74,7 @@ $(function(){
             $.each(data, function (key, item) { 
                 $('#ddlPlatform')
                     .append($("<option></option>")
-                    .attr("value", item.PlatformID)
+                    .attr("value", item.Name)
                     .text(item.Name));  
                
             }); //End of foreach Loop   
@@ -150,7 +150,7 @@ $(function(){
             $.each(data, function (key, item) {  
                 $('#ddlIdea')
                     .append($("<option></option>")
-                    .attr("value", item.IdeaID)
+                    .attr("value", item.Name)
                     .text(item.Name)); 
             }); //End of foreach Loop   
         }, //End of AJAX Success function  
@@ -172,13 +172,13 @@ function SetEmonEvents(result){
         platformData = result;
     if ($('#chkEmon').attr('checked') === 'checked'){
     $.each(platformData, function(key, item){
-        if (item.PlatformID == selectedOptions){
+        if (item.Name == selectedOptions){
             $('#ddlEmonEvents').find('option').remove();
             emonEvents = item.emonevents
             $.each(emonEvents, function(key, item){
                 $('#ddlEmonEvents')
                             .append($("<option></option>")
-                            .attr("value", item.EmonEventID)
+                            .attr("value", item.Name)
                             .text(item.Name));  
                 });
     }
@@ -216,16 +216,16 @@ function setEmonCounters(selectedArray){
         $('#ddlEmonCounters').find('option').remove();
         $.each(selectedArray, function(index, obj){
             $.each(platformData, function(key, platformItem){
-                if (platformItem.PlatformID == selectedOptions){
+                if (platformItem.Name == selectedOptions){
                     emonEvents = platformItem.emonevents
                     $.each(emonEvents, function(key, eventItem){
-                        if (eventItem.EmonEventID == obj)
+                        if (eventItem.Name == obj)
                         {
                             emonCounters = eventItem.emoncounters;
                             $.each(emonCounters, function(idx, counterItem){
                                 $('#ddlEmonCounters')
                                     .append($("<option></option>")
-                                    .attr("value", counterItem.EmonCounterID)
+                                    .attr("value", counterItem.Name)
                                     .text(counterItem.Name));  
                                 });
                         }
