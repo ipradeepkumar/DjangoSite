@@ -16,7 +16,7 @@
                         <thead>
                             <tr>
                                 {% for col in colNames %}
-                                    {% if col.name != "id" %}
+                                    {% if col.name == "Station" or col.name == "RegressionName" or col.name == "Tool" or col.name == "TotalIterations" or col.name == "Platform" or col.name == "CreatedDate" or col.name == "Status" or col.name == "ModifiedDate" or col.name == "ErrorMessage" %}
                                         <th>{{ col.name }}</th>
                                     {% endif %}
                                 {% endfor %}
@@ -26,14 +26,14 @@
                             {% for task in tasks %}
                                 <tr style="cursor:pointer" onclick=showDetail({{ task.id }})>
                                     <td>{{ task.Station }}</td>
-                                    <td>{{ task.Counter }}</td>
-                                    <td>{{ task.Events }}</td>
-                                    <td>{{ task.TotalIterations}}</td>
-                                    <td>{{ task.RegressionName}}</td>
-                                    <td>{{ task.Idea}}</td>
-                                    <td>{{ task.Splitter}}</td>
-                                    <td>{{ task.MinImpurityDecrease}}</td>
-                                    <td>{{ task.MaxFeatures}}</td>
+                                    <td>{{ task.RegressionName }}</td>
+                                    <td>{{ task.Tool }}</td>
+                                    <td>{{ task.TotalIterations }}</td>
+                                    <td>{{ task.Platform }}</td>
+                                    <td>{{ task.CreatedDate }}</td>
+                                    <td>{{ task.Status }}</td>
+                                    <td>{{ task.ModifiedDate | }}</td>
+                                    <td>{{ task.ErrorMesage }}</td>
                                 </tr>
                             {% endfor %}
                         </tbody>
