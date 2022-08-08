@@ -8,6 +8,7 @@ from .forms import TaskForm
 from .models import Idea, Platform, Station, Task, TaskStatus, Tool
 from datetime import datetime
 from rest_framework.parsers import JSONParser
+from django.core import serializers
 
 
 
@@ -47,7 +48,8 @@ def newtask(request):
             Status = "PENDING"
             )
         task.save()
-       
+        taskJson = serializers.serialize('json', [task])
+        print(taskJson)
         return HttpResponseRedirect("jobhistory")
    
 
@@ -61,6 +63,12 @@ def find(task: Task, condition):
 
 def jobhistory(request):
     if (request.META.get("HTTP_REFERER")):
+        inprogressList = Task.objects.filter(Status = "IN-PROGRESS")
+        if (inprogressList.count() > 0):
+            inprogress = inprogressList[0]
+            inprogress.Status = 'COMPLETE'
+            inprogress.save()
+
         if (request.META.get("HTTP_REFERER").__contains__("jobhistory")):
             pendingList = Task.objects.filter(Status = "PENDING")
             if (pendingList.count() > 0):
@@ -68,11 +76,7 @@ def jobhistory(request):
                 pending.Status = 'IN-PROGRESS'
                 pending.save()
 
-            inprogressList = Task.objects.filter(Status = "IN-PROGRESS")
-            if (inprogressList.count() > 0):
-                inprogress = inprogressList[0]
-                inprogress.Status = 'COMPLETE'
-                inprogress.save()
+            
 
     taskList = Task.objects.all()
     return render(request, "servicemanager/jobhistory.html", {
@@ -144,6 +148,7 @@ def getTaskStatusInstance():
     taskStatus.TaskStatusID = 1
     taskStatus.Name = "Pending"
     return taskStatus
+
 
 
                     
