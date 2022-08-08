@@ -4,7 +4,9 @@ from rest_framework.response import Response
 from rest_framework.decorators import api_view
 from rest_framework.parsers import JSONParser
 from rest_framework.decorators import api_view
+from servicemanager.models import Task
 from servicemanager.api.serializers import PlatformSerializer, StationSerializer, ToolSerializer, TaskStatusSerializer, IdeaSerializer
+from django.core import serializers
 
 @api_view(['GET'])
 def StationList(request):
@@ -86,6 +88,12 @@ def TaskStatusList(request):
         else:
             return Response(serializer.errors)  
         
+@api_view(['GET'])
+def GetJobJson(request, id):
+    task = Task.objects.get(pk = id)
+    # assuming obj is a model instance
+    serialized_obj = serializers.serialize('json', [ task ])
+    return Response(serialized_obj)
     
 
 

@@ -130,38 +130,56 @@
                     target: 0
                 },
                 {
-                    title: 'Counter',
+                    title: 'Regression Name',
                     target: 1
                 },
                 {
-                    title: 'Event',
+                    title: 'Tool',
                     target: 2
                 },
                 {
-                    title: 'Iterations',
+                    title: 'Total Iterations',
                     target: 3
                 },
                 {
-                    title: 'Regression Name',
+                    title: 'Platform',
                     target: 4
                 },
                 {
-                    title: 'Idea',
+                    title: 'Created Date',
                     target: 5
                 },
                 {
-                    title: 'Splitter',
+                    title: 'Status',
                     target: 6
                 },
                 {
-                    title: 'Min Impurity Decrease',
+                    title: 'Modified Date',
                     target: 7
                 },
                 {
-                    title: 'Max Features',
+                    title: 'Error',
                     target: 8
                 },
-            ]
+            ],
+            'rowCallback': function(row, data, index){
+                if(data[6].toUpperCase() == "PENDING"){
+                    $(row).find('td:eq(6)').css('background-color', 'orange');
+                    $(row).find('td:eq(6)').css('color', 'black');
+                }
+                if(data[6].toUpperCase() == 'IN-PROGRESS'){
+                    $(row).find('td:eq(6)').css('background-color', 'yellow');
+                    $(row).find('td:eq(6)').css('color', 'black');
+                }
+                if(data[6].toUpperCase() == 'COMPLETE'){
+                    $(row).find('td:eq(6)').css('color', 'white');
+                    $(row).find('td:eq(6)').css('background-color', 'green');
+                }
+                if(data[6].toUpperCase() == 'ERROR'){
+                    $(row).find('td:eq(6)').css('color', 'white');
+                    $(row).find('td:eq(6)').css('background-color', 'red');
+                }
+              }
         });
     });
 
@@ -314,5 +332,26 @@ function($) {
 }(window.jQuery);
 
 function showDetail(id) {
-    window.location.href = "/jobhistory/" + id
+    $.ajax({  
+        type: "GET",  
+        url: "api/getjobjson/" + id,  
+        contentType: "application/json; charset=utf-8",  
+        dataType: "json",  
+        success: function (data) {  
+            let jsonObj = JSON.parse(data);
+            $('#jsonData')[0].innerHTML = JSON.stringify(jsonObj[0].fields, null, 2);
+            $('#jobJson').modal('show'); 
+        }, //End of AJAX Success function  
+        failure: function (data) {  
+            alert(data.responseText);  
+        }, //End of AJAX failure function  
+        error: function (data) {  
+            alert(data.responseText);  
+        } //End of AJAX error function  
+
+    });   
+}
+
+function refreshJobList(){
+    location.reload();
 }

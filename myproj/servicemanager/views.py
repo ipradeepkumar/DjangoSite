@@ -1,13 +1,15 @@
-from django.http import HttpResponseRedirect
+import socket 
+import os
+import io
+from django.http import HttpResponseRedirect, JsonResponse
 from django.shortcuts import render
 from django.views.generic.detail import DetailView
 from .forms import TaskForm
-from .models import EmonCounter, Idea, Platform, Station, Task, TaskStatus, Tool
-import socket 
+from .models import Idea, Platform, Station, Task, TaskStatus, Tool
 from datetime import datetime
-import os
-import io
 from rest_framework.parsers import JSONParser
+
+
 
 # Create your views here.
 def index(request):
@@ -53,17 +55,32 @@ def newtask(request):
         "taskForm": taskFormObj
     })
 
+def find(task: Task, condition):
+    if (task.Status == condition):
+        return task
+
 def jobhistory(request):
+    if (request.META.get("HTTP_REFERER")):
+        if (request.META.get("HTTP_REFERER").__contains__("jobhistory")):
+            pendingList = Task.objects.filter(Status = "PENDING")
+            if (pendingList.count() > 0):
+                pending = pendingList[0]
+                pending.Status = 'IN-PROGRESS'
+                pending.save()
+
+            inprogressList = Task.objects.filter(Status = "IN-PROGRESS")
+            if (inprogressList.count() > 0):
+                inprogress = inprogressList[0]
+                inprogress.Status = 'COMPLETE'
+                inprogress.save()
+
     taskList = Task.objects.all()
     return render(request, "servicemanager/jobhistory.html", {
         "tasks": taskList, "colNames" : Task._meta.fields
     })
 
 def jobhistory_detail(request, id):
-    task = Task.objects.get(pk = id)
-    return render(request, "servicemanager/jobhistorydetail.html", {
-        "task": task
-    })
+    pass
 
 
 class TaskDetailView(DetailView):
