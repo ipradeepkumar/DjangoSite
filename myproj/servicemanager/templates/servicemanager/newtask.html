@@ -12,13 +12,20 @@ from TaskForm import TaskForm
             <div class="card m-b-30">
                 <div class="card-body">
                     <div class="general-label">
-                        <form role="form" action="{% url "newtask" %}" method="POST">
+                        <form class="form" role="form" action="{% url "newtask" %}" method="POST">
                             {% csrf_token %}
                             {% for field in taskForm %}
-                            <div class="form-group">
-                                <label id="{{ field.auto_id }}">{{ field.label_tag }}</label>
-                                 {{ field }}
-                            </div>
+                            {% if field.auto_id != 'id_Stations' %}
+                                <div class="form-group hideCss">
+                                    <label id="{{ field.auto_id }}">{{ field.label_tag }}</label>
+                                    {{ field }}
+                                </div>
+                            {% else %}
+                                <div id="{{ field.auto_id }}" class="form-group">
+                                    <label id="{{ field.auto_id }}">{{ field.label_tag }}</label>
+                                    {{ field }}
+                                </div>
+                            {% endif %}
                             {% endfor %}
                             <button type="submit" class="btn btn-primary">Submit</button>
                         </form>                                    

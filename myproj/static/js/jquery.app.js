@@ -118,8 +118,13 @@
                 enableCaseInsensitiveFiltering: true
             }
         );
-
        
+       $('#ddlStation').on('change', function(event){
+            if (event.target.value != "--Select Station--")
+                $('.form > div').removeClass('hideCss');
+            else
+                $('.form > div:not(#id_Stations)').addClass('hideCss');
+       });
         
         $('#tblTasks').DataTable({
             scrollX: false,

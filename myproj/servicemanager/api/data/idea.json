@@ -1,5 +1,9 @@
 [
     {
+        "IdeaID": 0,
+        "Name": "--Select Idea--"
+    },
+    {
         "IdeaID": 1,
         "Name": "Idea 1"
     },

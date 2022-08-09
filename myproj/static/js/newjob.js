@@ -41,8 +41,7 @@ $(function(){
                 $('#ddlToolName')
                     .append($("<option></option>")
                     .attr("value", item.Name)
-                    .text(item.Name));  
-               
+                    .text(item.Name));
             }); //End of foreach Loop   
             $('#ddlToolName').multiselect(
                 {

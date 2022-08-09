@@ -1,8 +1,8 @@
 [
     {
         "StationID": 0,
-        "Name": "None",
-        "Desc": "Desc 1"
+        "Name": "--Select Station--",
+        "Desc": "--Select Station--"
     },
     {
         "StationID": 1,

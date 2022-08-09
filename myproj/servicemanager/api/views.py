@@ -29,11 +29,11 @@ def ToolList(request):
     with open(filePath, 'r') as toolfile:
         stream = io.BytesIO(str.encode(toolfile.read()))
         toolData = JSONParser().parse(stream=stream)
-        serializer = ToolSerializer(data=toolData, many=True)
-        if serializer.is_valid():
-            return Response(serializer.validated_data)
-        else:
-            return Response(serializer.errors)
+        return Response(toolData)
+        #serializer = ToolSerializer(data=toolData, many=True)
+        #if serializer.is_valid():
+        #else:
+            #return Response(serializer.errors)
 
 
 @api_view(['GET'])
@@ -43,11 +43,12 @@ def ToolEventList(request, toolid):
     with open(filePath, 'r') as tooleventfile:
         stream = io.BytesIO(str.encode(tooleventfile.read()))
         toolData = JSONParser().parse(stream=stream)
-        serializer = ToolSerializer(data=toolData, many=True)
-        if serializer.is_valid():
-            return Response(serializer.validated_data)
-        else:
-            return Response(serializer.errors)
+        return Response(toolData)
+        # serializer = ToolSerializer(data=toolData, many=True)
+        # if serializer.is_valid():
+        #     return Response(serializer.validated_data)
+        # else:
+        #     return Response(serializer.errors)
 
 @api_view(['GET'])
 def PlatformList(request):
@@ -56,11 +57,12 @@ def PlatformList(request):
     with open(filePath, 'r') as platformfile:
         stream = io.BytesIO(str.encode(platformfile.read()))
         platformData = JSONParser().parse(stream=stream)
-        serializer = PlatformSerializer(data=platformData, many=True)
-        if serializer.is_valid():
-            return Response(serializer.validated_data)
-        else:
-            return Response(serializer.errors)       
+        return Response(platformData)
+        # serializer = PlatformSerializer(data=platformData, many=True)
+        # if serializer.is_valid():
+        #     return Response(serializer.validated_data)
+        # else:
+        #     return Response(serializer.errors)       
 
 @api_view(['GET'])
 def IdeaList(request):
