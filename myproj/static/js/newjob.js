@@ -19,7 +19,12 @@ $(function(){
                     .append($("<option></option>")
                     .attr("value", item.Name)
                     .text(item.Name)); 
-            }); //End of foreach Loop   
+            }); //End of foreach Loop  
+            $('#ddlStation').selectpicker({
+                liveSearch: true,
+                maxOptions: 1,
+                liveSearchStyle: 'contains',
+            });
         }, //End of AJAX Success function  
 
         failure: function (data) {  
