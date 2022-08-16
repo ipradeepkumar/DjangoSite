@@ -1,7 +1,7 @@
 import socket 
 import os
 import io
-from django.http import HttpResponseRedirect, JsonResponse
+from django.http import HttpResponseRedirect, HttpResponse
 from django.shortcuts import render
 from django.views.generic.detail import DetailView
 from .forms import TaskForm
@@ -9,15 +9,17 @@ from .models import Idea, Platform, Station, Task, TaskStatus, Tool
 from datetime import datetime
 from rest_framework.parsers import JSONParser
 from django.core import serializers
+from django.contrib.auth.decorators import login_required
 
-
+@login_required()
+def test_ldap(request):
+    return HttpResponse("Welcome to private page")
 
 # Create your views here.
 def index(request):
     return render(request, "servicemanager/index.html")
 
 def newtask(request):
-       
     hostname = socket.gethostname()    
     IPAddr = socket.gethostbyname(hostname)  
     if request.method == "GET":
