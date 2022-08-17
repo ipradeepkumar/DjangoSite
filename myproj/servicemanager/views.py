@@ -10,9 +10,11 @@ from datetime import datetime
 from rest_framework.parsers import JSONParser
 from django.core import serializers
 from django.contrib.auth.decorators import login_required
+from .customdecorator import ldap_auth
 
-@login_required()
+@ldap_auth
 def test_ldap(request):
+    print('actual method')
     return HttpResponse("Welcome to private page")
 
 # Create your views here.
