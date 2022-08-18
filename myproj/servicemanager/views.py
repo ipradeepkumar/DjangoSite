@@ -11,13 +11,27 @@ from rest_framework.parsers import JSONParser
 from django.core import serializers
 from django.contrib.auth.decorators import login_required
 from .customdecorator import ldap_auth
+from django_python3_ldap.utils import format_search_filters
 
 @ldap_auth
 def test_ldap(request):
     print('actual method')
     return HttpResponse("Welcome to private page")
 
-# Create your views here.
+
+def login(request):
+    ldap_fields: any
+    if request.method == "GET":
+        return render(request, "servicemanager/login.html")
+    
+    if request.method == "POST":
+        ldap_fields["username"] = request.POST.get('txtUsername')
+        search_filters = format_search_filters(ldap_fields)
+        if (search_filters.count > 0):
+            return HttpResponseRedirect("index")
+        
+
+
 def index(request):
     return render(request, "servicemanager/index.html")
 

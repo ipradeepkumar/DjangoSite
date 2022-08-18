@@ -7,7 +7,8 @@ urlpatterns  = [
     path("newtask", views.newtask, name="newtask"),
     path("jobhistory", views.jobhistory, name="jobhistory"),
     path("jobhistory/<int:id>", views.jobhistory_detail, name="jobhistory_detail"),
-    path("testldap", views.test_ldap, name="testldap")
+    path("testldap", views.test_ldap, name="testldap"),
+    path("login", views.login, name="login")
     
 
 ]

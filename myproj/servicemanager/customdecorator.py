@@ -8,9 +8,9 @@ def is_authenticated(self, ldap_fields):
     search_filters = format_search_filters(ldap_fields)
     return (search_filters.count > 0)
 
-ldap_user_exists = user_passes_test(lambda u: True if u.is_authenticated else False, login_url='/accounts/login')
+ldap_user_exists = user_passes_test(lambda u: True if u.is_authenticated else False, login_url='login')
 
 def ldap_auth(view_func):
-    decorated_view_func = login_required(ldap_user_exists(view_func), login_url='/accounts/login')
+    decorated_view_func = login_required(ldap_user_exists(view_func), login_url='login')
     return decorated_view_func
 
