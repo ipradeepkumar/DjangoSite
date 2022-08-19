@@ -12,6 +12,15 @@ from django.core import serializers
 from django.contrib.auth.decorators import login_required
 from .customdecorator import ldap_auth
 from django_python3_ldap.utils import format_search_filters
+from django_python3_ldap import ldap
+
+LDAP_URI = 'ldap://ldap.forumsys.com:389'
+LDAP_DN = 'dc=example,dc=com'
+LDAP_USERNAME = 'einstein'
+LDAP_PASSWORD = 'password'
+USER_NAME = 'einstein'
+USER_IN_GROUP = 'CN=Scientist,DC=example,DC=com'
+
 
 @ldap_auth
 def test_ldap(request):
@@ -20,17 +29,17 @@ def test_ldap(request):
 
 
 def login(request):
-    ldap_fields: any
     if request.method == "GET":
         return render(request, "servicemanager/login.html")
     
     if request.method == "POST":
-        ldap_fields["username"] = request.POST.get('txtUsername')
-        search_filters = format_search_filters(ldap_fields)
-        if (search_filters.count > 0):
-            return HttpResponseRedirect("index")
-        
-
+       username = request.POST.get('txtUsername')
+       password = request.POST.get('txtPassword')
+       user = ldap.authenticate(username=username, password=password)
+       if (user is not None):
+        return render(request, "servicemanager/index.html")
+       else:
+        return render(request, "servicemanager/login.html")
 
 def index(request):
     return render(request, "servicemanager/index.html")

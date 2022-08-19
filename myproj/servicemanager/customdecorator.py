@@ -1,6 +1,7 @@
 import os
 from django_python3_ldap.utils import format_search_filters
 from django.contrib.auth.decorators import login_required, user_passes_test
+
 def is_authenticated(self, ldap_fields):
      # Add in simple filters.
     ldap_fields["username"] = os.getlogin()
