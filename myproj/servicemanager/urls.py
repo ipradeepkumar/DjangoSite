@@ -8,7 +8,8 @@ urlpatterns  = [
     path("jobhistory", views.jobhistory, name="jobhistory"),
     path("jobhistory/<int:id>", views.jobhistory_detail, name="jobhistory_detail"),
     path("testldap", views.test_ldap, name="testldap"),
-    path("login", views.login, name="login")
+    path("login", views.doLogin, name="dologin"),
+    path("logout", views.customlogout, name="logout")
     
 
 ]

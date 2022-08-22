@@ -90,7 +90,8 @@
                                     <img src="{% static "avatar-1.jpg" %}" alt="">
                                 </a>
                                 <div class="dropdown-menu dropdown-menu-right profile-menu" x-placement="bottom-end" style="position: absolute; transform: translate3d(-107px, 60px, 0px); top: 0px; left: 0px; will-change: transform;">
-                                    <a class="dropdown-item" href="#"><i class="ti ti-bag m-r-5 text-muted"></i> Logout</a>
+                                    <a class="dropdown-item">{{ request.user.username }}</a>
+                                    <a class="dropdown-item" href="{% url 'logout' %}"><i class="ti ti-bag m-r-5 text-muted"></i> Logout</a>
                                 </div>
                             </li>
                         </ul>

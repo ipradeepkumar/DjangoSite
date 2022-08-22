@@ -13,6 +13,7 @@ from django.contrib.auth.decorators import login_required
 from .customdecorator import ldap_auth
 from django_python3_ldap.utils import format_search_filters
 from django_python3_ldap import ldap
+from django.contrib.auth import logout, login
 
 LDAP_URI = 'ldap://ldap.forumsys.com:389'
 LDAP_DN = 'dc=example,dc=com'
@@ -28,7 +29,7 @@ def test_ldap(request):
     return HttpResponse("Welcome to private page")
 
 
-def login(request):
+def doLogin(request):
     if request.method == "GET":
         return render(request, "servicemanager/login.html")
     
@@ -37,13 +38,16 @@ def login(request):
        password = request.POST.get('txtPassword')
        user = ldap.authenticate(username=username, password=password)
        if (user is not None):
+        login(request, user)
         return render(request, "servicemanager/index.html")
        else:
         return render(request, "servicemanager/login.html")
 
+@ldap_auth
 def index(request):
     return render(request, "servicemanager/index.html")
 
+@ldap_auth
 def newtask(request):
     hostname = socket.gethostname()    
     IPAddr = socket.gethostbyname(hostname)  
@@ -87,7 +91,7 @@ def newtask(request):
 def find(task: Task, condition):
     if (task.Status == condition):
         return task
-
+@ldap_auth
 def jobhistory(request):
     if (request.META.get("HTTP_REFERER")):
         inprogressList = Task.objects.filter(Status = "IN-PROGRESS")
@@ -113,6 +117,9 @@ def jobhistory(request):
 def jobhistory_detail(request, id):
     pass
 
+def customlogout(request):
+    logout(request)
+    return render(request, "servicemanager/logout.html")
 
 class TaskDetailView(DetailView):
     model = Task
