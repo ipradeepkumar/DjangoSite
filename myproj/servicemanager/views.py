@@ -39,9 +39,9 @@ def doLogin(request):
        user = ldap.authenticate(username=username, password=password)
        if (user is not None):
         login(request, user)
-        return render(request, "servicemanager/index.html")
+        return render(request, "servicemanager/index.html",{ "error": "" })
        else:
-        return render(request, "servicemanager/login.html")
+        return render(request, "servicemanager/login.html",{ "error": "Invalid credentials" })
 
 @ldap_auth
 def index(request):

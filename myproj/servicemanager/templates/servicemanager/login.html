@@ -41,6 +41,13 @@
                                     </div>  
                                     <form class="form mt-5 contact-form" action="{% url "dologin" %}" method="POST">
                                         {% csrf_token %}
+                                        {% if error != "" %}
+                                        <div class="form-group">
+                                            <div class="col-sm-12">
+                                                <span style="color:red;">{{ error }}</span>
+                                            </div>
+                                        </div>
+                                        {% endif %}
                                         <div class="form-group ">
                                             <div class="col-sm-12">
                                                 <input class="form-control form-control-line" type="text" name="txtUsername" placeholder="Username" required="required">
