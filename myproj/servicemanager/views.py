@@ -39,7 +39,7 @@ def doLogin(request):
        user = ldap.authenticate(username=username, password=password)
        if (user is not None):
         login(request, user)
-        return render(request, "servicemanager/index.html",{ "error": "" })
+        return HttpResponseRedirect("/")
        else:
         return render(request, "servicemanager/login.html",{ "error": "Invalid credentials" })
 
