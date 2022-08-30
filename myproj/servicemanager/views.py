@@ -74,7 +74,7 @@ def newtask(request):
             Splitter = "Splitter",
             MinImpurityDecrease = "0.5",
             MaxFeatures = "0.9",
-            CreatedBy = IPAddr,
+            CreatedBy = request.user.username,
             CreatedDate = datetime.now(),
             Status = "PENDING"
             )
@@ -94,22 +94,22 @@ def find(task: Task, condition):
 @ldap_auth
 def jobhistory(request):
     if (request.META.get("HTTP_REFERER")):
-        inprogressList = Task.objects.filter(Status = "IN-PROGRESS")
-        if (inprogressList.count() > 0):
+        inprogressList = list(Task.objects.filter(Status = "IN-PROGRESS").filter(CreatedBy = request.user.username).order_by("-CreatedDate"))
+        if (inprogressList.count(id) > 0):
             inprogress = inprogressList[0]
             inprogress.Status = 'COMPLETE'
             inprogress.save()
 
         if (request.META.get("HTTP_REFERER").__contains__("jobhistory")):
-            pendingList = Task.objects.filter(Status = "PENDING")
-            if (pendingList.count() > 0):
+            pendingList = list(Task.objects.filter(Status = "PENDING").filter(CreatedBy = request.user.username).order_by("-CreatedDate"))
+            if (pendingList.count(id) > 0):
                 pending = pendingList[0]
                 pending.Status = 'IN-PROGRESS'
                 pending.save()
 
             
 
-    taskList = Task.objects.all()
+    taskList = list(Task.objects.all().filter(CreatedBy = request.user.username).order_by("-CreatedDate"))
     return render(request, "servicemanager/jobhistory.html", {
         "tasks": taskList, "colNames" : Task._meta.fields
     })

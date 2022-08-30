@@ -1,5 +1,6 @@
 {% extends 'master.html' %}
 {% load static%}
+{% load tz %}
 
 
 
@@ -31,7 +32,7 @@
                                     <td>{{ task.Tool }}</td>
                                     <td>{{ task.TotalIterations }}</td>
                                     <td>{{ task.Platform }}</td>
-                                    <td>{{ task.CreatedDate }}</td>
+                                    <td>{{ task.CreatedDate|localtime }}</td>
                                     <td>{{ task.Status }}</td>
                                     <td>{{ task.ModifiedDate|default_if_none:"" }}</td>
                                     <td>{{ task.ErrorMesage }}</td>
