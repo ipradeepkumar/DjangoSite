@@ -94,22 +94,22 @@ def find(task: Task, condition):
 @ldap_auth
 def jobhistory(request):
     if (request.META.get("HTTP_REFERER")):
-        inprogressList = list(Task.objects.filter(Status = "IN-PROGRESS").filter(CreatedBy = request.user.username).order_by("-CreatedDate"))
-        if (inprogressList.count(id) > 0):
+        inprogressList = Task.objects.filter(Status = "IN-PROGRESS").filter(CreatedBy = request.user.username).order_by("-CreatedDate")
+        if (inprogressList.count() > 0):
             inprogress = inprogressList[0]
             inprogress.Status = 'COMPLETE'
             inprogress.save()
 
         if (request.META.get("HTTP_REFERER").__contains__("jobhistory")):
-            pendingList = list(Task.objects.filter(Status = "PENDING").filter(CreatedBy = request.user.username).order_by("-CreatedDate"))
-            if (pendingList.count(id) > 0):
+            pendingList = Task.objects.filter(Status = "PENDING").filter(CreatedBy = request.user.username).order_by("-CreatedDate")
+            if (pendingList.count() > 0):
                 pending = pendingList[0]
                 pending.Status = 'IN-PROGRESS'
                 pending.save()
 
             
 
-    taskList = list(Task.objects.all().filter(CreatedBy = request.user.username).order_by("-CreatedDate"))
+    taskList = Task.objects.all().filter(CreatedBy = request.user.username).order_by("-CreatedDate")
     return render(request, "servicemanager/jobhistory.html", {
         "tasks": taskList, "colNames" : Task._meta.fields
     })

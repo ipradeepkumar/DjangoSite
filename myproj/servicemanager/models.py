@@ -1,5 +1,7 @@
+from math import fabs
 from pickle import FALSE
 from platform import platform
+import uuid
 from django.db import models
 
 
@@ -70,7 +72,7 @@ class Task(models.Model):
     ErrorCode = models.CharField(max_length=10, null=True)
     ErrorMessage = models.CharField(max_length=500, null=True)
     Status = models.CharField(max_length=50, null=True, default="PENDING")
-
+    GUID = models.UUIDField(primary_key=False, default=uuid.uuid4, editable=False)
 
 
 
