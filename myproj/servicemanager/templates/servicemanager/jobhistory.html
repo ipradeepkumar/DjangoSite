@@ -66,6 +66,11 @@
 </div>  
 
 {% endblock %}
+{% block extrajs %}
+<script type="text/javascript">
+    setInterval(refreshJobList, 1000 * 60);
+</script>
+{% endblock %}
 
 
 

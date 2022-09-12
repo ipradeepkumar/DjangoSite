@@ -93,19 +93,19 @@ def find(task: Task, condition):
         return task
 @ldap_auth
 def jobhistory(request):
-    if (request.META.get("HTTP_REFERER")):
-        inprogressList = Task.objects.filter(Status = "IN-PROGRESS").filter(CreatedBy = request.user.username).order_by("-CreatedDate")
-        if (inprogressList.count() > 0):
-            inprogress = inprogressList[0]
-            inprogress.Status = 'COMPLETE'
-            inprogress.save()
+    # if (request.META.get("HTTP_REFERER")):
+    #     inprogressList = Task.objects.filter(Status = "IN-PROGRESS").filter(CreatedBy = request.user.username).order_by("-CreatedDate")
+    #     if (inprogressList.count() > 0):
+    #         inprogress = inprogressList[0]
+    #         inprogress.Status = 'COMPLETE'
+    #         inprogress.save()
 
-        if (request.META.get("HTTP_REFERER").__contains__("jobhistory")):
-            pendingList = Task.objects.filter(Status = "PENDING").filter(CreatedBy = request.user.username).order_by("-CreatedDate")
-            if (pendingList.count() > 0):
-                pending = pendingList[0]
-                pending.Status = 'IN-PROGRESS'
-                pending.save()
+    #     if (request.META.get("HTTP_REFERER").__contains__("jobhistory")):
+    #         pendingList = Task.objects.filter(Status = "PENDING").filter(CreatedBy = request.user.username).order_by("-CreatedDate")
+    #         if (pendingList.count() > 0):
+    #             pending = pendingList[0]
+    #             pending.Status = 'IN-PROGRESS'
+    #             pending.save()
 
             
 

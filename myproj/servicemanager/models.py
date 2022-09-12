@@ -56,7 +56,7 @@ class Task(models.Model):
     ToolEvent = models.CharField(max_length=500, null= True)
     ToolCounter = models.CharField(max_length=500, null=True)
     Platform = models.CharField(max_length=500, null=True)
-    IsEmon = models.BooleanField(default=False)
+    IsEmon = models.BooleanField(default=False, null=True)
     PlatformEvent = models.CharField(max_length=500, null=True)
     PlatformCounter = models.CharField(max_length=500, null=True)
     Idea = models.CharField(max_length=500, null=True)

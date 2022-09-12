@@ -360,3 +360,4 @@ function showDetail(id) {
 function refreshJobList(){
     location.reload();
 }
+
