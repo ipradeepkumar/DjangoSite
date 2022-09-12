@@ -181,10 +181,5 @@ def getTaskStatusInstance():
     taskStatus = TaskStatus()
     taskStatus.TaskStatusID = 1
     taskStatus.Name = "Pending"
-    return taskStatus
-
-
-
-                    
-
-        
+    return taskStatus           
+ 

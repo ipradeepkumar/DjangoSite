@@ -176,7 +176,7 @@
                     $(row).find('td:eq(6)').css('background-color', 'yellow');
                     $(row).find('td:eq(6)').css('color', 'black');
                 }
-                if(data[6].toUpperCase() == 'COMPLETE'){
+                if(data[6].toUpperCase() == 'COMPLETE' || data[6].toUpperCase() == 'COMPLETED'){
                     $(row).find('td:eq(6)').css('color', 'white');
                     $(row).find('td:eq(6)').css('background-color', 'green');
                 }

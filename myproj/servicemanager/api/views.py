@@ -96,7 +96,7 @@ def GetJobJson(request, id):
     # assuming obj is a model instance
     serialized_obj = serializers.serialize('json', [ task ])
     return Response(serialized_obj)
-    
+
 
 
     

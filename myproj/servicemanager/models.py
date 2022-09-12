@@ -61,7 +61,7 @@ class Task(models.Model):
     PlatformCounter = models.CharField(max_length=500, null=True)
     Idea = models.CharField(max_length=500, null=True)
     IsUploadResults = models.BooleanField(default=False)
-    TotalIterations = models.IntegerField()
+    TotalIterations = models.IntegerField(default=2)
     Splitter = models.CharField(max_length=50)
     MinImpurityDecrease = models.CharField(max_length=50)
     MaxFeatures = models.CharField(max_length=50)
@@ -73,6 +73,7 @@ class Task(models.Model):
     ErrorMessage = models.CharField(max_length=500, null=True)
     Status = models.CharField(max_length=50, null=True, default="PENDING")
     GUID = models.UUIDField(primary_key=False, default=uuid.uuid4, editable=False)
+    CurrentIteration = models.IntegerField(default=0)
 
 
 
