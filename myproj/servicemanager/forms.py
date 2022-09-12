@@ -33,9 +33,9 @@ class TaskForm(forms.Form):
     #ToolEvents = forms.MultipleChoiceField(label="Tool Events", widget=forms.SelectMultiple(attrs={"class":"form-control", "id":"ddlToolEvents"}))
     #ToolCounters = forms.MultipleChoiceField(label="Tool Counter", widget=forms.SelectMultiple(attrs={"class":"form-control", "id":"ddlToolCounters"}))
     Platform = ChoiceFieldNoValidation(label="Platform", widget=forms.Select(attrs={"class":"form-control", "id":"ddlPlatform"}))
-    IsEmon = forms.BooleanField(label="Emon Tool", widget=forms.CheckboxInput(attrs={"class":"form-control", "id":"chkEmon"}))
-    EmonEvents = MultipleChoiceFieldNoValidation(label="Emon Events", widget=forms.SelectMultiple(attrs={"class":"form-control", "id":"ddlEmonEvents"}))
-    EmonCounters = MultipleChoiceFieldNoValidation(label="Emon Counter", widget=forms.SelectMultiple(attrs={"class":"form-control", "id":"ddlEmonCounters"}))
+    IsEmon = forms.BooleanField(required=False,label="Emon Tool", widget=forms.CheckboxInput(attrs={"class":"form-control", "id":"chkEmon"}))
+    EmonEvents = MultipleChoiceFieldNoValidation(required=False,label="Emon Events", widget=forms.SelectMultiple(attrs={"class":"form-control", "id":"ddlEmonEvents"}))
+    EmonCounters = MultipleChoiceFieldNoValidation(required=False,label="Emon Counter", widget=forms.SelectMultiple(attrs={"class":"form-control", "id":"ddlEmonCounters"}))
     Idea = ChoiceFieldNoValidation(label="Idea", widget=forms.Select(attrs={"class":"form-control", "id":"ddlIdea"}))
     IsUploadResult = forms.BooleanField(label="Upload Result", widget=forms.CheckboxInput(attrs={"class":"form-control", "id":"chkUploadResult"}))
     
