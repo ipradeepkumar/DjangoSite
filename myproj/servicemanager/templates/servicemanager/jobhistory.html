@@ -22,13 +22,14 @@
                                         <th>{{ col.name }}</th>
                                     {% endif %}
                                 {% endfor %}
+                                <th>Iterations</th>
                             </tr>
                         </thead>
                         <tbody>
                             {% for task in tasks %}
-                                <tr style="cursor:pointer" onclick=showDetail({{ task.id }})>
+                                <tr>
                                     <td>{{ task.Station }}</td>
-                                    <td>{{ task.RegressionName }}</td>
+                                    <td><a href='#' onclick=showDetail({{task.id}})>{{ task.RegressionName }}</a></td>
                                     <td>{{ task.Tool }}</td>
                                     <td>{{ task.CurrentIteration }} / {{ task.TotalIterations }}</td>
                                     <td>{{ task.Platform }}</td>
@@ -36,6 +37,7 @@
                                     <td>{{ task.Status }}</td>
                                     <td>{{ task.ModifiedDate|default_if_none:"" }}</td>
                                     <td>{{ task.ErrorMesage }}</td>
+                                    <td>{% include './_iterationslist.html' with iterationsData=iterations taskID=task.id GUID=task.GUID %}</td>
                                 </tr>
                             {% endfor %}
                         </tbody>
@@ -63,7 +65,26 @@
             </div>
         </div>
     </div>
-</div>  
+</div> 
+
+<div class="modal fade bd-example-modal-lg" id="iterationJson" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">JSON</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <pre id="iterationjsonData"></pre>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div> 
 
 {% endblock %}
 {% block extrajs %}

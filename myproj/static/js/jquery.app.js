@@ -357,7 +357,32 @@ function showDetail(id) {
     });   
 }
 
+function showIterationDetail(iterationID, taskID) {
+    $.ajax({  
+        type: "GET",  
+        url: "api/getiterationjson/" + iterationID + "/" + taskID,  
+        contentType: "application/json; charset=utf-8",  
+        dataType: "json",  
+        success: function (data) {  
+            //let jsonObj = JSON.parse(data);
+            //$('#iterationjsonData')[0].innerHTML = JSON.stringify(jsonObj[0].fields, null, 2);
+            $('#iterationjsonData')[0].innerHTML = JSON.stringify(data, null, 2);
+            $('#iterationJson').modal('show'); 
+        }, //End of AJAX Success function  
+        failure: function (data) {  
+            alert(data.responseText);  
+        }, //End of AJAX failure function  
+        error: function (data) {  
+            alert(data.responseText);  
+        } //End of AJAX error function  
+
+    });   
+}
+
+
 function refreshJobList(){
     location.reload();
 }
+
+
 

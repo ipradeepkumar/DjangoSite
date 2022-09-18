@@ -4,7 +4,7 @@ from rest_framework.response import Response
 from rest_framework.decorators import api_view
 from rest_framework.parsers import JSONParser
 from rest_framework.decorators import api_view
-from servicemanager.models import Task
+from servicemanager.models import Task, TaskIteration
 from servicemanager.api.serializers import PlatformSerializer, StationSerializer, ToolSerializer, TaskStatusSerializer, IdeaSerializer
 from django.core import serializers
 
@@ -96,6 +96,13 @@ def GetJobJson(request, id):
     # assuming obj is a model instance
     serialized_obj = serializers.serialize('json', [ task ])
     return Response(serialized_obj)
+
+@api_view(['GET'])
+def GetIterationJson(request, iterationID, taskID):
+    iterationData = TaskIteration.objects.get_queryset().filter(Iteration=iterationID, TaskID=taskID).first()
+    # assuming obj is a model instance
+    #serialized_obj = serializers.serialize('json', [ task ])
+    return Response(iterationData.JSONData)
 
 
 

@@ -1,6 +1,7 @@
 from math import fabs
 from pickle import FALSE
 from platform import platform
+from pyexpat import model
 import uuid
 from django.db import models
 
@@ -48,7 +49,7 @@ class TaskStatus(models.Model):
     Name = models.CharField(max_length=50)
 
 class Task(models.Model):
-    TaskID: models.IntegerField()
+    TaskID = models.IntegerField(null=True)
     Station = models.CharField(max_length=250, null=True)
     IsDebugMode = models.BooleanField(default=FALSE)
     RegressionName = models.CharField(max_length=250)
@@ -74,6 +75,14 @@ class Task(models.Model):
     Status = models.CharField(max_length=50, null=True, default="PENDING")
     GUID = models.UUIDField(primary_key=False, default=uuid.uuid4, editable=False)
     CurrentIteration = models.IntegerField(default=0)
+
+class TaskIteration(models.Model):
+    TaskID = models.IntegerField(null=True)
+    GUID = models.UUIDField(primary_key=False)
+    Iteration = models.IntegerField(null=True)
+    JSONData = models.JSONField(null=True)
+    CreatedDate =  models.DateTimeField(null=True)
+    CreatedBy = models.CharField(max_length=50, null=True)
 
 
 

@@ -1,0 +1,15 @@
+
+      
+                <table id="tblIterations">
+                    <tbody>
+                        <ul class="list-inline">
+                        {% for iteration in iterationsData %}
+                            {% if iteration.GUID == GUID %}
+                                <li class="list-inline-item"><a href='#' onclick=showIterationDetail({{iteration.Iteration}},{{iteration.TaskID}})>Iteration {{ iteration.Iteration }}</a></li>
+                            {% endif %}
+                            <li></li>
+                        {% endfor %}
+                        <ul>
+                    </tbody>
+                 </table>
+           

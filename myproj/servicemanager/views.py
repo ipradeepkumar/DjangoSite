@@ -5,13 +5,12 @@ from django.http import HttpResponseRedirect, HttpResponse
 from django.shortcuts import render
 from django.views.generic.detail import DetailView
 from .forms import TaskForm
-from .models import Idea, Platform, Station, Task, TaskStatus, Tool
+from .models import Idea, Platform, Station, Task, TaskIteration, TaskStatus, Tool
 from datetime import datetime
 from rest_framework.parsers import JSONParser
 from django.core import serializers
 from django.contrib.auth.decorators import login_required
 from .customdecorator import ldap_auth
-from django_python3_ldap.utils import format_search_filters
 from django_python3_ldap import ldap
 from django.contrib.auth import logout, login
 
@@ -80,7 +79,6 @@ def newtask(request):
             )
         task.save()
         taskJson = serializers.serialize('json', [task])
-        print(taskJson)
         return HttpResponseRedirect("jobhistory")
    
 
@@ -91,27 +89,13 @@ def newtask(request):
 def find(task: Task, condition):
     if (task.Status == condition):
         return task
+        
 @ldap_auth
 def jobhistory(request):
-    # if (request.META.get("HTTP_REFERER")):
-    #     inprogressList = Task.objects.filter(Status = "IN-PROGRESS").filter(CreatedBy = request.user.username).order_by("-CreatedDate")
-    #     if (inprogressList.count() > 0):
-    #         inprogress = inprogressList[0]
-    #         inprogress.Status = 'COMPLETE'
-    #         inprogress.save()
-
-    #     if (request.META.get("HTTP_REFERER").__contains__("jobhistory")):
-    #         pendingList = Task.objects.filter(Status = "PENDING").filter(CreatedBy = request.user.username).order_by("-CreatedDate")
-    #         if (pendingList.count() > 0):
-    #             pending = pendingList[0]
-    #             pending.Status = 'IN-PROGRESS'
-    #             pending.save()
-
-            
-
     taskList = Task.objects.all().filter(CreatedBy = request.user.username).order_by("-CreatedDate")
+    taskIterations = TaskIteration.objects.all().order_by("-CreatedDate")
     return render(request, "servicemanager/jobhistory.html", {
-        "tasks": taskList, "colNames" : Task._meta.fields
+        "tasks": taskList, "colNames" : Task._meta.fields, "iterations" : taskIterations
     })
 
 def jobhistory_detail(request, id):
