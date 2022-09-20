@@ -2,14 +2,14 @@
       
                 <table id="tblIterations">
                     <tbody>
-                        <ul class="list-inline">
-                        {% for iteration in iterationsData %}
-                            {% if iteration.GUID == GUID %}
-                                <li class="list-inline-item"><a href='#' onclick=showIterationDetail({{iteration.Iteration}},{{iteration.TaskID}})>Iteration {{ iteration.Iteration }}</a></li>
-                            {% endif %}
-                            <li></li>
-                        {% endfor %}
-                        <ul>
+                            <select class="form-control sm-2 w-75" style="font-size:14px;" name="iteration" id="iteration" onchange=showIterationDetail(this)>
+                                    <option value=""></option>
+                                    {% for iteration in iterationsData %}
+                                        {% if iteration.GUID == GUID %}
+                                            <option value="{{iteration.Iteration}}^{{iteration.TaskID}}">{{ iteration.Iteration }}</option>
+                                        {% endif %}
+                                    {% endfor %}
+                            </select>
                     </tbody>
                  </table>
            
