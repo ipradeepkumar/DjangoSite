@@ -535,6 +535,9 @@ h5.left-nav-title {
   left: 240px;
   width: 100%;
   z-index: 1000;
+  height: 60px;
+  background-color: #2e61f2;
+  color: white;
 }
 .sticky-header .body-content {
   padding: 60px 15px 50px 15px;
@@ -659,8 +662,8 @@ h5.left-nav-title {
   height: 60px;
 }
 .right-notification .notification-menu li a {
-  height: 60px;
-  line-height: 60px;
+  height: 29px;
+  line-height: 27px;
   padding: 0 12px;
   display: block;
 }

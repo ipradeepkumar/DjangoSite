@@ -903,12 +903,13 @@ p {
 }
 
 a:not([href]):not([tabindex]) {
-    color: #454545;
+    color: #f5efef;
     text-decoration: none;
 }
 
 a:not([href]):not([tabindex]):hover {
     text-decoration: none;
+    color: #1f2124;
 }
 
 .form-control:focus {

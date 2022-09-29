@@ -1,5 +1,6 @@
 {% load static %}
 {% load tz %}
+{% get_current_timezone as TIME_ZONE %}
 <!DOCTYPE html>
 <!--[if lt IE 7]>      <html class="no-js lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
 <!--[if IE 7]>         <html class="no-js lt-ie9 lt-ie8"> <![endif]-->
@@ -86,7 +87,7 @@
                     <ul  class="notification-menu" style="margin-top:1.4%">
                         <li>Welcome back! {{request.user.username}}</li>
                         <li style="margin-left:15%">Calendar : WW {% now "W" %} | {% now "M d Y" %}</li>
-                        <li style="margin-left:5%">{% now "f A T"%}</li>
+                        <li style="margin-left:5%">{% now "f A T" %}</li>
                     </ul>
                     <!--right notification start-->
                     <div class="right-notification">
@@ -95,7 +96,7 @@
                                 <a href="javascript:;" data-toggle="dropdown" aria-expanded="false">
                                     <img src="{% static "avatar-1.jpg" %}" alt="">
                                 </a>
-                                <div class="dropdown-menu dropdown-menu-right profile-menu" x-placement="bottom-end" style="position: absolute; transform: translate3d(-107px, 60px, 0px); top: 0px; left: 0px; will-change: transform;">
+                                <div class="dropdown-menu dropdown-menu-right profile-menu" x-placement="bottom-end" style="position: absolute; transform: translate3d(-107px, 29px, 0px); top: 0px; left: 0px; will-change: transform;">
                                     <a class="dropdown-item" href="{% url 'logout' %}"><i class="ti ti-bag m-r-5 text-muted"></i> Logout</a>
                                 </div>
                             </li>

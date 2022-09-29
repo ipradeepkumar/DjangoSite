@@ -26,7 +26,7 @@ class MultipleChoiceFieldNoValidation(forms.MultipleChoiceField):
 
 class TaskForm(forms.Form):
     Stations = ChoiceFieldNoValidation(label="Station", widget=forms.Select(attrs={"class":"form-control", "id":"ddlStation"}))
-    DebugMode = forms.BooleanField(label="Debug Mode", widget=forms.CheckboxInput(attrs={"class":"form-control", "id":"chkDebug", "autocomplete":"off"}))
+    DebugMode = forms.BooleanField(label="Debug Mode", required=False, widget=forms.CheckboxInput(attrs={"class":"form-control", "id":"chkDebug", "autocomplete":"off"}))
     RegressionName = forms.CharField(required=False, max_length=100, label="Regression Name", widget = forms.TextInput(attrs={"class":"form-control", "autocomplete":"off", "placeholder": "Please enter regression name"}))
     TotalIterations = forms.IntegerField(required=False, label="Total Iterations", widget = forms.NumberInput(attrs={ "min":"0", "class":"form-control", "autocomplete":"off", "placeholder": "Please enter Iterations"}))
     ToolName = MultipleChoiceFieldNoValidation(label="Tool Name", widget=forms.SelectMultiple(attrs={"class":"form-control", "id":"ddlToolName"}))

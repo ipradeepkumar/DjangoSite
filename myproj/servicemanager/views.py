@@ -14,12 +14,14 @@ from .customdecorator import ldap_auth
 from django_python3_ldap import ldap
 from django.contrib.auth import logout, login
 
-LDAP_URI = 'ldap://ldap.forumsys.com:389'
-LDAP_DN = 'dc=example,dc=com'
-LDAP_USERNAME = 'einstein'
-LDAP_PASSWORD = 'password'
-USER_NAME = 'einstein'
-USER_IN_GROUP = 'CN=Scientist,DC=example,DC=com'
+
+
+# LDAP_URI = 'ldap://ldap.forumsys.com:389'
+# LDAP_DN = 'dc=example,dc=com'
+# LDAP_USERNAME = 'einstein'
+# LDAP_PASSWORD = 'password'
+# USER_NAME = 'einstein'
+# USER_IN_GROUP = 'CN=Scientist,DC=example,DC=com'
 
 
 @ldap_auth

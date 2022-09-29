@@ -120,10 +120,14 @@
         );
        
        $('#ddlStation').on('change', function(event){
-            if (event.target.value != "--Select Station--")
+            if (event.target.value != "--Select Station--"){
                 $('.form > div').removeClass('hideCss');
-            else
+                $('#btnSubmit').show();
+            }
+            else{
                 $('.form > div:not(#id_Stations)').addClass('hideCss');
+                $('#btnSubmit').hide();
+            }
        });
         
         $('#tblTasks').DataTable({
