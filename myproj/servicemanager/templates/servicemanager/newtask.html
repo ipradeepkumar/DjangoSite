@@ -16,7 +16,7 @@ from TaskForm import TaskForm
                             {% csrf_token %}
                             {% for field in taskForm %}
                             {% if field.auto_id != 'id_Stations' %}
-                                <div class="form-group hideCss">
+                                <div id="{{ field.auto_id }}" class="form-group hideCss">
                                     <label id="{{ field.auto_id }}">{{ field.label_tag }}</label>
                                     {{ field }}
                                 </div>
@@ -33,6 +33,8 @@ from TaskForm import TaskForm
                 </div>
             </div>
         </div>
+    </div>
+    <div id='section1' class="formgroup" style="text-align: center" onclick="showSection1()">
     </div>
     <div>
 {% endblock %}

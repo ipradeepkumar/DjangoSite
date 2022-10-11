@@ -168,6 +168,10 @@ $(function(){
 
     });  
     
+    setSections();
+    
+
+
 });
 
 function SetEmonEvents(result){
@@ -250,6 +254,21 @@ function setEmonCounters(selectedArray){
     );
     $('#ddlEmonCounters').multiselect('rebuild');
 }
+
+function setSections(){
+    var divElement = $('#section1')[0];
+    divElement.innerText = 'Section 1';
+    $('#id_DebugMode')[0].insertBefore(divElement, null);
+}
+
+function showSection1(){
+   $('#id_RegressionName').toggle();
+   $('#id_TotalIterations').toggle();
+}
+
+
+
+
 
 
 
