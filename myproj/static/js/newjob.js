@@ -91,35 +91,57 @@ $(function(){
         } //End of AJAX error function  
 
     }); 
-    isPlatformChanged = false;
    
     $('#ddlPlatform').on('change', function(e){
-       
-        if (!isPlatformChanged){
             $.ajax({  
                 type: "GET",  
-                url: "/api/platforms",  
+                url: "/api/event/" + $('#ddlPlatform').find(":selected").val(),  
                 contentType: "application/json; charset=utf-8",  
                 dataType: "json",  
                 success: function (data) {  
-                    isPlatformChanged = true;
-                    SetEmonEvents(data);
-                    setEmonCounters([0]);
+                    //isPlatformChanged = true;
+                    $('#ddlEmonEvents').find('option').remove();
+                    emonEvents = data;
+                    $.each(emonEvents, function(key, item){
+                        $('#ddlEmonEvents')
+                                    .append($("<option></option>")
+                                    .attr("value", item.fields['EmonEventID'])
+                                    .text(item.fields['Name']));  
+                        });
+                        $('#ddlEmonEvents').multiselect(
+                            {
+                                includeSelectAllOption: true,
+                                selectAllText: 'Select all',
+                                enableFiltering: true,
+                                enableCaseInsensitiveFiltering: true,
+                                onChange: function(element, checked){
+                                    console.log(element.val());
+                                    if (checked)
+                                        $("#ddlEmonEvents").multiselect('select', element.val());
+                                    else
+                                        $("#ddlEmonEvents").multiselect('deselect', element.val());
+                                    setEmonCounters($("#ddlEmonEvents").val());
+                                    return false;
+                                },
+                                onSelectAll: function(){
+                                    setEmonCounters($("#ddlEmonEvents").val());
+                                },
+                                onDeselectAll: function(){
+                                    setEmonCounters($("#ddlEmonEvents").val());
+                                },
+                    
+                            }
+                        );
+                        $('#ddlEmonEvents').multiselect('rebuild');
+                        BuildEmonCounter();
                 }, //End of AJAX Success function  
                 failure: function (data) {  
-                    alert(data.responseText);  
+                    console.log(data.responseText);  
                 }, //End of AJAX failure function  
                 error: function (data) {  
-                    alert(data.responseText);  
+                    comsole.log(data.responseText);  
                 }
             }); 
-        }
-        else{
-            SetEmonEvents(platformData);
-            setEmonCounters([0]);
-        }
-            
-
     });
     
     $('#chkEmon').on('change', function(e){
@@ -130,7 +152,6 @@ $(function(){
             $('#id_EmonCounters').show();
             $('#ddlEmonCounters').show();
             $('.multiselect-native-select').show();
-            
         }
         else
         {
@@ -140,11 +161,10 @@ $(function(){
             $('#ddlEmonCounters').hide();
             $('.multiselect-native-select').hide();
         }
-        SetEmonEvents(platformData);
         setEmonCounters($('#ddlEmonEvents').val());
     });
 
-    //ajax call for fetching stations
+    //ajax call for fetching ideas
     $.ajax({  
         type: "GET",  
         url: "/api/ideas",  
@@ -220,30 +240,35 @@ function SetEmonEvents(result){
 }
 
 function setEmonCounters(selectedArray){
-    if (platformData != undefined &&  $('#chkEmon').attr('checked') === 'checked'){
-        $('#ddlEmonCounters').find('option').remove();
-        $.each(selectedArray, function(index, obj){
-            $.each(platformData, function(key, platformItem){
-                if (platformItem.Name == selectedOptions){
-                    emonEvents = platformItem.emonevents
-                    $.each(emonEvents, function(key, eventItem){
-                        if (eventItem.Name == obj)
-                        {
-                            emonCounters = eventItem.emoncounters;
-                            $.each(emonCounters, function(idx, counterItem){
-                                $('#ddlEmonCounters')
-                                    .append($("<option></option>")
-                                    .attr("value", counterItem.Name)
-                                    .text(counterItem.Name));  
-                                });
-                        }
-                    });
-                }
-            });
-
-        });
-    }
-    
+    //if ($('#chkEmon').attr('checked') === 'checked'){
+        $.ajax({  
+            type: "GET",  
+            url: "/api/counter/" + $("#ddlEmonEvents").val(),  
+            contentType: "application/json; charset=utf-8",  
+            dataType: "json",  
+            success: function (data) {  
+                //isPlatformChanged = true;
+                $('#ddlEmonCounters').find('option').remove();
+                emonCounters = data;
+                    $.each(emonCounters, function(idx, counterItem){
+                        $('#ddlEmonCounters')
+                            .append($("<option></option>")
+                            .attr("value", counterItem.fields['EmonCounterID'])
+                            .text(counterItem.fields['Name']));  
+                        });
+                        BuildEmonCounter();
+                       
+            }, //End of AJAX Success function  
+            failure: function (data) {  
+                console.log(data.responseText);  
+            }, //End of AJAX failure function  
+            error: function (data) {  
+                console.log(data.responseText);  
+            }
+        }); 
+    //}
+}
+function BuildEmonCounter(){
     $('#ddlEmonCounters').multiselect(
         {
             includeSelectAllOption: true,
@@ -254,7 +279,6 @@ function setEmonCounters(selectedArray){
     );
     $('#ddlEmonCounters').multiselect('rebuild');
 }
-
 function setSections(){
     var divElement = $('#section1')[0];
     divElement.innerText = 'Section 1';

@@ -1,10 +1,11 @@
 import os
 import io
+from django.http import HttpResponse
 from rest_framework.response import Response
 from rest_framework.decorators import api_view
 from rest_framework.parsers import JSONParser
 from rest_framework.decorators import api_view
-from servicemanager.models import Task, TaskIteration
+from servicemanager.models import Task, TaskIteration, EmonCounter, EmonEvent, Platform
 from servicemanager.api.serializers import PlatformSerializer, StationSerializer, ToolSerializer, TaskStatusSerializer, IdeaSerializer
 from django.core import serializers
 
@@ -103,6 +104,23 @@ def GetIterationJson(request, iterationID, taskID):
     # assuming obj is a model instance
     #serialized_obj = serializers.serialize('json', [ task ])
     return Response(iterationData.JSONData)
+
+@api_view(['GET'])
+def GetPlatformEvents(request, platformID):
+    platformEventData = EmonEvent.objects.filter(Platform__Name = platformID)
+    # assuming obj is a model instance
+    serialized_obj = serializers.serialize('json', platformEventData)
+    return HttpResponse(serialized_obj, content_type="application/json")
+
+@api_view(['GET'])
+def GetPlatformCounters(request, eventID):
+    list= eventID.split(",")
+    emonCounterData = EmonCounter.objects.filter(EmonEvent__EmonEventID__in = list)
+    # assuming obj is a model instance
+    serialized_obj = serializers.serialize('json', emonCounterData)
+    return HttpResponse(serialized_obj, content_type="application/json")
+
+
 
 
 

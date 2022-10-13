@@ -1,6 +1,6 @@
 from django.urls import include, path
 from rest_framework import routers
-from servicemanager.api.views import StationList, ToolList, ToolEventList, PlatformList, TaskStatusList, IdeaList, GetJobJson, GetIterationJson
+from servicemanager.api.views import StationList, ToolList, ToolEventList, PlatformList, TaskStatusList, IdeaList, GetJobJson, GetIterationJson, GetPlatformEvents, GetPlatformCounters
 
 
 # Wire up our API using automatic URL routing.
@@ -11,6 +11,8 @@ urlpatterns = [
     path('tools/', ToolList, name='tool_list'),
     path('toolevents/<int:toolid>', ToolEventList, name='tool_event_list'),
     path('platforms/', PlatformList, name='platform_list'),
+    path('event/<platformID>', GetPlatformEvents, name='platform_events'),
+    path('counter/<eventID>', GetPlatformCounters, name='platform_counter'),
     path('ideas/', IdeaList, name='idea_list'),
     path('taskstatuses/', TaskStatusList, name='taskstatus_list'),
     path('getjobjson/<int:id>', GetJobJson, name='get_job_json'),
