@@ -42,10 +42,10 @@
                                     <td>{{ task.ModifiedDate|default_if_none:"" }}</td>
                                     <td>{{ task.ErrorMesage }}</td>
                                     <td>{% include './_iterationslist.html' with iterationsData=iterations taskID=task.id GUID=task.GUID %}</td>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
+                                    <td>{{ task.IterationResult }}</td>
+                                    <td>{{ task.TestResults }}</td>
+                                    <td>{{ task.AxonLog }}</td>
+                                    <td><a href="{{task.AzureLink}}" target="_blank">{{ task.AzureLink }}</a></td>
                                 </tr>
                             {% endfor %}
                         </tbody>

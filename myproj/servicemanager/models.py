@@ -2,6 +2,7 @@ from math import fabs
 from pickle import FALSE
 from platform import platform
 from pyexpat import model
+from unittest.util import _MAX_LENGTH
 import uuid
 from django.db import models
 
@@ -75,6 +76,12 @@ class Task(models.Model):
     Status = models.CharField(max_length=50, null=True, default="PENDING")
     GUID = models.UUIDField(primary_key=False, default=uuid.uuid4, editable=False)
     CurrentIteration = models.IntegerField(default=0)
+    IterationResult = models.CharField(max_length= 500, null=True)
+    TestResults = models.CharField(max_length=500, null=True)
+    AxonLog = models.CharField(max_length=250, null=True)
+    AzureLink = models.CharField(max_length=250, null=True)
+
+
 
 class TaskIteration(models.Model):
     TaskID = models.IntegerField(null=True)
