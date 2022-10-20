@@ -22,7 +22,11 @@
                                         <th>{{ col.name }}</th>
                                     {% endif %}
                                 {% endfor %}
-                                <th>Iterations</th>
+                                <th>Frodo Suggestions</th>
+                                <th>Iteration Result</th>
+                                <th>Test Results</th>
+                                <th>Axon Log</th>
+                                <th>Azure Link</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -38,6 +42,10 @@
                                     <td>{{ task.ModifiedDate|default_if_none:"" }}</td>
                                     <td>{{ task.ErrorMesage }}</td>
                                     <td>{% include './_iterationslist.html' with iterationsData=iterations taskID=task.id GUID=task.GUID %}</td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
                                 </tr>
                             {% endfor %}
                         </tbody>

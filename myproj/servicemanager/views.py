@@ -94,8 +94,8 @@ def find(task: Task, condition):
         
 @ldap_auth
 def jobhistory(request):
-    taskList = Task.objects.all().filter(CreatedBy = request.user.username).order_by("-CreatedDate")
-    taskIterations = TaskIteration.objects.all().order_by("-CreatedDate")
+    taskList = Task.objects.all().filter(CreatedBy = request.user.username).order_by("-id")
+    taskIterations = TaskIteration.objects.all().order_by("-id")
     return render(request, "servicemanager/jobhistory.html", {
         "tasks": taskList, "colNames" : Task._meta.fields, "iterations" : taskIterations
     })

@@ -45,25 +45,12 @@ def ToolEventList(request, toolid):
         stream = io.BytesIO(str.encode(tooleventfile.read()))
         toolData = JSONParser().parse(stream=stream)
         return Response(toolData)
-        # serializer = ToolSerializer(data=toolData, many=True)
-        # if serializer.is_valid():
-        #     return Response(serializer.validated_data)
-        # else:
-        #     return Response(serializer.errors)
 
 @api_view(['GET'])
 def PlatformList(request):
-    dirPath = os.path.dirname(os.path.realpath(__file__))
-    filePath = os.path.join(dirPath, "data", "platform.json")
-    with open(filePath, 'r') as platformfile:
-        stream = io.BytesIO(str.encode(platformfile.read()))
-        platformData = JSONParser().parse(stream=stream)
-        return Response(platformData)
-        # serializer = PlatformSerializer(data=platformData, many=True)
-        # if serializer.is_valid():
-        #     return Response(serializer.validated_data)
-        # else:
-        #     return Response(serializer.errors)       
+        platformData = Platform.objects.all()
+        serialized_obj = serializers.serialize('json', platformData)
+        return HttpResponse(serialized_obj, content_type="application/json")
 
 @api_view(['GET'])
 def IdeaList(request):

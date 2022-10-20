@@ -1,4 +1,5 @@
 var platformData;
+BASEAPI_URL = 'http://127.0.0.1:8000'
 $(function(){
     setEmonCounters([0]);
     $('#id_EmonEvents').hide();
@@ -75,11 +76,15 @@ $(function(){
         contentType: "application/json; charset=utf-8",  
         dataType: "json",  
         success: function (data) {  
+            $('#ddlPlatform')
+                    .append($("<option></option>")
+                    .attr("value", "")
+                    .text("-- Select Platform--"));  
             $.each(data, function (key, item) { 
                 $('#ddlPlatform')
                     .append($("<option></option>")
-                    .attr("value", item.Name)
-                    .text(item.Name));  
+                    .attr("value", item.fields.Name)
+                    .text(item.fields.Name));  
                
             }); //End of foreach Loop   
         }, //End of AJAX Success function  
@@ -110,6 +115,7 @@ $(function(){
                         });
                         $('#ddlEmonEvents').multiselect(
                             {
+                                maxHeight: 200,
                                 includeSelectAllOption: true,
                                 selectAllText: 'Select all',
                                 enableFiltering: true,
@@ -139,7 +145,7 @@ $(function(){
                     console.log(data.responseText);  
                 }, //End of AJAX failure function  
                 error: function (data) {  
-                    comsole.log(data.responseText);  
+                    console.log(data.responseText);  
                 }
             }); 
     });
@@ -274,7 +280,8 @@ function BuildEmonCounter(){
             includeSelectAllOption: true,
             selectAllText: 'Select all',
             enableFiltering: true,
-            enableCaseInsensitiveFiltering: true
+            enableCaseInsensitiveFiltering: true,
+            maxHeight: 200
         }
     );
     $('#ddlEmonCounters').multiselect('rebuild');
