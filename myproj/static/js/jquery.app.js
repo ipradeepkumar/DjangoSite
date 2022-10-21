@@ -133,6 +133,7 @@
         $('#tblTasks').DataTable({
             scrollX: false,
             "autoWidth": true,
+            "order": [[5, 'desc']],
             columnDefs:[
                 {
                     title: 'Station',
