@@ -5,7 +5,7 @@ from django.http import HttpResponseRedirect, HttpResponse
 from django.shortcuts import render
 from django.views.generic.detail import DetailView
 from .forms import TaskForm
-from .models import Idea, Platform, Station, Task, TaskIteration, TaskStatus, Tool
+from .models import Idea, Platform, Station, Task, TaskIteration, TaskStatus, Tool, EmonCounter, EmonEvent
 from datetime import datetime
 from rest_framework.parsers import JSONParser
 from django.core import serializers
@@ -59,13 +59,15 @@ def newtask(request):
         taskFormObj = TaskForm(request.POST)
 
     if taskFormObj.is_valid():
-        print(taskFormObj.cleaned_data)
+        
+        emonCounterData = EmonCounter.objects.filter(EmonCounterID__in = taskFormObj.cleaned_data['EmonCounters']).values_list('Name', flat=True)
+        emonEventData = EmonEvent.objects.filter(EmonEventID__in = taskFormObj.cleaned_data['EmonEvents']).values_list('Name', flat=True)
         task = Task(
             Idea = taskFormObj.cleaned_data['Idea'],
             Station= taskFormObj.cleaned_data['Stations'],
             IsDebugMode = taskFormObj.cleaned_data['DebugMode'],
-            PlatformCounter = taskFormObj.cleaned_data['EmonCounters'],
-            PlatformEvent = taskFormObj.cleaned_data['EmonEvents'],
+            PlatformCounter = list(emonCounterData),
+            PlatformEvent = list(emonEventData),
             TotalIterations = taskFormObj.cleaned_data['TotalIterations'],
             RegressionName = taskFormObj.cleaned_data['RegressionName'],
             Tool = taskFormObj.cleaned_data['ToolName'],
