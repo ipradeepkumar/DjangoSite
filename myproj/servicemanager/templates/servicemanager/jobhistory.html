@@ -17,6 +17,7 @@
                     <table id="tblTasks" class="table-responsive hover table table-striped table-bordered" style="border-radius:10px">
                         <thead>
                             <tr>
+                                <th>Action</th>
                                 {% for col in colNames %}
                                     {% if col.name == "Station" or col.name == "RegressionName" or col.name == "Tool" or col.name == "TotalIterations" or col.name == "Platform" or col.name == "CreatedDate" or col.name == "Status" or col.name == "ModifiedDate" or col.name == "ErrorMessage" %}
                                         <th>{{ col.name }}</th>
@@ -32,6 +33,7 @@
                         <tbody>
                             {% for task in tasks %}
                                 <tr>
+                                    <td>{% include './_run.html' with taskID=task.id GUID=task.GUID status=task.Status %}</td>
                                     <td>{{ task.Station }}</td>
                                     <td><a href='#' onclick=showDetail({{task.id}})><p style="text-decoration:underline">{{ task.RegressionName }}</p></td>
                                     <td>{{ task.Tool }}</td>

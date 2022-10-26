@@ -4,9 +4,12 @@ import io
 from django.http import HttpResponseRedirect, HttpResponse
 from django.shortcuts import render
 from django.views.generic.detail import DetailView
+import time
+from servicemanager.api.serializers import TaskSerializer
 from .forms import TaskForm
 from .models import Idea, Platform, Station, Task, TaskIteration, TaskStatus, Tool, EmonCounter, EmonEvent
 from datetime import datetime
+from rest_framework import status
 from rest_framework.parsers import JSONParser
 from django.core import serializers
 from django.contrib.auth.decorators import login_required
@@ -109,6 +112,11 @@ def customlogout(request):
     logout(request)
     return render(request, "servicemanager/logout.html")
 
+def StartProcess(request, GUID):
+    instance = Task.objects.get_queryset().filter(GUID=GUID).first()
+    ProcessTask(instance=instance)
+    pass
+    
 class TaskDetailView(DetailView):
     model = Task
     template_name = "servicemanager/jobhistorydetail.html"
@@ -170,4 +178,51 @@ def getTaskStatusInstance():
     taskStatus.TaskStatusID = 1
     taskStatus.Name = "Pending"
     return taskStatus           
- 
+
+def ProcessTask(instance): 
+    isValid = False
+    data = {
+        "CurrentIteration": 0,
+        "Status": 'IN-PROGRESS',
+         "TestResults": '',
+         "AxonLog": '',
+         "IterationResult": '',
+         "AzureLink": ""
+    }
+    serializer = TaskSerializer(instance=instance, data=data)
+    if serializer.is_valid():
+            serializer.save()
+    TaskIteration.objects.filter(GUID=instance.GUID).delete()
+
+    for i in range(instance.TotalIterations):
+            data = {
+                "CurrentIteration": str(i + 1),
+                "Status": 'IN-PROGRESS',
+                "TestResults": '{Passed: 3,Failed: 2}',
+                "AxonLog": 'Logged data',
+                "IterationResult": 'Results',
+                "AzureLink": "http://www.google.com"
+            }
+            serializer = TaskSerializer(instance=instance, data=data)
+            if serializer.is_valid():
+                isValid = True
+                serializer.save()
+
+                taskIteration = TaskIteration()
+                jsonData = { 'key1': (i + 1), 'key2': 'value2', 'key3': 'value3', 'key4': 'value4' }
+                taskIteration.TaskID = instance.id
+                taskIteration.GUID = instance.GUID
+                taskIteration.JSONData = jsonData
+                taskIteration.CreatedDate = datetime.now()
+                taskIteration.Iteration = i + 1
+                taskIteration.save()
+                
+                time.sleep(5)
+    if (i == instance.TotalIterations - 1):
+        compData = {
+            "Status": 'COMPLETED'
+        }
+        compSerializer = TaskSerializer(instance=instance, data=compData)
+        if compSerializer.is_valid():
+            compSerializer.save()
+    return isValid

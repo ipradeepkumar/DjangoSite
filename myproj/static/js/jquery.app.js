@@ -133,61 +133,65 @@
         $('#tblTasks').DataTable({
             scrollX: false,
             "autoWidth": true,
-            "order": [[5, 'desc']],
+            "order": [[6, 'desc']],
             columnDefs:[
                 {
-                    title: 'Station',
+                    title: 'Action',
                     target: 0
                 },
                 {
-                    title: 'Regression Name',
+                    title: 'Station',
                     target: 1
                 },
                 {
-                    title: 'Tool',
+                    title: 'Regression Name',
                     target: 2
                 },
                 {
-                    title: 'Total Iterations',
+                    title: 'Tool',
                     target: 3
                 },
                 {
-                    title: 'Platform',
+                    title: 'Total Iterations',
                     target: 4
                 },
                 {
-                    title: 'Created Date',
+                    title: 'Platform',
                     target: 5
                 },
                 {
-                    title: 'Status',
+                    title: 'Created Date',
                     target: 6
                 },
                 {
-                    title: 'Modified Date',
+                    title: 'Status',
                     target: 7
                 },
                 {
-                    title: 'Error',
+                    title: 'Modified Date',
                     target: 8
+                },
+                {
+                    title: 'Error',
+                    target: 9
                 },
             ],
             'rowCallback': function(row, data, index){
-                if(data[6].toUpperCase() == "PENDING"){
-                    $(row).find('td:eq(6)').css('background-color', 'orange');
-                    $(row).find('td:eq(6)').css('color', 'black');
+                if(data[7].toUpperCase() == "PENDING"){
+                    $(row).find('td:eq(7)').css('background-color', 'orange');
+                    $(row).find('td:eq(7)').css('color', 'black');
                 }
-                if(data[6].toUpperCase() == 'IN-PROGRESS'){
-                    $(row).find('td:eq(6)').css('background-color', 'yellow');
-                    $(row).find('td:eq(6)').css('color', 'black');
+                if(data[7].toUpperCase() == 'IN-PROGRESS'){
+                    $(row).find('td:eq(7)').css('background-color', 'yellow');
+                    $(row).find('td:eq(7)').css('color', 'black');
                 }
-                if(data[6].toUpperCase() == 'COMPLETE' || data[6].toUpperCase() == 'COMPLETED'){
-                    $(row).find('td:eq(6)').css('color', 'white');
-                    $(row).find('td:eq(6)').css('background-color', 'green');
+                if(data[7].toUpperCase() == 'COMPLETE' || data[7].toUpperCase() == 'COMPLETED'){
+                    $(row).find('td:eq(7)').css('color', 'white');
+                    $(row).find('td:eq(7)').css('background-color', 'green');
                 }
-                if(data[6].toUpperCase() == 'ERROR'){
-                    $(row).find('td:eq(6)').css('color', 'white');
-                    $(row).find('td:eq(6)').css('background-color', 'red');
+                if(data[7].toUpperCase() == 'ERROR'){
+                    $(row).find('td:eq(7)').css('color', 'white');
+                    $(row).find('td:eq(7)').css('background-color', 'red');
                 }
               }
         });
@@ -414,6 +418,32 @@ function showIterationDetail(seletObj) {
 function refreshJobList(){
     location.reload();
 }
+
+function startProcess(GUID) {
+    if (confirm('Are you sure, you want to start the process?')){
+        if (GUID === '') return;
+        $.ajax({  
+            type: "GET",  
+            url: "startprocess/" + GUID,  
+            contentType: "application/json; charset=utf-8",  
+            dataType: "json",  
+            success: function (data) {  
+            
+            }, //End of AJAX Success function  
+            failure: function (data) {  
+                alert(data.responseText);  
+            }, //End of AJAX failure function  
+            error: function (data) {  
+                alert(data.responseText);  
+            } //End of AJAX error function  
+
+        });  
+    }
+    else{
+        return;
+    } 
+}
+
 
 
 

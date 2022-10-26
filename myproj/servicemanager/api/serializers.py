@@ -3,7 +3,7 @@ from platform import platform
 from pyexpat import model
 from django.contrib.auth.models import User, Group
 from rest_framework import serializers
-from servicemanager.models import Station, Tool, ToolEvent, ToolCounter, Platform, EmonCounter, EmonEvent, Idea, TaskStatus
+from servicemanager.models import Station, Tool, ToolEvent, ToolCounter, Platform, EmonCounter, EmonEvent, Idea, TaskStatus, Task, TaskIteration
 
 
 class StationSerializer(serializers.ModelSerializer):
@@ -102,3 +102,13 @@ class ToolSerializer(serializers.ModelSerializer):
         for toolevent_data in toolevents_data:
             ToolEvent.objects.create(Tool=tool, **toolevent_data)
         return tool
+
+class TaskSerializer(serializers.HyperlinkedModelSerializer):
+    class Meta:
+        model = Task
+        fields = ('GUID','TotalIterations', 'Status','CurrentIteration','TestResults','AxonLog','IterationResult','AzureLink')
+
+class TaskIterationSerializer(serializers.HyperlinkedModelSerializer):
+    class Meta:
+        model = TaskIteration
+        fields = ('TaskID', 'GUID', 'JSONData', 'CreatedData', 'CreatedBy')
