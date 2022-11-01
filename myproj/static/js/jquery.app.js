@@ -185,11 +185,11 @@
                     $(row).find('td:eq(7)').css('background-color', 'yellow');
                     $(row).find('td:eq(7)').css('color', 'black');
                 }
-                if(data[7].toUpperCase() == 'COMPLETE' || data[7].toUpperCase() == 'COMPLETED'){
+                if(data[7].toUpperCase() == 'COMPLETE' || data[7].toUpperCase() == 'COMPLETED' || data[7].toUpperCase() == 'STARTING'){
                     $(row).find('td:eq(7)').css('color', 'white');
                     $(row).find('td:eq(7)').css('background-color', 'green');
                 }
-                if(data[7].toUpperCase() == 'ERROR'){
+                if(data[7].toUpperCase() == 'ERROR' || data[7].toUpperCase() == 'STOPPING' || data[7].toUpperCase() == 'STOPPED'){
                     $(row).find('td:eq(7)').css('color', 'white');
                     $(row).find('td:eq(7)').css('background-color', 'red');
                 }
@@ -419,25 +419,32 @@ function refreshJobList(){
     location.reload();
 }
 
-function startProcess(GUID) {
+function startProcess(GUID, uExecution, eExecution, status) {
     if (confirm('Are you sure, you want to start the process?')){
         if (GUID === '') return;
+        
         $.ajax({  
             type: "GET",  
-            url: "startprocess/" + GUID,  
+            url: "startprocess/" + GUID + "/" + uExecution + "/" + eExecution,  
             contentType: "application/json; charset=utf-8",  
             dataType: "json",  
             success: function (data) {  
-            
+                if (data.responseText == 'success'){
+                    console.log('success');
+                }
+                else{
+                    console.log(data.responseText);
+                }
             }, //End of AJAX Success function  
-            failure: function (data) {  
-                alert(data.responseText);  
+            failure: function (data) { 
             }, //End of AJAX failure function  
             error: function (data) {  
-                alert(data.responseText);  
+
             } //End of AJAX error function  
 
-        });  
+        }).always(function(xhr, status, error){
+            refreshJobList();
+        });
     }
     else{
         return;

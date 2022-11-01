@@ -1,22 +1,22 @@
 import socket 
 import os
 import io
-from django.http import HttpResponseRedirect, HttpResponse
+from django.http import HttpResponseRedirect, HttpResponse, JsonResponse
 from django.shortcuts import render
 from django.views.generic.detail import DetailView
 import time
 from servicemanager.api.serializers import TaskSerializer
 from .forms import TaskForm
-from .models import Idea, Platform, Station, Task, TaskIteration, TaskStatus, Tool, EmonCounter, EmonEvent
+from .models import Idea, Platform, Station, Task, TaskExecutionLog, TaskIteration, TaskStatus, Tool, EmonCounter, EmonEvent
 from datetime import datetime
-from rest_framework import status
 from rest_framework.parsers import JSONParser
 from django.core import serializers
 from django.contrib.auth.decorators import login_required
 from .customdecorator import ldap_auth
 from django_python3_ldap import ldap
 from django.contrib.auth import logout, login
-
+from multiprocessing import Process
+import requests
 
 
 # LDAP_URI = 'ldap://ldap.forumsys.com:389'
@@ -26,6 +26,7 @@ from django.contrib.auth import logout, login
 # USER_NAME = 'einstein'
 # USER_IN_GROUP = 'CN=Scientist,DC=example,DC=com'
 
+dictThreads = {}
 
 @ldap_auth
 def test_ldap(request):
@@ -43,7 +44,7 @@ def doLogin(request):
        user = ldap.authenticate(username=username, password=password)
        if (user is not None):
         login(request, user)
-        return HttpResponseRedirect("/")
+        return HttpResponseRedirect("jobhistory", { "id": "123" })
        else:
         return render(request, "servicemanager/login.html",{ "error": "Invalid credentials" })
 
@@ -81,7 +82,7 @@ def newtask(request):
             MinImpurityDecrease = "0.5",
             MaxFeatures = "0.9",
             CreatedBy = request.user.username,
-            CreatedDate = datetime.now(),
+            CreatedDate = datetime.utcnow(),
             Status = "PENDING"
             )
         task.save()
@@ -112,10 +113,39 @@ def customlogout(request):
     logout(request)
     return render(request, "servicemanager/logout.html")
 
-def StartProcess(request, GUID):
+def StartProcess(request, GUID, userExecution, eowynExecution):
     instance = Task.objects.get_queryset().filter(GUID=GUID).first()
-    ProcessTask(instance=instance)
-    pass
+    try:
+        #update task with flags received from front-end
+        #userExecution and eowyn execution is set to true when user triggers the process
+        #userExecution is set to false when user stops the process
+        #eowynExecution is false when python updates to false when user stops the process
+        #Task status save
+        instance.IsUserExecution = userExecution
+        instance.IsEowynExecution = eowynExecution
+        
+
+        if (userExecution):
+            SaveTaskExecutionLog(request, instance, 'START')
+            instance.Status = 'STARTING'
+            instance.save()
+        elif(userExecution == False):
+            SaveTaskExecutionLog(request, instance, 'STOPPED')
+            instance.Status = 'STOPPING'
+            instance.save()
+
+        if (userExecution):
+            req = requests.post("http://127.0.0.1:8000/api/posttask/", data = { "GUID" : instance.GUID } )
+        
+        response = {
+            'status': '200', 'responseText': 'success'
+        }
+        return JsonResponse(response)
+    except Exception as e:
+        response = {
+            'status': '500', 'responseText': 'error'
+        }
+        return JsonResponse(response)
     
 class TaskDetailView(DetailView):
     model = Task
@@ -181,24 +211,13 @@ def getTaskStatusInstance():
 
 def ProcessTask(instance): 
     isValid = False
-    data = {
-        "CurrentIteration": 0,
-        "Status": 'IN-PROGRESS',
-         "TestResults": '',
-         "AxonLog": '',
-         "IterationResult": '',
-         "AzureLink": ""
-    }
-    serializer = TaskSerializer(instance=instance, data=data)
-    if serializer.is_valid():
-            serializer.save()
-    TaskIteration.objects.filter(GUID=instance.GUID).delete()
-
+    ClearPreviousRunData(instance)
     for i in range(instance.TotalIterations):
+        if (GetExecutionStatus(instance)):
             data = {
                 "CurrentIteration": str(i + 1),
                 "Status": 'IN-PROGRESS',
-                "TestResults": '{Passed: 3,Failed: 2}',
+                "TestResults": '{Passed: ' + str(i + 1) +' ,Failed: 0 }',
                 "AxonLog": 'Logged data',
                 "IterationResult": 'Results',
                 "AzureLink": "http://www.google.com"
@@ -217,12 +236,53 @@ def ProcessTask(instance):
                 taskIteration.Iteration = i + 1
                 taskIteration.save()
                 
-                time.sleep(5)
-    if (i == instance.TotalIterations - 1):
-        compData = {
-            "Status": 'COMPLETED'
+                time.sleep(10)
+            if (i == instance.TotalIterations - 1):
+                compData = {
+                    "Status": 'COMPLETED'
+                }
+                compSerializer = TaskSerializer(instance=instance, data=compData)
+                if compSerializer.is_valid():
+                    compSerializer.save()
+                return isValid
+        else:
+            process = dictThreads[instance.GUID]
+            process.close()
+            process.kill()
+            break
+    return False
+        
+
+def SaveTaskExecutionLog(req, instance, status):
+        executionLog = TaskExecutionLog(
+        TaskID = instance.TaskID,
+        GUID = instance.GUID,
+        StatusDate = datetime.utcnow(),
+        Status = status,
+        CreatedBy = req.user.username,
+        CreatedDate = datetime.utcnow()) 
+        executionLog.save()
+    
+def ClearPreviousRunData(instance):
+        data = {
+            "CurrentIteration": 0,
+            "Status": 'IN-PROGRESS',
+            "TestResults": '',
+            "AxonLog": '',
+            "IterationResult": '',
+            "AzureLink": ""
         }
-        compSerializer = TaskSerializer(instance=instance, data=compData)
-        if compSerializer.is_valid():
-            compSerializer.save()
-    return isValid
+        serializer = TaskSerializer(instance=instance, data=data)
+        if serializer.is_valid():
+                serializer.save()
+        TaskIteration.objects.filter(GUID=instance.GUID).delete()
+
+def GetExecutionStatus(taskInstance):
+    instance = Task.objects.get_queryset().filter(GUID=taskInstance.GUID).first()
+    if (instance.IsUserExecution == False):
+        instance.IsEowynExecution = False
+        instance.Status = 'STOPPED'
+        instance.save()
+    return instance.IsUserExecution
+
+

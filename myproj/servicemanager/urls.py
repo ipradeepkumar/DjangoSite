@@ -11,5 +11,5 @@ urlpatterns  = [
     path("testldap", views.test_ldap, name="testldap"),
     path("login", views.doLogin, name="dologin"),
     path("logout", views.customlogout, name="logout"),
-    path("startprocess/<GUID>", views.StartProcess, name="startprocess")
+    path("startprocess/<GUID>/<int:userExecution>/<int:eowynExecution>", views.StartProcess, name="startprocess")
 ] + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)

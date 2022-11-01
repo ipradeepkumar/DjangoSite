@@ -1,3 +1,4 @@
+from email.policy import default
 from math import fabs
 from pickle import FALSE
 from platform import platform
@@ -5,6 +6,7 @@ from pyexpat import model
 from unittest.util import _MAX_LENGTH
 import uuid
 from django.db import models
+from ldap3 import NONE
 
 
 # Create your models here.
@@ -80,8 +82,8 @@ class Task(models.Model):
     TestResults = models.CharField(max_length=500, null=True)
     AxonLog = models.CharField(max_length=250, null=True)
     AzureLink = models.CharField(max_length=250, null=True)
-
-
+    IsUserExecution = models.BooleanField(null=True)
+    IsEowynExecution = models.BooleanField(null=True)
 
 class TaskIteration(models.Model):
     TaskID = models.IntegerField(null=True)
@@ -90,6 +92,15 @@ class TaskIteration(models.Model):
     JSONData = models.JSONField(null=True)
     CreatedDate =  models.DateTimeField(null=True)
     CreatedBy = models.CharField(max_length=50, null=True)
+
+class TaskExecutionLog(models.Model):
+    TaskID = models.IntegerField(null=True)
+    GUID = models.UUIDField(primary_key=False)
+    Status = models.CharField(max_length=50, null=True)
+    StatusDate = models.DateTimeField(null=True)
+    CreatedDate =  models.DateTimeField(null=True)
+    CreatedBy = models.CharField(max_length=50, null=True)
+
 
 
 
