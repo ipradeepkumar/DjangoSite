@@ -49,15 +49,15 @@ $(function(){
                     .attr("value", item.Name)
                     .text(item.Name));
             }); //End of foreach Loop   
-            $('#ddlToolName').multiselect(
-                {
-                    includeSelectAllOption: true,
-                    selectAllText: 'Select all',
-                    enableFiltering: true,
-                    enableCaseInsensitiveFiltering: true,
-                }
-            );
-            $('#ddlToolName').multiselect('rebuild');
+            // $('#ddlToolName').multiselect(
+            //     {
+            //         includeSelectAllOption: true,
+            //         selectAllText: 'Select all',
+            //         enableFiltering: true,
+            //         enableCaseInsensitiveFiltering: true,
+            //     }
+            // );
+            // $('#ddlToolName').multiselect('rebuild');
         }, //End of AJAX Success function  
 
         failure: function (data) {  
@@ -157,7 +157,7 @@ $(function(){
             $('#ddlEmonEvents').show();
             $('#id_EmonCounters').show();
             $('#ddlEmonCounters').show();
-            $('.multiselect-native-select').show();
+            $('#id_EmonEvents > .multiselect-native-select').show();
         }
         else
         {
@@ -165,7 +165,7 @@ $(function(){
             $('#ddlEmonEvents').hide();
             $('#id_EmonCounters').hide();
             $('#ddlEmonCounters').hide();
-            $('.multiselect-native-select').hide();
+            $('#id_EmonEvents > .multiselect-native-select').hide();
         }
         setEmonCounters($('#ddlEmonEvents').val());
     });
@@ -194,7 +194,7 @@ $(function(){
 
     });  
     
-    setSections();
+    //setSections();
     
 
 
@@ -246,10 +246,15 @@ function SetEmonEvents(result){
 }
 
 function setEmonCounters(selectedArray){
+    emonEventsVal = 0;
+    if ( $("#ddlEmonEvents").val() == undefined )  
+        emonEventsVal = 0; 
+    else  
+        emonEventsVal = $("#ddlEmonEvents").val();
     //if ($('#chkEmon').attr('checked') === 'checked'){
         $.ajax({  
             type: "GET",  
-            url: "/api/counter/" + $("#ddlEmonEvents").val(),  
+            url: "/api/counter/" + emonEventsVal ,  
             contentType: "application/json; charset=utf-8",  
             dataType: "json",  
             success: function (data) {  

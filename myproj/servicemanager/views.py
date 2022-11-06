@@ -58,6 +58,7 @@ def newtask(request):
     IPAddr = socket.gethostbyname(hostname)  
     if request.method == "GET":
         taskFormObj = TaskForm()
+       
 
     if request.method == "POST":
         taskFormObj = TaskForm(request.POST)
@@ -78,9 +79,9 @@ def newtask(request):
             Platform = taskFormObj.cleaned_data['Platform'],
             IsEmon = taskFormObj.cleaned_data['IsEmon'],
             IsUploadResults = taskFormObj.cleaned_data['IsUploadResult'],
-            Splitter = "Splitter",
-            MinImpurityDecrease = "0.5",
-            MaxFeatures = "0.9",
+            Splitter = taskFormObj.cleaned_data['Splitter'],
+            MinImpurityDecrease = taskFormObj.cleaned_data['MinImpurityDecrease'],
+            MaxFeatures = taskFormObj.cleaned_data['MaxFeatures'],
             CreatedBy = request.user.username,
             CreatedDate = datetime.utcnow(),
             Status = "PENDING"
@@ -286,3 +287,18 @@ def GetExecutionStatus(taskInstance):
     return instance.IsUserExecution
 
 
+def GetStationList():
+    dirPath = os.path.dirname(os.path.realpath(__file__))
+    filePath = os.path.join(dirPath, "api", "data", "station.json")
+    with open(filePath, 'r') as stationfile:
+        stream = io.BytesIO(str.encode(stationfile.read()))
+        stationData = JSONParser().parse(stream=stream)
+        return stationData
+
+def GetToolList():
+    dirPath = os.path.dirname(os.path.realpath(__file__))
+    filePath = os.path.join(dirPath, "api", "data", "tool.json")
+    with open(filePath, 'r') as toolfile:
+        stream = io.BytesIO(str.encode(toolfile.read()))
+        toolData = JSONParser().parse(stream=stream)
+        return toolData

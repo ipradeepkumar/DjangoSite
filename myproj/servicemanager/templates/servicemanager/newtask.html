@@ -14,27 +14,135 @@ from TaskForm import TaskForm
                     <div class="general-label">
                         <form class="form" role="form" action="{% url "newtask" %}" method="POST">
                             {% csrf_token %}
-                            {% for field in taskForm %}
-                            {% if field.auto_id != 'id_Stations' %}
-                                <div id="{{ field.auto_id }}" class="form-group hideCss">
-                                    <label id="{{ field.auto_id }}">{{ field.label_tag }}</label>
-                                    {{ field }}
+                           
+                                <div id="id_Stations" class="form-group row">
+                                    <div class="col-2">
+                                    <label id="id_Stations">Station:</label></div>
+                                    <div class="col-10">
+                                        <select name="Stations" class="form-control" id="ddlStation">
+                                        </select>
+                                    </div>
                                 </div>
-                            {% else %}
-                                <div id="{{ field.auto_id }}" class="form-group">
-                                    <label id="{{ field.auto_id }}">{{ field.label_tag }}</label>
-                                    {{ field }}
+                                <div class="row mb-3"></div>
+                                <div class="card">
+                                    <div class="card-header card-title">Regression Configuration</div>
+                                    <div class="card-body">
+                                        <div id="id_RegressionName" class="form-group row">
+                                            <div class="col-2">
+                                            <label id="id_RegressionName">Regression Name:</label></div>
+                                            <div class="col-4">
+                                                <input type="text" name="RegressionName" class="form-control" autocomplete="off" placeholder="Please enter regression name" maxlength="100" id="id_RegressionName">
+                                            </select>
+                                            </div>
+                                            <div class="col-2">
+                                                <label id="id_Platform">Platform:</label></div>
+                                                <div class="col-4">
+                                                    <select name="Platform" id="ddlPlatform" class="form-control">
+                                                    </select>
+                                                </div>
+                                        </div>
+                                        <div id="id_TotalIterations" class="form-group row">
+                                            <div class="col-2">
+                                            <label id="id_TotalIterations">Total Iterations:</label></div>
+                                            <div class="col-4">
+                                                <input type="number" name="TotalIterations" min="0" class="form-control" autocomplete="off" placeholder="Please enter Iterations" id="id_TotalIterations" />
+                                            </div>
+                                        </div>
+                                        <div id="id_ToolName" class="form-group row">
+                                            <div class="col-2">
+                                            <label id="id_ToolName">Tool Name:</label></div>
+                                            <div class="col-3">
+                                                <select name="ToolName" id="ddlToolName" class="form-control">
+                                                </select>
+                                            </div>
+                                            <div class="col-2">
+                                                <label id="id_IsUploadResult">Upload Result:</label></div>
+                                                <div class="col-2">
+                                                    <input type="checkbox" id="chkUploadResult" class="form-control" name="IsUploadResult"></input>
+                                                </div>
+                                                <div class="col-2">
+                                                    <label id="id_DebugMode">Debug Mode:</label></div>
+                                                    <div class="col-1">
+                                                        <input type="checkbox" id="id_DebugMode" class="form-control" name="DebugMode"></input>
+                                                    </select>
+                                                    </div>
+                                        </div>
+                                    </div>
                                 </div>
-                            {% endif %}
-                            {% endfor %}
+                                <div class="row mb-3"></div>
+                                <div class="card">
+                                    <div class="card-header card-title">Algorithm Configuration</div>
+                                    <div class="card-body">
+                                        <div id="id_IsEmon" class="form-group row">
+                                            <div class="col-2">
+                                            <label id="id_IsEmon">Emon Tool:</label></div>
+                                            <div class="col-10">
+                                                <input type="checkbox" id="chkEmon" class="form-control" name="IsEmon"></input>
+                                            </div>
+                                        </div>
+                                        <div id="id_EmonEvents" class="form-group row">
+                                            <div class="col-2">
+                                            <label id="id_EmonEvents">Emon Events:</label></div>
+                                            <div class="col-4">
+                                                <select name="EmonEvents" id="ddlEmonEvents" multiple="" class="form-control">
+                                                </select>
+                                            </div>
+                                            <div class="col-2">
+                                            <label id="id_EmonCounters">Emon Counter:</label></div>
+                                            <div class="col-4">
+                                                <select name="EmonCounters" id="ddlEmonCounters" multiple="" class="form-control">
+                                                </select>
+                                            </div>
+                                        </div>
+                                        <div id="id_Idea" class="form-group row">
+                                            <div class="col-2">
+                                            <label id="id_Idea">Idea:</label></div>
+                                            <div class="col-10">
+                                                <select name="Idea" id="ddlIdea" class="form-control">
+                                                </select>
+                                            </div>
+                                        </div>
+                                                
+                                    </div>
+                                </div>
+                                <div class="row mb-3"></div>
+                                <div class="card">
+                                    <div class="card-header card-title">
+                                        Advanced Machine Learning Settings
+                                    </div>
+                                    <div class="card-body">
+                                        <div id="id_Splitter" class="form-group row">
+                                            <div class="col-2">
+                                                <label id="id_Splitter">Splitter:</label>
+                                            </div>
+                                            <div class="col-4">
+                                                <input type="text" name="Splitter" class="form-control" autocomplete="off" placeholder="randon|best" maxlength="100" id="id_Splitter">
+                                            </div>
+                                        </div>
+                                        <div id="id_MinImpurityDecrease" class="form-group row">
+                                            <div class="col-2">
+                                            <label id="id_MinImpurityDecrease">Min Impurity Decrease:</label></div>
+                                            <div class="col-8">
+                                                <input type="number" name="MinImpurityDecrease" min="0" class="form-control" autocomplete="off" placeholder="Please enter min impurity decrease" id="id_MinImpurityDecrease" />
+                                            </div>
+                                        </div>
+                                        <div id="id_MaxFeatures" class="form-group row">
+                                            <div class="col-2">
+                                            <label id="id_MaxFeatures">Max Features:</label></div>
+                                            <div class="col-8">
+                                                <input type="number" name="MaxFeatures" min="0" class="form-control" autocomplete="off" placeholder="Please enter max features" id="id_MaxFeatures" />
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row mb-3"></div>
                             <button type="submit" id="btnSubmit" style="display:none" class="btn btn-primary">Submit</button>
+                            <button type="button" id="btnClear" class="btn btn-primary">Clear</button>
                         </form>                                    
                     </div>
-                </div>
+                </div>  
             </div>
         </div>
-    </div>
-    <div id='section1' class="formgroup" style="text-align: center" onclick="showSection1()">
     </div>
     <div>
 {% endblock %}

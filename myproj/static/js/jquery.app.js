@@ -161,6 +161,7 @@
                 },
                 {
                     title: 'Created Date',
+                    type: 'date',
                     target: 6
                 },
                 {
