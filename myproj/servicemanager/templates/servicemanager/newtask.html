@@ -12,7 +12,7 @@ from TaskForm import TaskForm
             <div class="card m-b-30">
                 <div class="card-body">
                     <div class="general-label">
-                        <form class="form" role="form" action="{% url "newtask" %}" method="POST">
+                        <form  id="taskForm" class="form" role="form" action="{% url "newtask" %}" method="POST">
                             {% csrf_token %}
                            
                                 <div id="id_Stations" class="form-group row">
@@ -83,17 +83,20 @@ from TaskForm import TaskForm
                                         <div id="id_EmonEvents" class="form-group row">
                                             <div class="col-2">
                                             <label id="id_EmonEvents">Emon Events:</label></div>
-                                            <div class="col-4">
+                                            <div class="col-8">
                                                 <select name="EmonEvents" id="ddlEmonEvents" multiple="" class="form-control">
                                                 </select>
                                             </div>
-                                            <div class="col-2">
-                                            <label id="id_EmonCounters">Emon Counter:</label></div>
-                                            <div class="col-4">
-                                                <select name="EmonCounters" id="ddlEmonCounters" multiple="" class="form-control">
-                                                </select>
-                                            </div>
                                         </div>
+                                        <div id="id_EmonCounters" class="form-group row">
+                                            <div class="col-2">
+                                                <label id="id_EmonCounters">Emon Counter:</label></div>
+                                                <div class="col-8">
+                                                    <select name="EmonCounters" id="ddlEmonCounters" multiple="" class="form-control">
+                                                    </select>
+                                                </div>
+                                        </div>
+
                                         <div id="id_Idea" class="form-group row">
                                             <div class="col-2">
                                             <label id="id_Idea">Idea:</label></div>
@@ -116,28 +119,32 @@ from TaskForm import TaskForm
                                                 <label id="id_Splitter">Splitter:</label>
                                             </div>
                                             <div class="col-4">
-                                                <input type="text" name="Splitter" class="form-control" autocomplete="off" placeholder="randon|best" maxlength="100" id="id_Splitter">
+                                                <select name="Splitter" id="id_Splitter" class="form-control">
+                                                    <option value="">--Select Splitter--</option>
+                                                    <option value="Random">Random</option>
+                                                    <option value="Best">Best</option>
+                                                </select>
                                             </div>
                                         </div>
                                         <div id="id_MinImpurityDecrease" class="form-group row">
                                             <div class="col-2">
                                             <label id="id_MinImpurityDecrease">Min Impurity Decrease:</label></div>
                                             <div class="col-8">
-                                                <input type="number" name="MinImpurityDecrease" min="0" class="form-control" autocomplete="off" placeholder="Please enter min impurity decrease" id="id_MinImpurityDecrease" />
+                                                <input type="number" name="MinImpurityDecrease" min="0" class="form-control" autocomplete="off" step="0.1" placeholder="Please enter min impurity decrease" id="id_MinImpurityDecrease" />
                                             </div>
                                         </div>
                                         <div id="id_MaxFeatures" class="form-group row">
                                             <div class="col-2">
                                             <label id="id_MaxFeatures">Max Features:</label></div>
                                             <div class="col-8">
-                                                <input type="number" name="MaxFeatures" min="0" class="form-control" autocomplete="off" placeholder="Please enter max features" id="id_MaxFeatures" />
+                                                <input type="number" name="MaxFeatures" min="0" class="form-control" autocomplete="off" step="0.1" placeholder="Please enter max features" id="id_MaxFeatures" />
                                             </div>
                                         </div>
                                     </div>
                                 </div>
                                 <div class="row mb-3"></div>
                             <button type="submit" id="btnSubmit" style="display:none" class="btn btn-primary">Submit</button>
-                            <button type="button" id="btnClear" class="btn btn-primary">Clear</button>
+                            <button type="button" id="btnClear" class="btn btn-primary" onclick="clearForm()">Clear</button>
                         </form>                                    
                     </div>
                 </div>  

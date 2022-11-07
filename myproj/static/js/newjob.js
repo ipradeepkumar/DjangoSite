@@ -302,7 +302,11 @@ function showSection1(){
    $('#id_TotalIterations').toggle();
 }
 
-
+function clearForm(){
+    $('#taskForm')[0].reset();
+    $('#ddlEmonCounters').multiselect('refresh');
+    $('#ddlEmonEvents').multiselect('refresh');
+}
 
 
 
