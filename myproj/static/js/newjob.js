@@ -309,7 +309,41 @@ function clearForm(){
 }
 
 
+function toggleRegression(obj){
+    if (obj.className == 'ti-angle-down'){
+        obj.className = 'ti-angle-up';
+        $('.regression').hide();
+    }
+    else{
+        obj.className = 'ti-angle-down';
+        $('.regression').show();
+    }
 
+}
+
+function toggleAlgorithm(obj){
+    if (obj.className == 'ti-angle-down'){
+        obj.className = 'ti-angle-up';
+        $('.algorithm').hide();
+    }
+    else{
+        obj.className = 'ti-angle-down';
+        $('.algorithm').show();
+    }
+
+}
+
+function toggleAdvance(obj){
+    if (obj.className == 'ti-angle-down'){
+        obj.className = 'ti-angle-up';
+        $('.advanced').hide();
+    }
+    else{
+        obj.className = 'ti-angle-down';
+        $('.advanced').show();
+    }
+
+}
 
 
 
