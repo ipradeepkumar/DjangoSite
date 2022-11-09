@@ -6,12 +6,12 @@
     },
     {
         "StationID": 1,
-        "Name": "Station 1",
-        "Desc": "Desc 1"
+        "Name": "cpx-8159.fcl.com",
+        "Desc": "cpx"
     },
     {
         "StationID": 2,
-        "Name": "Station 2",
-        "Desc": "Desc 2"
+        "Name": "icx-8159.fcl.com",
+        "Desc": "icx"
     }
 ]

@@ -120,14 +120,19 @@
         );
        
        $('#ddlStation').on('change', function(event){
-            if (event.target.value != "--Select Station--"){
+            var val = event.target.value;
+            if (val != "--Select Station--"){
                 $('.form > div').removeClass('hideCss');
                 $('#btnSubmit').show();
+
+                $('#spnPlatform').html(val);
+                setEmonEventCounters();
             }
             else{
                 $('.form > div:not(#id_Stations)').addClass('hideCss');
                 $('#btnSubmit').hide();
             }
+
        });
         
         $('#tblTasks').DataTable({
@@ -453,5 +458,57 @@ function startProcess(GUID, uExecution, eExecution, status) {
 }
 
 
-
+function setEmonEventCounters(){
+    $.ajax({  
+        type: "GET",  
+        url: "/api/event/" + 'cpx',//$('#ddlStation').find(":selected").val(),  
+        contentType: "application/json; charset=utf-8",  
+        dataType: "json",  
+        success: function (data) {  
+            //isPlatformChanged = true;
+            $('#ddlEmonEvents').find('option').remove();
+            emonEvents = data;
+            $.each(emonEvents, function(key, item){
+                $('#ddlEmonEvents')
+                            .append($("<option></option>")
+                            .attr("value", item.fields['EmonEventID'])
+                            .text(item.fields['Name']));  
+                });
+                $('#ddlEmonEvents').multiselect(
+                    {
+                        maxHeight: 200,
+                        includeSelectAllOption: true,
+                        selectAllText: 'Select all',
+                        enableFiltering: true,
+                        enableCaseInsensitiveFiltering: true,
+                        onChange: function(element, checked){
+                            console.log(element.val());
+                            if (checked)
+                                $("#ddlEmonEvents").multiselect('select', element.val());
+                            else
+                                $("#ddlEmonEvents").multiselect('deselect', element.val());
+                            setEmonCounters($("#ddlEmonEvents").val());
+                            return false;
+                        },
+                        onSelectAll: function(){
+                            setEmonCounters($("#ddlEmonEvents").val());
+                        },
+                        onDeselectAll: function(){
+                            setEmonCounters($("#ddlEmonEvents").val());
+                        },
+            
+                    }
+                );
+                $('#ddlEmonEvents').multiselect('rebuild');
+                setEmonCounters();
+                BuildEmonCounter();
+        }, //End of AJAX Success function  
+        failure: function (data) {  
+            console.log(data.responseText);  
+        }, //End of AJAX failure function  
+        error: function (data) {  
+            console.log(data.responseText);  
+        }
+    }); 
+}
 

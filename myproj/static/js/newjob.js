@@ -7,6 +7,9 @@ $(function(){
     $('#id_EmonCounters').hide();
     $('#ddlEmonCounters').hide();
     $('.multiselect-native-select').hide();
+    $('.regression').hide();
+    $('.advanced').hide();
+    $('.algorithm').hide();
     
     //ajax call for fetching stations
     $.ajax({  
@@ -18,7 +21,7 @@ $(function(){
             $.each(data, function (key, item) {  
                 $('#ddlStation')
                     .append($("<option></option>")
-                    .attr("value", item.Name)
+                    .attr("value", item.Desc)
                     .text(item.Name)); 
             }); //End of foreach Loop  
             $('#ddlStation').selectpicker({
@@ -70,85 +73,36 @@ $(function(){
     }); 
 
     //ajax call for fetching platforms
-    $.ajax({  
-        type: "GET",  
-        url: "/api/platforms",  
-        contentType: "application/json; charset=utf-8",  
-        dataType: "json",  
-        success: function (data) {  
-            $('#ddlPlatform')
-                    .append($("<option></option>")
-                    .attr("value", "")
-                    .text("-- Select Platform--"));  
-            $.each(data, function (key, item) { 
-                $('#ddlPlatform')
-                    .append($("<option></option>")
-                    .attr("value", item.fields.Name)
-                    .text(item.fields.Name));  
+    // $.ajax({  
+    //     type: "GET",  
+    //     url: "/api/platforms",  
+    //     contentType: "application/json; charset=utf-8",  
+    //     dataType: "json",  
+    //     success: function (data) {  
+    //         $('#ddlPlatform')
+    //                 .append($("<option></option>")
+    //                 .attr("value", "")
+    //                 .text("-- Select Platform--"));  
+    //         $.each(data, function (key, item) { 
+    //             $('#ddlPlatform')
+    //                 .append($("<option></option>")
+    //                 .attr("value", item.fields.Name)
+    //                 .text(item.fields.Name));  
                
-            }); //End of foreach Loop   
-        }, //End of AJAX Success function  
-        failure: function (data) {  
-            alert(data.responseText);  
-        }, //End of AJAX failure function  
-        error: function (data) {  
-            alert(data.responseText);  
-        } //End of AJAX error function  
+    //         }); //End of foreach Loop   
+    //     }, //End of AJAX Success function  
+    //     failure: function (data) {  
+    //         alert(data.responseText);  
+    //     }, //End of AJAX failure function  
+    //     error: function (data) {  
+    //         alert(data.responseText);  
+    //     } //End of AJAX error function  
 
-    }); 
+    // }); 
    
-    $('#ddlPlatform').on('change', function(e){
-            $.ajax({  
-                type: "GET",  
-                url: "/api/event/" + $('#ddlPlatform').find(":selected").val(),  
-                contentType: "application/json; charset=utf-8",  
-                dataType: "json",  
-                success: function (data) {  
-                    //isPlatformChanged = true;
-                    $('#ddlEmonEvents').find('option').remove();
-                    emonEvents = data;
-                    $.each(emonEvents, function(key, item){
-                        $('#ddlEmonEvents')
-                                    .append($("<option></option>")
-                                    .attr("value", item.fields['EmonEventID'])
-                                    .text(item.fields['Name']));  
-                        });
-                        $('#ddlEmonEvents').multiselect(
-                            {
-                                maxHeight: 200,
-                                includeSelectAllOption: true,
-                                selectAllText: 'Select all',
-                                enableFiltering: true,
-                                enableCaseInsensitiveFiltering: true,
-                                onChange: function(element, checked){
-                                    console.log(element.val());
-                                    if (checked)
-                                        $("#ddlEmonEvents").multiselect('select', element.val());
-                                    else
-                                        $("#ddlEmonEvents").multiselect('deselect', element.val());
-                                    setEmonCounters($("#ddlEmonEvents").val());
-                                    return false;
-                                },
-                                onSelectAll: function(){
-                                    setEmonCounters($("#ddlEmonEvents").val());
-                                },
-                                onDeselectAll: function(){
-                                    setEmonCounters($("#ddlEmonEvents").val());
-                                },
-                    
-                            }
-                        );
-                        $('#ddlEmonEvents').multiselect('rebuild');
-                        BuildEmonCounter();
-                }, //End of AJAX Success function  
-                failure: function (data) {  
-                    console.log(data.responseText);  
-                }, //End of AJAX failure function  
-                error: function (data) {  
-                    console.log(data.responseText);  
-                }
-            }); 
-    });
+    // $('#ddlPlatform').on('change', function(e){
+       
+    // });
     
     $('#chkEmon').on('change', function(e){
         if (e.target.checked)
@@ -247,7 +201,7 @@ function SetEmonEvents(result){
 
 function setEmonCounters(selectedArray){
     emonEventsVal = 0;
-    if ( $("#ddlEmonEvents").val() == undefined )  
+    if ( $("#ddlEmonEvents").val().length == 0)  
         emonEventsVal = 0; 
     else  
         emonEventsVal = $("#ddlEmonEvents").val();
@@ -310,36 +264,36 @@ function clearForm(){
 
 
 function toggleRegression(obj){
-    if (obj.className == 'ti-angle-down'){
-        obj.className = 'ti-angle-up';
+    if (obj.className == 'ti-angle-up'){
+        obj.className = 'ti-angle-down';
         $('.regression').hide();
     }
     else{
-        obj.className = 'ti-angle-down';
+        obj.className = 'ti-angle-up';
         $('.regression').show();
     }
 
 }
 
 function toggleAlgorithm(obj){
-    if (obj.className == 'ti-angle-down'){
-        obj.className = 'ti-angle-up';
+    if (obj.className == 'ti-angle-up'){
+        obj.className = 'ti-angle-down';
         $('.algorithm').hide();
     }
     else{
-        obj.className = 'ti-angle-down';
+        obj.className = 'ti-angle-up';
         $('.algorithm').show();
     }
 
 }
 
 function toggleAdvance(obj){
-    if (obj.className == 'ti-angle-down'){
-        obj.className = 'ti-angle-up';
+    if (obj.className == 'ti-angle-up'){
+        obj.className = 'ti-angle-down';
         $('.advanced').hide();
     }
     else{
-        obj.className = 'ti-angle-down';
+        obj.className = 'ti-angle-up';
         $('.advanced').show();
     }
 

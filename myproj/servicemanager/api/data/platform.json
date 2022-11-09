@@ -12,7 +12,8 @@
                     {"EmonCounterID": 1, "Name": "Emon Counter 1"},
                     {"EmonCounterID": 2, "Name": "Emon Counter 2"},
                     {"EmonCounterID": 3, "Name": "Emon Counter 3"},
-                    {"EmonCounterID": 4, "Name": "Emon Counter 4"}
+                    {"EmonCounterID": 4, "Name": "Emon Counter 4"},
+                    {"EmonCounterID": 5, "Name": "Emon Counter 5"}
                 ]
             },
             {"EmonEventID": 2, "Name": "Emon Event 2", 

@@ -36,11 +36,12 @@ from TaskForm import TaskForm
                                                 <input type="text" name="RegressionName" class="form-control" autocomplete="off" placeholder="Please enter regression name" maxlength="100" id="id_RegressionName">
                                             </select>
                                             </div>
-                                            <div class="col-2">
+                                            <div class="col-2 text-right">
                                                 <label id="id_Platform">Platform:</label></div>
-                                                <div class="col-4">
-                                                    <select name="Platform" id="ddlPlatform" class="form-control">
-                                                    </select>
+                                                <div class="col-4 text-left">
+                                                    {% comment %} <select name="Platform" id="ddlPlatform" class="form-control">
+                                                    </select> {% endcomment %}
+                                                    <span id="spnPlatform"></span>
                                                 </div>
                                         </div>
                                         <div id="id_TotalIterations" class="form-group row">
@@ -57,14 +58,14 @@ from TaskForm import TaskForm
                                                 <select name="ToolName" id="ddlToolName" class="form-control">
                                                 </select>
                                             </div>
-                                            <div class="col-2">
+                                            <div class="col-2 text-right">
                                                 <label id="id_IsUploadResult">Upload Result:</label></div>
-                                                <div class="col-2">
+                                                <div class="col-2 px-0">
                                                     <input type="checkbox" id="chkUploadResult" class="form-control" name="IsUploadResult"></input>
                                                 </div>
-                                                <div class="col-2">
+                                                <div class="col-2 text-right">
                                                     <label id="id_DebugMode">Debug Mode:</label></div>
-                                                    <div class="col-1">
+                                                    <div class="col-1 px-0">
                                                         <input type="checkbox" id="id_DebugMode" class="form-control" name="DebugMode"></input>
                                                     </select>
                                                     </div>
