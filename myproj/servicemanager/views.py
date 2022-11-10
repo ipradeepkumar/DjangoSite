@@ -69,14 +69,14 @@ def newtask(request):
         emonEventData = EmonEvent.objects.filter(EmonEventID__in = taskFormObj.cleaned_data['EmonEvents']).values_list('Name', flat=True)
         task = Task(
             Idea = taskFormObj.cleaned_data['Idea'],
-            Station= taskFormObj.cleaned_data['Stations'],
+            Station= taskFormObj.cleaned_data['Stations'].split('^')[1],
             IsDebugMode = taskFormObj.cleaned_data['DebugMode'],
             PlatformCounter = list(emonCounterData),
             PlatformEvent = list(emonEventData),
             TotalIterations = taskFormObj.cleaned_data['TotalIterations'],
             RegressionName = taskFormObj.cleaned_data['RegressionName'],
             Tool = taskFormObj.cleaned_data['ToolName'],
-            Platform = taskFormObj.cleaned_data['Platform'],
+            Platform = taskFormObj.cleaned_data['Stations'].split('^')[0],
             IsEmon = taskFormObj.cleaned_data['IsEmon'],
             IsUploadResults = taskFormObj.cleaned_data['IsUploadResult'],
             Splitter = taskFormObj.cleaned_data['Splitter'],

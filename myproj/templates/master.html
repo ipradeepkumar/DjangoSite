@@ -26,7 +26,7 @@
         {% block css_files %}{% endblock %}
         
     </head>
-    <body class="sticky-header">
+    <body class="sticky-header" onload="getWeekNumber()">
         <!--[if lt IE 7]>
             <p class="browsehappy">You are using an <strong>outdated</strong> browser. Please <a href="#">upgrade your browser</a> to improve your experience.</p>
         <![endif]-->
@@ -86,7 +86,7 @@
                 <div class="notification-wrap">
                     <ul  class="notification-menu" style="margin-top:1.4%">
                         <li>Welcome back! {{request.user.username}}</li>
-                        <li style="margin-left:15%">Calendar : WW {% now "W" %} | {% now "M d Y" %}</li>
+                        <li style="margin-left:15%">Calendar : WW <span id="wkNumber"></span>  | {% now "M d Y" %}</li>
                         <li style="margin-left:5%">{% now "f A T" %}</li>
                     </ul>
                     <!--right notification start-->
@@ -144,6 +144,21 @@
     <script type="text/javascript" src="{% static "dataTables.bootstrap4.min.js" %}"></script>
     <!-- app.js -->
     <script type="text/javascript" src="{% static "jquery.app.js" %}"></script>
+    <script src="//cdn.datatables.net/plug-ins/1.10.11/sorting/date-eu.js" type="text/javascript"></script>
+    <script type="text/javascript">
+        function getWeekNumber()
+        {
+            currentDate = new Date();
+            startDate = new Date(currentDate.getFullYear(), 0, 1);
+            var days = Math.floor((currentDate - startDate) /
+                (24 * 60 * 60 * 1000));
+                
+            var weekNumber = Math.ceil(days / 7);
+        
+            // Display the calculated result      
+            $('#wkNumber').html(weekNumber + 1);
+        }
+    </script>
     {% block extrajs %}
     {% endblock %}
     </body>

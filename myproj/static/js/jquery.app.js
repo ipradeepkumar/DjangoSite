@@ -121,11 +121,11 @@
        
        $('#ddlStation').on('change', function(event){
             var val = event.target.value;
-            if (val != "--Select Station--"){
+            if (val.split('^')[0] != "--Select Station--"){
                 $('.form > div').removeClass('hideCss');
                 $('#btnSubmit').show();
 
-                $('#spnPlatform').html(val);
+                $('#spnPlatform').html(val.split('^')[0]);
                 setEmonEventCounters();
             }
             else{
