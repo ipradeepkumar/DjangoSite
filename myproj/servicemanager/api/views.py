@@ -5,22 +5,27 @@ from rest_framework.response import Response
 from rest_framework.decorators import api_view
 from rest_framework.parsers import JSONParser
 from rest_framework.decorators import api_view
-from servicemanager.models import Task, TaskIteration, EmonCounter, EmonEvent, Platform
+from servicemanager.models import Task, TaskIteration, EmonCounter, EmonEvent, Platform, Station
 from servicemanager.api.serializers import PlatformSerializer, StationSerializer, ToolSerializer, TaskStatusSerializer, IdeaSerializer
 from django.core import serializers
+from django.db.models import Q
 
 @api_view(['GET'])
 def StationList(request):
-    dirPath = os.path.dirname(os.path.realpath(__file__))
-    filePath = os.path.join(dirPath, "data", "station.json")
-    with open(filePath, 'r') as stationfile:
-        stream = io.BytesIO(str.encode(stationfile.read()))
-        stationData = JSONParser().parse(stream=stream)
-        serializer = StationSerializer(data=stationData, many=True)
-        if serializer.is_valid():
-            return Response(serializer.validated_data)
-        else:
-            return Response(serializer.errors)
+    pendingStationList = Task.objects.exclude(Status="COMPLETED").values_list("Station").distinct()
+    stations = Station.objects.exclude(Name__in=pendingStationList)
+    serialized_obj = serializers.serialize('json', stations)
+    return HttpResponse(serialized_obj, content_type="application/json")
+    # dirPath = os.path.dirname(os.path.realpath(__file__))
+    # filePath = os.path.join(dirPath, "data", "station.json")
+    # with open(filePath, 'r') as stationfile:
+    #     stream = io.BytesIO(str.encode(stationfile.read()))
+    #     stationData = JSONParser().parse(stream=stream)
+    #     serializer = StationSerializer(data=stationData, many=True)
+    #     if serializer.is_valid():
+    #         return Response(serializer.validated_data)
+    #     else:
+    #         return Response(serializer.errors)
 
 
 @api_view(['GET'])
@@ -106,6 +111,8 @@ def GetPlatformCounters(request, eventID):
     # assuming obj is a model instance
     serialized_obj = serializers.serialize('json', emonCounterData)
     return HttpResponse(serialized_obj, content_type="application/json")
+
+
 
 
 

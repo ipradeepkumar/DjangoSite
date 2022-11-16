@@ -21,8 +21,8 @@ $(function(){
             $.each(data, function (key, item) {  
                 $('#ddlStation')
                     .append($("<option></option>")
-                    .attr("value", item.Desc + "^" + item.Name)
-                    .text(item.Name)); 
+                    .attr("value", item.fields.Desc + "^" + item.fields.Name)
+                    .text(item.fields.Name)); 
             }); //End of foreach Loop  
             $('#ddlStation').selectpicker({
                 liveSearch: true,
