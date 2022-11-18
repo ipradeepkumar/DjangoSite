@@ -1,13 +1,16 @@
 
-
-        {% if status == 'COMPLETE' or status == 'COMPLETED' or status == 'ERROR' or status == 'PENDING' or status == 'STOPPED' %}
-                <a href='#' onclick="startProcess('{{GUID}}', 1, 1)" class='ti-control-play'>&nbsp;Start</a>
-        {% elif status == 'IN-PROGRESS' %}
-                <a href='#' onclick="startProcess('{{GUID}}', 0, 1)" class='ti-control-stop'>&nbsp;Stop</a>
-        {% elif status == 'STARTING' %}
-                <span style="font-weight:bold;color:green">Starting...</span>
-        {% elif status == 'STOPPING' %}
-                <span style="font-weight:bold;color:red">Stopping...</span>
-        {% endif %}
+        {% if loggedInUser == user  %}
+                {% if status == 'COMPLETE' or status == 'COMPLETED' or status == 'ERROR' or status == 'PENDING' or status == 'STOPPED' %}
+                        <a href='#' onclick="startProcess('{{GUID}}', 1, 1)" class='ti-control-play'>&nbsp;Start</a>
+                {% elif status == 'IN-PROGRESS' %}
+                        <a href='#' onclick="startProcess('{{GUID}}', 0, 1)" class='ti-control-stop'>&nbsp;Stop</a>
+                {% elif status == 'STARTING' %}
+                        <span style="font-weight:bold;color:green">Starting...</span>
+                {% elif status == 'STOPPING' %}
+                        <span style="font-weight:bold;color:red">Stopping...</span>
+                {% endif %}
+        {%else%}
+                <span style="font-weight:bold;color:red">Not Available</span>
+        {%endif%}
                     
  

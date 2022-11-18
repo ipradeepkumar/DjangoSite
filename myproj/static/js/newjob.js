@@ -18,6 +18,18 @@ $(function(){
         contentType: "application/json; charset=utf-8",  
         dataType: "json",  
         success: function (data) {  
+            if (data.length == 0){
+                $('#ddlStation')
+                    .append($("<option></option>")
+                    .attr("value", "--Not Available--")
+                    .text("--Not Available--"));
+            }
+            else{
+                $('#ddlStation')
+                .append($("<option></option>")
+                .attr("value", "--Select Station--")
+                .text("--Select Station--"));
+            }
             $.each(data, function (key, item) {  
                 $('#ddlStation')
                     .append($("<option></option>")
@@ -46,6 +58,7 @@ $(function(){
         contentType: "application/json; charset=utf-8",  
         dataType: "json",  
         success: function (data) {  
+           
             $.each(data, function (key, item) { 
                 $('#ddlToolName')
                     .append($("<option></option>")

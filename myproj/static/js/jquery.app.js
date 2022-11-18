@@ -134,72 +134,116 @@
             }
 
        });
-        
+   
+       $('#tblTasks thead tr:first')
+       .before('<tr><th>Filters:</th><th id="thUser">User</th><th id="thStation">Station</th><th><p></p></th><th id="thTool">Tool</th><th><p></p></th><th id="thPlatform">Platform</th><th><p></p></th><th id="thStatus">Status</th><th><p></p></th><th><p></p></th><th><p></p></th><th><p></p></th><th><p></p></th><th><p></p></th><th><p></p></th></tr>');
         $('#tblTasks').DataTable({
             scrollX: false,
             "autoWidth": true,
-            "order": [[6, 'desc']],
+            "order": [[7, 'desc']],
             columnDefs:[
                 {
                     title: 'Action',
                     target: 0
                 },
                 {
-                    title: 'Station',
+                    title: 'User',
                     target: 1
                 },
                 {
-                    title: 'Regression Name',
+                    title: 'Station',
                     target: 2
                 },
                 {
-                    title: 'Tool',
+                    title: 'Regression Name',
                     target: 3
                 },
                 {
-                    title: 'Total Iterations',
+                    title: 'Tool',
                     target: 4
                 },
                 {
-                    title: 'Platform',
+                    title: 'Total Iterations',
                     target: 5
+                },
+                {
+                    title: 'Platform',
+                    target: 6
                 },
                 {
                     title: 'Created Date',
                     type: 'date',
-                    target: 6
-                },
-                {
-                    title: 'Status',
                     target: 7
                 },
                 {
-                    title: 'Modified Date',
+                    title: 'Status',
                     target: 8
                 },
                 {
-                    title: 'Error',
+                    title: 'Modified Date',
                     target: 9
+                },
+                {
+                    title: 'Error',
+                    target: 10
                 },
             ],
             'rowCallback': function(row, data, index){
-                if(data[7].toUpperCase() == "PENDING"){
-                    $(row).find('td:eq(7)').css('background-color', 'orange');
-                    $(row).find('td:eq(7)').css('color', 'black');
+                if(data[8].toUpperCase() == "PENDING"){
+                    $(row).find('td:eq(8)').css('background-color', 'orange');
+                    $(row).find('td:eq(8)').css('color', 'black');
                 }
-                if(data[7].toUpperCase() == 'IN-PROGRESS'){
-                    $(row).find('td:eq(7)').css('background-color', 'yellow');
-                    $(row).find('td:eq(7)').css('color', 'black');
+                if(data[8].toUpperCase() == 'IN-PROGRESS'){
+                    $(row).find('td:eq(8)').css('background-color', 'yellow');
+                    $(row).find('td:eq(8)').css('color', 'black');
                 }
-                if(data[7].toUpperCase() == 'COMPLETE' || data[7].toUpperCase() == 'COMPLETED' || data[7].toUpperCase() == 'STARTING'){
-                    $(row).find('td:eq(7)').css('color', 'white');
-                    $(row).find('td:eq(7)').css('background-color', 'green');
+                if(data[8].toUpperCase() == 'COMPLETE' || data[8].toUpperCase() == 'COMPLETED' || data[8].toUpperCase() == 'STARTING'){
+                    $(row).find('td:eq(8)').css('color', 'white');
+                    $(row).find('td:eq(8)').css('background-color', 'green');
                 }
-                if(data[7].toUpperCase() == 'ERROR' || data[7].toUpperCase() == 'STOPPING' || data[7].toUpperCase() == 'STOPPED'){
-                    $(row).find('td:eq(7)').css('color', 'white');
-                    $(row).find('td:eq(7)').css('background-color', 'red');
+                if(data[8].toUpperCase() == 'ERROR' || data[8].toUpperCase() == 'STOPPING' || data[8].toUpperCase() == 'STOPPED'){
+                    $(row).find('td:eq(8)').css('color', 'white');
+                    $(row).find('td:eq(8)').css('background-color', 'red');
                 }
-              }
+              },
+              initComplete: function () {
+                this.api()
+                    .columns()
+                    .every(function () {
+                        var column = this;
+                        if ($(column.header()).html() == 'Station' || $(column.header()).html() == 'Tool' || 
+                                        $(column.header()).html() == 'Platform' || $(column.header()).html() == 'Status' || $(column.header()).html() == 'User'){
+                         
+                        var select = $('<select style="border-radius:5px;border:1px solid #ced4da"><option value=""></option></select>')
+                        .appendTo($('#tblTasks #th' + $(column.header()).html()).empty())
+                        .on('change', function () {
+                            var val = $.fn.dataTable.util.escapeRegex($(this).val());
+                            column.search(val ? '^' + val + '$' : '', true, false).draw();
+                            
+                        });
+                        if ($(column.header()).html() == 'User'){
+                            var users = $('#users').html().trim().split(',');
+                            var loggedinUser = $('#loggedInUser').html();
+                            for(var i=0; i < users.length; i++){
+                                if (users[i].trim() != '' )
+                                    select.append('<option value="' + users[i].trim() + '"' + (loggedinUser == users[i].trim() ?  'selected' : '') +'>' + users[i].trim() + '</option>');
+                            }
+                            column.search('^' + loggedinUser + '$', true, false).draw();
+                        }
+                        else{
+                            column
+                                .data()
+                                .unique()
+                                .sort()
+                                .each(function (d, j) {
+                                        select.append('<option value="' + d + '">' + d + '</option>');
+                                });
+
+                            }
+                        
+                        }
+                    });
+            }
         });
     });
 

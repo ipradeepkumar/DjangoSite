@@ -14,10 +14,17 @@
             <div class="card m-b-30">
                 <div class="card-body">
                     <button style="float:right" onclick="refreshJobList()" type="button" class="btn btn-dark btn-sm">Refresh</button>
-                    <table id="tblTasks" class="table-responsive hover table table-striped table-bordered" style="border-radius:10px">
+                    <span id="users" style="display:none">
+                        {% for u in Users %}
+                            {{u.username}},
+                        {% endfor%}
+                    </span>
+                    <span id="loggedInUser" style="display:none">{{request.user.username}}</span>
+                    <table id="tblTasks" class="table-responsive hover table table-striped table-bordered" style="border-radius:10px;width:100%">
                         <thead>
                             <tr>
                                 <th>Action</th>
+                                <th>User</th>
                                 {% for col in colNames %}
                                     {% if col.name == "Station" or col.name == "RegressionName" or col.name == "Tool" or col.name == "TotalIterations" or col.name == "Platform" or col.name == "CreatedDate" or col.name == "Status" or col.name == "ModifiedDate" or col.name == "ErrorMessage" %}
                                         <th>{{ col.name }}</th>
@@ -29,11 +36,14 @@
                                 <th>Axon Log</th>
                                 <th>Azure Link</th>
                             </tr>
+                            
                         </thead>
                         <tbody>
+                            
                             {% for task in tasks %}
                                 <tr>
-                                    <td>{% include './_run.html' with taskID=task.id GUID=task.GUID status=task.Status %}</td>
+                                    <td>{% include './_run.html' with taskID=task.id GUID=task.GUID status=task.Status loggedInUser=request.user.username user=task.CreatedBy %}</td>
+                                    <td>{{ task.CreatedBy }}</td>
                                     <td>{{ task.Station }}</td>
                                     <td><a href='#' onclick=showDetail({{task.id}})><p style="text-decoration:underline">{{ task.RegressionName }}</p></td>
                                     <td>{{ task.Tool }}</td>
@@ -98,9 +108,7 @@
 
 {% endblock %}
 {% block extrajs %}
-<script type="text/javascript">
-    setInterval(refreshJobList, 1000 * 60);
-</script>
+
 {% endblock %}
 
 

@@ -14,7 +14,7 @@ from django.core import serializers
 from django.contrib.auth.decorators import login_required
 from .customdecorator import ldap_auth
 from django_python3_ldap import ldap
-from django.contrib.auth import logout, login
+from django.contrib.auth import logout, login, models 
 from multiprocessing import Process
 import requests
 
@@ -87,6 +87,11 @@ def newtask(request):
             Status = "PENDING"
             )
         task.save()
+
+        station = Station.objects.get(Name=taskFormObj.cleaned_data['Stations'].split('^')[1])
+        station.IsActive = False
+        station.save();
+
         taskJson = serializers.serialize('json', [task])
         return HttpResponseRedirect("jobhistory")
    
@@ -101,10 +106,11 @@ def find(task: Task, condition):
         
 @ldap_auth
 def jobhistory(request):
-    taskList = Task.objects.all().filter(CreatedBy = request.user.username).order_by("-id")
+    taskList = Task.objects.all()
     taskIterations = TaskIteration.objects.all().order_by("-id")
+    usrs = models.User.objects.all().values('username')
     return render(request, "servicemanager/jobhistory.html", {
-        "tasks": taskList, "colNames" : Task._meta.fields, "iterations" : taskIterations
+        "tasks": taskList, "colNames" : Task._meta.fields, "iterations" : taskIterations, "Users": usrs
     })
 
 def jobhistory_detail(request, id):
