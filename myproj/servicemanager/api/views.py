@@ -8,12 +8,14 @@ from rest_framework.decorators import api_view
 from servicemanager.models import Task, TaskIteration, EmonCounter, EmonEvent, Platform, Station
 from servicemanager.api.serializers import PlatformSerializer, StationSerializer, ToolSerializer, TaskStatusSerializer, IdeaSerializer
 from django.core import serializers
-from django.db.models import Q
+
 
 @api_view(['GET'])
 def StationList(request):
-    pendingStationList = Task.objects.exclude(Status="COMPLETED").values_list("Station").distinct()
-    stations = Station.objects.exclude(Name__in=pendingStationList)
+    #pendingStationList = Task.objects.filter(Status__in=['COMPLETED','STOPPED']).values_list("Station").distinct()
+    #stations = Station.objects.filter(Name__in=pendingStationList)
+
+    stations = Station.objects.filter(IsActive__in=[True, None])
     serialized_obj = serializers.serialize('json', stations)
     return HttpResponse(serialized_obj, content_type="application/json")
     # dirPath = os.path.dirname(os.path.realpath(__file__))

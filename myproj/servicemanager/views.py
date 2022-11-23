@@ -56,44 +56,48 @@ def index(request):
 def newtask(request):
     hostname = socket.gethostname()    
     IPAddr = socket.gethostbyname(hostname)  
+
     if request.method == "GET":
         taskFormObj = TaskForm()
        
 
     if request.method == "POST":
         taskFormObj = TaskForm(request.POST)
+        station = Station.objects.get(Name=taskFormObj['Stations'].data.split('^')[1])
 
-    if taskFormObj.is_valid():
-        
-        emonCounterData = EmonCounter.objects.filter(EmonCounterID__in = taskFormObj.cleaned_data['EmonCounters']).values_list('Name', flat=True)
-        emonEventData = EmonEvent.objects.filter(EmonEventID__in = taskFormObj.cleaned_data['EmonEvents']).values_list('Name', flat=True)
-        task = Task(
-            Idea = taskFormObj.cleaned_data['Idea'],
-            Station= taskFormObj.cleaned_data['Stations'].split('^')[1],
-            IsDebugMode = taskFormObj.cleaned_data['DebugMode'],
-            PlatformCounter = list(emonCounterData),
-            PlatformEvent = list(emonEventData),
-            TotalIterations = taskFormObj.cleaned_data['TotalIterations'],
-            RegressionName = taskFormObj.cleaned_data['RegressionName'],
-            Tool = taskFormObj.cleaned_data['ToolName'],
-            Platform = taskFormObj.cleaned_data['Stations'].split('^')[0],
-            IsEmon = taskFormObj.cleaned_data['IsEmon'],
-            IsUploadResults = taskFormObj.cleaned_data['IsUploadResult'],
-            Splitter = taskFormObj.cleaned_data['Splitter'],
-            MinImpurityDecrease = taskFormObj.cleaned_data['MinImpurityDecrease'],
-            MaxFeatures = taskFormObj.cleaned_data['MaxFeatures'],
-            CreatedBy = request.user.username,
-            CreatedDate = datetime.utcnow(),
-            Status = "PENDING"
-            )
-        task.save()
-
-        station = Station.objects.get(Name=taskFormObj.cleaned_data['Stations'].split('^')[1])
-        station.IsActive = False
-        station.save();
-
-        taskJson = serializers.serialize('json', [task])
-        return HttpResponseRedirect("jobhistory")
+        if (station.IsActive == False):
+            return render(request, "servicemanager/newtask.html", {
+            "taskForm": taskFormObj, "message": "Station is already in use."
+        })
+        else:
+            if taskFormObj.is_valid():
+                
+                emonCounterData = EmonCounter.objects.filter(EmonCounterID__in = taskFormObj.cleaned_data['EmonCounters']).values_list('Name', flat=True)
+                emonEventData = EmonEvent.objects.filter(EmonEventID__in = taskFormObj.cleaned_data['EmonEvents']).values_list('Name', flat=True)
+                task = Task(
+                    Idea = taskFormObj.cleaned_data['Idea'],
+                    Station= taskFormObj.cleaned_data['Stations'].split('^')[1],
+                    IsDebugMode = taskFormObj.cleaned_data['DebugMode'],
+                    PlatformCounter = list(emonCounterData),
+                    PlatformEvent = list(emonEventData),
+                    TotalIterations = taskFormObj.cleaned_data['TotalIterations'],
+                    RegressionName = taskFormObj.cleaned_data['RegressionName'],
+                    Tool = taskFormObj.cleaned_data['ToolName'],
+                    Platform = taskFormObj.cleaned_data['Stations'].split('^')[0],
+                    IsEmon = taskFormObj.cleaned_data['IsEmon'],
+                    IsUploadResults = taskFormObj.cleaned_data['IsUploadResult'],
+                    Splitter = taskFormObj.cleaned_data['Splitter'],
+                    MinImpurityDecrease = taskFormObj.cleaned_data['MinImpurityDecrease'],
+                    MaxFeatures = taskFormObj.cleaned_data['MaxFeatures'],
+                    CreatedBy = request.user.username,
+                    CreatedDate = datetime.utcnow(),
+                    Status = "PENDING"
+                    )
+                task.save()
+                station.IsActive = False
+                station.save()
+                # taskJson = serializers.serialize('json', [task])
+                return HttpResponseRedirect("jobhistory")
    
 
     return render(request, "servicemanager/newtask.html", {

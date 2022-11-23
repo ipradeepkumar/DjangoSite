@@ -136,8 +136,8 @@
        });
    
        $('#tblTasks thead tr:first')
-       .before('<tr><th>Filters:</th><th id="thUser">User</th><th id="thStation">Station</th><th><p></p></th><th id="thTool">Tool</th><th><p></p></th><th id="thPlatform">Platform</th><th><p></p></th><th id="thStatus">Status</th><th><p></p></th><th><p></p></th><th><p></p></th><th><p></p></th><th><p></p></th><th><p></p></th><th><p></p></th></tr>');
-        $('#tblTasks').DataTable({
+       .before('<tr><th>Filters:</th><th id="thUser">User</th><th id="thSystem_Under_Test">System Under Test</th><th><p></p></th><th id="thTool">Tool</th><th><p></p></th><th id="thPlatform">Platform</th><th><p></p></th><th id="thStatus">Status</th><th><p></p></th><th><p></p></th><th><p></p></th><th><p></p></th><th><p></p></th><th><p></p></th><th><p></p></th></tr>');
+        var tasksTable = $('#tblTasks').DataTable({
             scrollX: false,
             "autoWidth": true,
             "order": [[7, 'desc']],
@@ -151,7 +151,7 @@
                     target: 1
                 },
                 {
-                    title: 'Station',
+                    title: 'System Under Test',
                     target: 2
                 },
                 {
@@ -184,7 +184,7 @@
                     target: 9
                 },
                 {
-                    title: 'Error',
+                    title: 'Eowyn Execution Status',
                     target: 10
                 },
             ],
@@ -211,11 +211,11 @@
                     .columns()
                     .every(function () {
                         var column = this;
-                        if ($(column.header()).html() == 'Station' || $(column.header()).html() == 'Tool' || 
+                        if ($(column.header()).html() == 'System Under Test' || $(column.header()).html() == 'Tool' || 
                                         $(column.header()).html() == 'Platform' || $(column.header()).html() == 'Status' || $(column.header()).html() == 'User'){
                          
                         var select = $('<select style="border-radius:5px;border:1px solid #ced4da"><option value=""></option></select>')
-                        .appendTo($('#tblTasks #th' + $(column.header()).html()).empty())
+                        .appendTo($('#tblTasks #th' + $(column.header()).html().replaceAll(' ','_')).empty())
                         .on('change', function () {
                             var val = $.fn.dataTable.util.escapeRegex($(this).val());
                             column.search(val ? '^' + val + '$' : '', true, false).draw();
@@ -245,6 +245,8 @@
                     });
             }
         });
+
+        tasksTable.order([7, 'desc']).draw();
     });
 
 

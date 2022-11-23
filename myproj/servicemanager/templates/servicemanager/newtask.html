@@ -14,7 +14,9 @@ from TaskForm import TaskForm
                     <div class="general-label">
                         <form  id="taskForm" class="form" role="form" action="{% url "newtask" %}" method="POST">
                             {% csrf_token %}
-                           
+                                <div class="form-group row mx-auto" style="width:300px">
+                                    <span style="color:red">{{message}}</span>
+                                </div>
                                 <div id="id_Stations" class="form-group row">
                                     <div class="col-2">
                                     <label id="id_Stations">Station:</label></div>
