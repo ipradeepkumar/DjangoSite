@@ -214,7 +214,7 @@
                         if ($(column.header()).html() == 'System Under Test' || $(column.header()).html() == 'Tool' || 
                                         $(column.header()).html() == 'Platform' || $(column.header()).html() == 'Status' || $(column.header()).html() == 'User'){
                          
-                        var select = $('<select style="border-radius:5px;border:1px solid #ced4da"><option value=""></option></select>')
+                        var select = $('<select style="border-radius:5px;border:1px solid #ced4da" data-size="3"><option value=""></option></select>')
                         .appendTo($('#tblTasks #th' + $(column.header()).html().replaceAll(' ','_')).empty())
                         .on('change', function () {
                             var val = $.fn.dataTable.util.escapeRegex($(this).val());
