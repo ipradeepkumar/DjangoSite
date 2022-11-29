@@ -248,6 +248,31 @@
                         liveSearch: true,
                         maxOptions: 3,
                         liveSearchStyle: 'contains',
+                        title:'--filter--'
+                    });
+                    $('#thSystem_Under_Test select').selectpicker({
+                        liveSearch: true,
+                        maxOptions: 3,
+                        liveSearchStyle: 'contains',
+                        title:'--filter--',
+                    });
+                    $('#thTool select').selectpicker({
+                        liveSearch: true,
+                        maxOptions: 3,
+                        liveSearchStyle: 'contains',
+                        title:'--filter--'
+                    });
+                    $('#thPlatform select').selectpicker({
+                        liveSearch: true,
+                        maxOptions: 3,
+                        liveSearchStyle: 'contains',
+                        title:'--filter--'
+                    });
+                    $('#thStatus select').selectpicker({
+                        liveSearch: true,
+                        maxOptions: 3,
+                        liveSearchStyle: 'contains',
+                        title:'--filter--'
                     });
             }
         });
