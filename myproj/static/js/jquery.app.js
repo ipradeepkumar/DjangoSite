@@ -243,12 +243,20 @@
                         
                         }
                     });
+                    $("#thUser select option[value='']").remove();
+                    $('#thUser select').selectpicker({
+                        liveSearch: true,
+                        maxOptions: 3,
+                        liveSearchStyle: 'contains',
+                    });
             }
         });
 
         tasksTable.order([7, 'desc']).draw();
     });
 
+    
+   
 
     $(".notification-scroll").slimScroll({
         height: "240px"
@@ -261,10 +269,6 @@
          color: '#98a6ad',
          wheelStep: 13
     });
-
-
-
-
 
     // collapsible panel
 
