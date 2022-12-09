@@ -137,7 +137,8 @@
    
        $('#tblTasks thead tr:first')
        .before('<tr><th>Filters:</th><th id="thUser">User</th><th id="thSystem_Under_Test">System Under Test</th><th><p></p></th><th id="thTool">Tool</th><th><p></p></th><th id="thPlatform">Platform</th><th><p></p></th><th id="thStatus">Status</th><th><p></p></th><th><p></p></th><th><p></p></th><th><p></p></th><th><p></p></th><th><p></p></th><th><p></p></th></tr>');
-        var tasksTable = $('#tblTasks').DataTable({
+        
+       var tasksTable = $('#tblTasks').DataTable({
             scrollX: false,
             "autoWidth": true,
             "order": [[7, 'desc']],
@@ -214,7 +215,7 @@
                         if ($(column.header()).html() == 'System Under Test' || $(column.header()).html() == 'Tool' || 
                                         $(column.header()).html() == 'Platform' || $(column.header()).html() == 'Status' || $(column.header()).html() == 'User'){
                          
-                        var select = $('<select style="border-radius:5px;border:1px solid #ced4da" data-size="3"><option value=""></option></select>')
+                        var select = $('<select style="border-radius:5px;border:1px solid #ced4da" data-size="3"><option value="">--Select All--</option></select>')
                         .appendTo($('#tblTasks #th' + $(column.header()).html().replaceAll(' ','_')).empty())
                         .on('change', function () {
                             var val = $.fn.dataTable.util.escapeRegex($(this).val());
@@ -236,51 +237,62 @@
                                 .unique()
                                 .sort()
                                 .each(function (d, j) {
-                                        select.append('<option value="' + d + '">' + d + '</option>');
+                                        if (d != '')
+                                            select.append('<option value="' + d + '">' + d + '</option>');
                                 });
 
                             }
                         
                         }
                     });
-                    $("#thUser select option[value='']").remove();
+                    //$("#thUser select option[value='']").remove();
                     $('#thUser select').selectpicker({
                         liveSearch: true,
                         maxOptions: 3,
-                        liveSearchStyle: 'contains',
-                        title:'--filter--'
+                        liveSearchStyle: 'contains'
                     });
                     $('#thSystem_Under_Test select').selectpicker({
                         liveSearch: true,
                         maxOptions: 3,
-                        liveSearchStyle: 'contains',
-                        title:'--filter--',
+                        liveSearchStyle: 'contains'
                     });
                     $('#thTool select').selectpicker({
                         liveSearch: true,
                         maxOptions: 3,
-                        liveSearchStyle: 'contains',
-                        title:'--filter--'
+                        liveSearchStyle: 'contains'
                     });
                     $('#thPlatform select').selectpicker({
                         liveSearch: true,
                         maxOptions: 3,
-                        liveSearchStyle: 'contains',
-                        title:'--filter--'
+                        liveSearchStyle: 'contains'
                     });
                     $('#thStatus select').selectpicker({
                         liveSearch: true,
                         maxOptions: 3,
-                        liveSearchStyle: 'contains',
-                        title:'--filter--'
+                        liveSearchStyle: 'contains'
                     });
             }
         });
 
         tasksTable.order([7, 'desc']).draw();
+
+        $('#btnClear').on('click', function(){
+            $('#thUser select').val('').selectpicker('refresh');
+            $('#thSystem_Under_Test select').val('').selectpicker('refresh');
+            $('#thTool select').val('').selectpicker('refresh');
+            $('#thStatus select').val('').selectpicker('refresh');
+            $('#thPlatform select').val('').selectpicker('refresh');
+            $('#thUser select').trigger('change');
+            $('#thSystem_Under_Test select').trigger('change');
+            $('#thTool select').val('').trigger('change');
+            $('#thStatus select').val('').trigger('change');
+            $('#thPlatform select').val('').trigger('change');
+            tasksTable.draw();
+        });
+
     });
 
-    
+   
    
 
     $(".notification-scroll").slimScroll({
