@@ -14,6 +14,7 @@
             <div class="card m-b-30">
                 <div class="card-body">
                     <button style="float:right" onclick="refreshJobList()" type="button" class="btn btn-dark btn-sm">Refresh</button>
+                    <button style="float:left" type="button" id="btnClear" class="btn btn-dark btn-sm">Clear</button>
                     <span id="users" style="display:none">
                         {% for u in Users %}
                             {{u.username}},
