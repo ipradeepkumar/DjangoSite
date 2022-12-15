@@ -14,7 +14,8 @@
             <div class="card m-b-30">
                 <div class="card-body">
                     <button style="float:right" onclick="refreshJobList()" type="button" class="btn btn-dark btn-sm">Refresh</button>
-                    <button style="float:left" type="button" id="btnClear" class="btn btn-dark btn-sm">Clear</button>
+                    <button style="float:left" type="button" id="btnClear" class="btn btn-dark btn-sm mr-1">Clear</button>
+                    <button style="float:left" type="button" id="btnDelete" class="btn btn-dark btn-sm" onclick="deleteRecord()">Delete</button>
                     <span id="users" style="display:none">
                         {% for u in Users %}
                             {{u.username}},
@@ -24,6 +25,7 @@
                     <table id="tblTasks" class="table-responsive hover table table-striped table-bordered" style="border-radius:10px;width:100%">
                         <thead>
                             <tr>
+                                <th></th>
                                 <th>Action</th>
                                 <th>User</th>
                                 {% for col in colNames %}
@@ -43,6 +45,7 @@
                             
                             {% for task in tasks %}
                                 <tr>
+                                    <td>{% include './_delete.html' with taskID=task.id GUID=task.GUID status=task.Status loggedInUser=request.user.username user=task.CreatedBy %}</td>
                                     <td>{% include './_run.html' with taskID=task.id GUID=task.GUID status=task.Status loggedInUser=request.user.username user=task.CreatedBy %}</td>
                                     <td>{{ task.CreatedBy }}</td>
                                     <td>{{ task.Station }}</td>

@@ -141,70 +141,74 @@
        var tasksTable = $('#tblTasks').DataTable({
             scrollX: false,
             "autoWidth": true,
-            "order": [[7, 'desc']],
+            "order": [[8, 'desc']],
             columnDefs:[
                 {
-                    title: 'Action',
+                    title: 'Select',
                     target: 0
                 },
                 {
-                    title: 'User',
+                    title: 'Action',
                     target: 1
                 },
                 {
-                    title: 'System Under Test',
+                    title: 'User',
                     target: 2
                 },
                 {
-                    title: 'Regression Name',
+                    title: 'System Under Test',
                     target: 3
                 },
                 {
-                    title: 'Tool',
+                    title: 'Regression Name',
                     target: 4
                 },
                 {
-                    title: 'Total Iterations',
+                    title: 'Tool',
                     target: 5
                 },
                 {
-                    title: 'Platform',
+                    title: 'Total Iterations',
                     target: 6
+                },
+                {
+                    title: 'Platform',
+                    target: 7
                 },
                 {
                     title: 'Created Date',
                     type: 'date',
-                    target: 7
-                },
-                {
-                    title: 'Status',
                     target: 8
                 },
                 {
-                    title: 'Modified Date',
+                    title: 'Status',
                     target: 9
                 },
                 {
-                    title: 'Eowyn Execution Status',
+                    title: 'Modified Date',
                     target: 10
+                },
+                {
+                    title: 'Eowyn Execution Status',
+                    target: 11
                 },
             ],
             'rowCallback': function(row, data, index){
-                if(data[8].toUpperCase() == "PENDING"){
-                    $(row).find('td:eq(8)').css('background-color', 'orange');
-                    $(row).find('td:eq(8)').css('color', 'black');
+                if(data[9].toUpperCase() == "PENDING"){
+                    $(row).find('td:eq(9)').css('background-color', 'orange');
+                    $(row).find('td:eq(9)').css('color', 'black');
                 }
-                if(data[8].toUpperCase() == 'IN-PROGRESS'){
-                    $(row).find('td:eq(8)').css('background-color', 'yellow');
-                    $(row).find('td:eq(8)').css('color', 'black');
+                if(data[9].toUpperCase() == 'IN-PROGRESS'){
+                    $(row).find('td:eq(9)').css('background-color', 'yellow');
+                    $(row).find('td:eq(9)').css('color', 'black');
                 }
-                if(data[8].toUpperCase() == 'COMPLETE' || data[8].toUpperCase() == 'COMPLETED' || data[8].toUpperCase() == 'STARTING'){
-                    $(row).find('td:eq(8)').css('color', 'white');
-                    $(row).find('td:eq(8)').css('background-color', 'green');
+                if(data[9].toUpperCase() == 'COMPLETE' || data[9].toUpperCase() == 'COMPLETED' || data[9].toUpperCase() == 'STARTING'){
+                    $(row).find('td:eq(9)').css('color', 'white');
+                    $(row).find('td:eq(9)').css('background-color', 'green');
                 }
-                if(data[8].toUpperCase() == 'ERROR' || data[8].toUpperCase() == 'STOPPING' || data[8].toUpperCase() == 'STOPPED'){
-                    $(row).find('td:eq(8)').css('color', 'white');
-                    $(row).find('td:eq(8)').css('background-color', 'red');
+                if(data[9].toUpperCase() == 'ERROR' || data[9].toUpperCase() == 'STOPPING' || data[9].toUpperCase() == 'STOPPED'){
+                    $(row).find('td:eq(9)').css('color', 'white');
+                    $(row).find('td:eq(9)').css('background-color', 'red');
                 }
               },
               initComplete: function () {
@@ -274,7 +278,7 @@
             }
         });
 
-        tasksTable.order([7, 'desc']).draw();
+        tasksTable.order([8, 'desc']).draw();
 
         $('#btnClear').on('click', function(){
             $('#thUser select').val('').selectpicker('refresh');
@@ -598,4 +602,59 @@ function setEmonEventCounters(){
         }
     }); 
 }
+
+function deleteRecord(){
+    var checkBoxes = $('#tblTasks').find('input[type="checkbox"]:checked');
+    if(checkBoxes.length == 0){
+        alert('Please select a row to delete.');
+        return;
+    }
+    if (confirm('Are you sure, you want to delete?')){
+        guids = [];
+        for(i = 0; i < checkBoxes.length; i++){
+            guids.push(checkBoxes[i].value);
+        }
+
+            $.ajax({  
+                type: "POST",  
+                headers: { "X-CSRFToken": getCookie("csrftoken") },
+                url: "deleteTask/" + guids,  
+                contentType: "application/json; charset=utf-8",  
+                data: {'guids': guids},
+                dataType: "json",  
+                success: function (data) {  
+                    if (data.responseText == 'success'){
+                        console.log('success');
+                    }
+                    else{
+                        console.log(data.responseText);
+                    }
+                }, //End of AJAX Success function  
+                failure: function (data) { 
+                }, //End of AJAX failure function  
+                error: function (data) {  
+
+                } //End of AJAX error function  
+
+            }).always(function(xhr, status, error){
+                refreshJobList();
+            });
+        }
+}
+
+function getCookie(c_name)
+{
+    if (document.cookie.length > 0)
+    {
+        c_start = document.cookie.indexOf(c_name + "=");
+        if (c_start != -1)
+        {
+            c_start = c_start + c_name.length + 1;
+            c_end = document.cookie.indexOf(";", c_start);
+            if (c_end == -1) c_end = document.cookie.length;
+            return unescape(document.cookie.substring(c_start,c_end));
+        }
+    }
+    return "";
+ }
 

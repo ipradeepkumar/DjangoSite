@@ -312,3 +312,14 @@ def GetToolList():
         stream = io.BytesIO(str.encode(toolfile.read()))
         toolData = JSONParser().parse(stream=stream)
         return toolData
+
+def deleteTask(request, guids):
+    list = guids.split(',')
+    tasks = Task.objects.filter(GUID__in = list)
+    tasks.delete()
+    iterations = TaskIteration.objects.filter(GUID__in = list)
+    iterations.delete()
+    response = {
+            'status': '200', 'responseText': 'success'
+        }
+    return JsonResponse(response)

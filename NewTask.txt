@@ -1,0 +1,13 @@
+{% for field in taskForm %}
+                            {% if field.auto_id != 'id_Stations' %}
+                                <div id="{{ field.auto_id }}" class="form-group hideCss">
+                                    <label id="{{ field.auto_id }}">{{ field.label_tag }}</label>
+                                    {{ field }}
+                                </div>
+                            {% else %}
+                                <div id="{{ field.auto_id }}" class="form-group">
+                                    <label id="{{ field.auto_id }}">{{ field.label_tag }}</label>
+                                    {{ field }}
+                                </div>
+                            {% endif %}
+                            {% endfor %}

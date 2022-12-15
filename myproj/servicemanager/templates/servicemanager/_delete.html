@@ -1,0 +1,10 @@
+
+        {% if loggedInUser == user  %}
+                {% if status == 'COMPLETE' or status == 'COMPLETED' or status == 'ERROR' or status == 'PENDING' or status == 'STOPPED' %}
+                        <input type="checkbox" value="{{ GUID }}"></input>
+                {% endif %}
+        {%else%}
+                <span style="font-weight:bold;color:red">Not Available</span>
+        {%endif%}
+                    
+ 

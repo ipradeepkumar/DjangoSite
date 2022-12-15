@@ -10,7 +10,9 @@ $(function(){
     $('.regression').hide();
     $('.advanced').hide();
     $('.algorithm').hide();
-    
+    $('#icoReg').addClass('ti-angle-down');
+    $('#icoAlgo').addClass('ti-angle-down');
+    $('#icoAdvance').addClass('ti-angle-down');
     //ajax call for fetching stations
     $.ajax({  
         type: "GET",  
@@ -277,36 +279,42 @@ function clearForm(){
 
 
 function toggleRegression(obj){
-    if (obj.className == 'ti-angle-up'){
-        obj.className = 'ti-angle-down';
+    if (obj.childNodes[2].childNodes[0].className == 'ti-angle-up'){
+        obj.childNodes[2].childNodes[0].classList.remove("ti-angle-up");
+        obj.childNodes[2].childNodes[0].className = 'ti-angle-down';
         $('.regression').hide();
     }
     else{
-        obj.className = 'ti-angle-up';
+        obj.childNodes[2].childNodes[0].classList.remove("ti-angle-down");
+        obj.childNodes[2].childNodes[0].className = 'ti-angle-up';
         $('.regression').show();
     }
 
 }
 
 function toggleAlgorithm(obj){
-    if (obj.className == 'ti-angle-up'){
-        obj.className = 'ti-angle-down';
+    if (obj.childNodes[2].childNodes[0].className == 'ti-angle-up'){
+        obj.childNodes[2].childNodes[0].classList.remove("ti-angle-up");
+        obj.childNodes[2].childNodes[0].className = 'ti-angle-down';
         $('.algorithm').hide();
     }
     else{
-        obj.className = 'ti-angle-up';
+        obj.childNodes[2].childNodes[0].classList.remove("ti-angle-down");
+        obj.childNodes[2].childNodes[0].className = 'ti-angle-up';
         $('.algorithm').show();
     }
 
 }
 
 function toggleAdvance(obj){
-    if (obj.className == 'ti-angle-up'){
-        obj.className = 'ti-angle-down';
+    if (obj.childNodes[2].childNodes[0].className == 'ti-angle-up'){
+        obj.childNodes[2].childNodes[0].classList.remove("ti-angle-up");
+        obj.childNodes[2].childNodes[0].className = 'ti-angle-down';
         $('.advanced').hide();
     }
     else{
-        obj.className = 'ti-angle-up';
+        obj.childNodes[2].childNodes[0].classList.remove("ti-angle-down");
+        obj.childNodes[2].childNodes[0].className = 'ti-angle-up';
         $('.advanced').show();
     }
 

@@ -27,8 +27,8 @@ from TaskForm import TaskForm
                                 </div>
                                 <div class="row mb-3"></div>
                                 <div class="card">
-                                    <div class="card-header mx-0 my-0 px-0 py-0 d-flex">
-                                        <div class="mr-auto p-2">Regression Configuration</div><div class="p-2"><i class="ti-angle-down" style="cursor:pointer" onclick="toggleRegression(this)"></i></div>
+                                    <div class="card-header mx-0 my-0 px-0 py-0 d-flex" onclick="toggleRegression(this)">
+                                        <div class="mr-auto p-2">Regression Configuration</div><div class="p-2"><i id="icoReg" style="cursor:pointer"></i></div>
                                     </div>
                                     <div class="card-body regression">
                                         <div id="id_RegressionName" class="form-group row">
@@ -77,8 +77,8 @@ from TaskForm import TaskForm
                                 </div>
                                 <div class="row mb-3"></div>
                                 <div class="card">
-                                    <div class="card-header mx-0 my-0 px-0 py-0 d-flex">
-                                        <div class="mr-auto p-2">Algorithm Configuration</div><div class="p-2"><i class="ti-angle-down" style="cursor:pointer" onclick="toggleAlgorithm(this)"></i></div>
+                                    <div class="card-header mx-0 my-0 px-0 py-0 d-flex" onclick="toggleAlgorithm(this)">
+                                        <div class="mr-auto p-2">Algorithm Configuration</div><div class="p-2"><i id="icoAlgo" style="cursor:pointer"></i></div>
                                     </div>
                                     <div class="card-body algorithm">
                                         <div id="id_IsEmon" class="form-group row">
@@ -118,8 +118,8 @@ from TaskForm import TaskForm
                                 </div>
                                 <div class="row mb-3"></div>
                                 <div class="card">
-                                    <div class="card-header mx-0 my-0 px-0 py-0 d-flex">
-                                        <div class="mr-auto p-2">Advanced Machine Learning Settings</div><div class="p-2"><i class="ti-angle-down" style="cursor:pointer" onclick="toggleAdvance(this)"></i></div>
+                                    <div class="card-header mx-0 my-0 px-0 py-0 d-flex" onclick="toggleAdvance(this)">
+                                        <div class="mr-auto p-2">Advanced Machine Learning Settings</div><div class="p-2"><i id="icoAdvance" style="cursor:pointer"></i></div>
                                     </div>
                                     <div class="card-body advanced">
                                         <div id="id_Splitter" class="form-group row">
