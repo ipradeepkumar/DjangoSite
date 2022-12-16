@@ -323,3 +323,25 @@ def deleteTask(request, guids):
             'status': '200', 'responseText': 'success'
         }
     return JsonResponse(response)
+
+@ldap_auth
+def filterData(request):
+    try:
+        if (request.POST['txtFromDate'] != ''):
+            fromDate = datetime.strptime(request.POST['txtFromDate'] + ' 12:00:00','%m/%d/%Y %H:%M:%S')
+        
+        if (request.POST['txtToDate'] != ''):
+            toDate = datetime.strptime(request.POST['txtToDate'] + ' 12:00:00','%m/%d/%Y %H:%M:%S')
+        else:
+            toDate = datetime.strptime(request.POST['txtFromDate'] + ' 12:00:00','%m/%d/%Y %H:%M:%S')
+
+        taskList = Task.objects.filter(CreatedDate__date__range=(fromDate, toDate))
+        taskIterations = TaskIteration.objects.all().order_by("-id")
+        usrs = models.User.objects.all().values('username')
+        return render(request, "servicemanager/jobhistory.html", {
+            "tasks": taskList, "colNames" : Task._meta.fields, "iterations" : taskIterations, "Users": usrs
+        })
+    except Exception as e:
+        return render(request, "servicemanager/jobhistory.html", {
+            "tasks": taskList, "colNames" : Task._meta.fields, "iterations" : taskIterations, "Users": usrs
+        })

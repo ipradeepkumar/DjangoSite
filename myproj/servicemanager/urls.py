@@ -12,5 +12,6 @@ urlpatterns  = [
     path("login", views.doLogin, name="dologin"),
     path("logout", views.customlogout, name="logout"),
     path("startprocess/<GUID>/<int:userExecution>/<int:eowynExecution>", views.StartProcess, name="startprocess"),
-    path("deleteTask/<guids>", views.deleteTask, name="deleteTask")
+    path("deleteTask/<guids>", views.deleteTask, name="deleteTask"),
+    path("filterData/", views.filterData, name="filterData"),
 ] + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)

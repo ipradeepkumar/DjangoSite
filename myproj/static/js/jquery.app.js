@@ -101,6 +101,8 @@
 
     $(function(){
         $.slidebars();
+        $('#txtFromDate').datepicker();
+        $('#txtToDate').datepicker();
         $('#id_Counters').multiselect(
             {
                 includeSelectAllOption: true,
@@ -640,6 +642,40 @@ function deleteRecord(){
                 refreshJobList();
             });
         }
+}
+
+function filterData(){
+   var fromDate = $('#txtFromDate').val();
+   var toDate = $('#txtToDate').val();
+    if(fromDate == '' && toDate == ''){
+        alert('Please enter either from date or to date to filter.');
+        return;
+    }
+            $.ajax({  
+                type: "POST",  
+                headers: { "X-CSRFToken": getCookie("csrftoken") },
+                url: "filterData/",  
+                contentType: "application/json; charset=utf-8",  
+                data: {'fromDate': guids, 'toDate': toDate},
+                dataType: "json",  
+                success: function (data) {  
+                    if (data.responseText == 'success'){
+                        console.log('success');
+                    }
+                    else{
+                        console.log(data.responseText);
+                    }
+                }, //End of AJAX Success function  
+                failure: function (data) { 
+                }, //End of AJAX failure function  
+                error: function (data) {  
+
+                } //End of AJAX error function  
+
+            }).always(function(xhr, status, error){
+                refreshJobList();
+            });
+        
 }
 
 function getCookie(c_name)

@@ -13,6 +13,15 @@
         <div class="col-lg-12 col-sm-12">
             <div class="card m-b-30">
                 <div class="card-body">
+                    <form  id="jobHistory" class="form" role="form" action="{% url "filterData" %}" method="POST">
+                        {% csrf_token %}
+                    <div class="row m-b-30">
+                        <div class="col-sm-6 col-lg-6">
+                                From:&nbsp;<input type="text" id="txtFromDate" name="txtFromDate" />&nbsp;&nbsp;
+                                To:&nbsp;<input type="text" id="txtToDate" name="txtToDate" />&nbsp;&nbsp;
+                                <button style="float:right" type="submit" class="btn btn-dark btn-sm">Filter</button>
+                        </div>
+                    </div>
                     <button style="float:right" onclick="refreshJobList()" type="button" class="btn btn-dark btn-sm">Refresh</button>
                     <button style="float:left" type="button" id="btnClear" class="btn btn-dark btn-sm mr-1">Clear</button>
                     <button style="float:left" type="button" id="btnDelete" class="btn btn-dark btn-sm" onclick="deleteRecord()">Delete</button>
@@ -66,7 +75,8 @@
                             {% endfor %}
                         </tbody>
                      </table>
-                </div>
+                    </form>
+                    </div>
             </div>
         </div>
     </div>
