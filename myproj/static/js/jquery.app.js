@@ -293,7 +293,11 @@
             $('#thTool select').val('').trigger('change');
             $('#thStatus select').val('').trigger('change');
             $('#thPlatform select').val('').trigger('change');
+            $('#txtFromDate').val('');
+            $('#txtToDate').val('');
             tasksTable.draw();
+            $('#tblTasks_filter').find("input")[0].value = '';
+            
         });
 
     });
