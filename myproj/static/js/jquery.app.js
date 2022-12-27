@@ -138,7 +138,7 @@
        });
    
        $('#tblTasks thead tr:first')
-       .before('<tr><th>Filters:</th><th id="thUser">User</th><th id="thSystem_Under_Test">System Under Test</th><th><p></p></th><th id="thTool">Tool</th><th><p></p></th><th id="thPlatform">Platform</th><th><p></p></th><th id="thStatus">Status</th><th><p></p></th><th><p></p></th><th><p></p></th><th><p></p></th><th><p></p></th><th><p></p></th><th><p></p></th></tr>');
+       .before('<tr><th>Filters:</th><th></th><th id="thUser">User</th><th id="thSystem_Under_Test">System Under Test</th><th><p></p></th><th id="thTool">Tool</th><th><p></p></th><th id="thPlatform">Platform</th><th><p></p></th><th id="thStatus">Status</th><th><p></p></th><th><p></p></th><th><p></p></th><th><p></p></th><th><p></p></th><th><p></p></th><th><p></p></th></tr>');
         
        var tasksTable = $('#tblTasks').DataTable({
             scrollX: false,
@@ -146,12 +146,14 @@
             "order": [[8, 'desc']],
             columnDefs:[
                 {
-                    title: 'Select',
-                    target: 0
+                    title: '<input type=\'checkbox\' id=\'chkSelectAll\' class=\'chkall\' />',
+                    target: 0,
+                    orderable: false
                 },
                 {
                     title: 'Action',
-                    target: 1
+                    target: 1,
+                    orderable: false
                 },
                 {
                     title: 'User',
@@ -297,13 +299,39 @@
             $('#txtToDate').val('');
             tasksTable.draw();
             $('#tblTasks_filter').find("input")[0].value = '';
+            $('#tblTasks input:checkbox').prop('checked', false);
+
             
+        });
+
+        $('#chkSelectAll').on('click', function(){
+            if (this.checked){
+                $('#tblTasks input:checkbox').prop('checked', true);
+            }
+            else{
+                $('#tblTasks input:checkbox').prop('checked', false);
+            }
+        });
+
+        $('.chk').on('click', function(){
+            if ($('#tblTasks input:checked').length - 1 == $('#tblTasks input:checkbox').length - 1){
+                $('#chkSelectAll').prop('checked', true);
+            }
+            else{
+                $('#chkSelectAll').prop('checked', false);
+            }
+
+            if ($('.chk:checkbox:checked').length == $('#tblTasks .chk').length)
+                $('#chkSelectAll').prop('checked', true);
+
+
+
         });
 
     });
 
    
-   
+    
 
     $(".notification-scroll").slimScroll({
         height: "240px"
