@@ -126,6 +126,10 @@ def customlogout(request):
 
 def StartProcess(request, GUID, userExecution, eowynExecution):
     instance = Task.objects.get_queryset().filter(GUID=GUID).first()
+    newTask = PrepareNewTask(instance, request)
+    newTask.save()
+    guid = newTask.GUID
+    instance = Task.objects.get_queryset().filter(GUID=guid).first()
     try:
         #update task with flags received from front-end
         #userExecution and eowyn execution is set to true when user triggers the process
@@ -157,7 +161,30 @@ def StartProcess(request, GUID, userExecution, eowynExecution):
             'status': '500', 'responseText': 'error'
         }
         return JsonResponse(response)
+
+def PrepareNewTask(task: Task, request: requests.Request):
+    t = Task(
+        Idea = task.Idea,
+        Station= task.Station,
+        IsDebugMode = task.IsDebugMode,
+        PlatformCounter = task.PlatformCounter,
+        PlatformEvent = task.PlatformEvent,
+        TotalIterations = task.TotalIterations,
+        RegressionName = task.RegressionName,
+        Tool = task.Tool,
+        Platform = task.Platform,
+        IsEmon = task.IsEmon,
+        IsUploadResults = task.IsUploadResults,
+        Splitter = task.Splitter,
+        MinImpurityDecrease = task.MinImpurityDecrease,
+        MaxFeatures = task.MaxFeatures,
+        CreatedBy = request.user.username,
+        CreatedDate = datetime.utcnow(),
+        Status = "PENDING"
+    )
+    return t
     
+
 class TaskDetailView(DetailView):
     model = Task
     template_name = "servicemanager/jobhistorydetail.html"
