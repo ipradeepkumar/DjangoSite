@@ -126,41 +126,54 @@ def customlogout(request):
 
 def StartProcess(request, GUID, userExecution, eowynExecution):
     instance = Task.objects.get_queryset().filter(GUID=GUID).first()
-    newTask = PrepareNewTask(instance, request)
-    newTask.save()
-    guid = newTask.GUID
-    instance = Task.objects.get_queryset().filter(GUID=guid).first()
+    #find any task with the same station is in-progress
+    #if in-progress show an alert, else create a new task and start it
+    #if we check for station active, we have tasks which are using the same station but never executed
+    #in this case we can never start a task with same station which has been never executed
+    #so checking for any task with same station and is in-progress
     try:
-        #update task with flags received from front-end
-        #userExecution and eowyn execution is set to true when user triggers the process
-        #userExecution is set to false when user stops the process
-        #eowynExecution is false when python updates to false when user stops the process
-        #Task status save
-        instance.IsUserExecution = userExecution
-        instance.IsEowynExecution = eowynExecution
-        
-
-        if (userExecution):
-            SaveTaskExecutionLog(request, instance, 'START')
-            instance.Status = 'STARTING'
-            instance.save()
-        elif(userExecution == False):
-            SaveTaskExecutionLog(request, instance, 'STOPPED')
-            instance.Status = 'STOPPING'
-            instance.save()
-
-        if (userExecution):
-            req = requests.post("http://127.0.0.1:8000/api/posttask/", data = { "GUID" : instance.GUID } )
-        
+        inProgressTask = Task.objects.get(Station=instance.Station, Status='IN-PROGRESS')
+    except Task.DoesNotExist:
+        inProgressTask = None
+    if (inProgressTask != None):
         response = {
-            'status': '200', 'responseText': 'success'
-        }
-        return JsonResponse(response)
-    except Exception as e:
-        response = {
-            'status': '500', 'responseText': 'error'
-        }
-        return JsonResponse(response)
+                'status': '404', 'responseText': 'Job with this station is already active. Please try after sometime.'
+            }
+    else:
+            newTask = PrepareNewTask(instance, request)
+            newTask.save()
+            guid = newTask.GUID
+            instance = Task.objects.get_queryset().filter(GUID=guid).first()
+            try:
+                #update task with flags received from front-end
+                #userExecution and eowyn execution is set to true when user triggers the process
+                #userExecution is set to false when user stops the process
+                #eowynExecution is false when python updates to false when user stops the process
+                #Task status save
+                instance.IsUserExecution = userExecution
+                instance.IsEowynExecution = eowynExecution
+
+                if (userExecution):
+                    SaveTaskExecutionLog(request, instance, 'START')
+                    instance.Status = 'STARTING'
+                    instance.save()
+                elif(userExecution == False):
+                    SaveTaskExecutionLog(request, instance, 'STOPPED')
+                    instance.Status = 'STOPPING'
+                    instance.save()
+
+                if (userExecution):
+                    req = requests.post("http://127.0.0.1:8000/api/posttask/", data = { "GUID" : instance.GUID } )
+                
+                response = {
+                    'status': '200', 'responseText': 'success'
+                }
+                return JsonResponse(response)
+            except Exception as e:
+                response = {
+                    'status': '500', 'responseText': 'error'
+                }
+    return JsonResponse(response)
 
 def PrepareNewTask(task: Task, request: requests.Request):
     t = Task(

@@ -563,8 +563,8 @@ function startProcess(GUID, uExecution, eExecution, status) {
                 if (data.responseText == 'success'){
                     console.log('success');
                 }
-                else{
-                    console.log(data.responseText);
+                else if(data.status == '404'){
+                    alert(data.responseText);
                 }
             }, //End of AJAX Success function  
             failure: function (data) { 

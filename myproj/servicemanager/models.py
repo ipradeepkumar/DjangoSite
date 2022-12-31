@@ -16,7 +16,7 @@ class Station(models.Model):
     Desc = models.CharField(max_length=500)
     IsActive = models.BooleanField(null=True)
     CreatedBy = models.CharField(max_length=50, null=True)
-    Url = models.CharField(max_length=500, null=True)
+    
 
 class Tool(models.Model):
     ToolID = models.IntegerField(primary_key=True, unique=False)
