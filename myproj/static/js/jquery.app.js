@@ -181,7 +181,6 @@
                 },
                 {
                     title: 'Created Date',
-                    type: 'date',
                     target: 8
                 },
                 {
@@ -551,7 +550,7 @@ function refreshJobList(){
 }
 
 function startProcess(GUID, uExecution, eExecution, status) {
-    if (confirm('Are you sure, you want to start the process?')){
+    if (confirm('Are you sure, you want to ' +  status +' the process?')){
         if (GUID === '') return;
         
         $.ajax({  
@@ -560,6 +559,7 @@ function startProcess(GUID, uExecution, eExecution, status) {
             contentType: "application/json; charset=utf-8",  
             dataType: "json",  
             success: function (data) {  
+                location.reload();
                 if (data.responseText == 'success'){
                     console.log('success');
                 }

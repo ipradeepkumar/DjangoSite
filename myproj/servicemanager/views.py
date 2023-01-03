@@ -131,19 +131,23 @@ def StartProcess(request, GUID, userExecution, eowynExecution):
     #if we check for station active, we have tasks which are using the same station but never executed
     #in this case we can never start a task with same station which has been never executed
     #so checking for any task with same station and is in-progress
-    try:
-        inProgressTask = Task.objects.get(Station=instance.Station, Status='IN-PROGRESS')
-    except Task.DoesNotExist:
-        inProgressTask = None
-    if (inProgressTask != None):
+    station = Station.objects.get(Name = instance.Station)
+   
+    # try:
+    #     inProgressTask = Task.objects.get(Station=instance.Station, Status='IN-PROGRESS')
+    # except Task.DoesNotExist:
+    #     inProgressTask = None
+    # if (inProgressTask != None):
+    if (station.IsActive == False and (instance.Status == 'PENDING' or instance.Status == 'COMPLETED' or instance.Status == 'STOPPED' or instance.Status == 'ERROR')):
         response = {
                 'status': '404', 'responseText': 'Job with this station is already active. Please try after sometime.'
             }
     else:
-            newTask = PrepareNewTask(instance, request)
-            newTask.save()
-            guid = newTask.GUID
-            instance = Task.objects.get_queryset().filter(GUID=guid).first()
+            if (instance.Status == 'PENDING' or instance.Status == 'COMPLETED' or instance.Status == 'STOPPED' or instance.Status == 'ERROR'):
+                newTask = PrepareNewTask(instance, request)
+                newTask.save()
+                guid = newTask.GUID
+                instance = Task.objects.get_queryset().filter(GUID=guid).first()
             try:
                 #update task with flags received from front-end
                 #userExecution and eowyn execution is set to true when user triggers the process
