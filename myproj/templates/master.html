@@ -25,7 +25,6 @@
         <link href="{% static "dataTables.bootstrap4.min.css" %}" rel="stylesheet" type="text/css" />
         <link href="{% static "bootstrap-datepicker3.min.css" %}" rel="stylesheet" type="text/css" />
         {% block css_files %}{% endblock %}
-        
     </head>
     <body class="sticky-header" onload="getWeekNumber()">
         <!--[if lt IE 7]>
@@ -159,7 +158,7 @@
             var weekNumber = Math.ceil(days / 7);
         
             // Display the calculated result      
-            $('#wkNumber').html(weekNumber + 1);
+            $('#wkNumber').html(weekNumber);
         }
     </script>
     {% block extrajs %}

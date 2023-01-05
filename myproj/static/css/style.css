@@ -2722,3 +2722,7 @@ ul.p-social-link li a {
 .showCss{
     display: block;
 }
+
+.table td {
+    padding: 0.25em!important;
+}

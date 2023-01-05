@@ -3,7 +3,7 @@
 {% load tz %}
 
 
-
+{%block title %}Job History {%endblock%}
 {% block content %}
 <div class="page-head">
     <h4 class="mt-2 mb-2">Job History</h4>
@@ -62,14 +62,14 @@
                                     <td>{{ task.Tool }}</td>
                                     <td>{{ task.CurrentIteration }} / {{ task.TotalIterations }}</td>
                                     <td>{{ task.Platform }}</td>
-                                    <td>{{ task.CreatedDate|localtime }}</td>
+                                    <td style="white-space: nowrap;">{{ task.CreatedDate|localtime }}</td>
                                     <td>{{ task.Status }}</td>
                                     <td>{{ task.ModifiedDate|default_if_none:"" }}</td>
                                     <td>{{ task.ErrorMesage }}</td>
                                     <td>{% include './_iterationslist.html' with iterationsData=iterations taskID=task.id GUID=task.GUID %}</td>
                                     <td>{{ task.IterationResult }}</td>
-                                    <td>{{ task.TestResults }}</td>
-                                    <td>{{ task.AxonLog }}</td>
+                                    <td style="white-space: nowrap;">{{ task.TestResults }}</td>
+                                    <td style="white-space: nowrap;">{{ task.AxonLog }}</td>
                                     <td><a href="{{task.AzureLink}}" target="_blank">{{ task.AzureLink }}</a></td>
                                 </tr>
                             {% endfor %}
