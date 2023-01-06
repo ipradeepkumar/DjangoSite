@@ -277,6 +277,24 @@ function clearForm(){
     $('#ddlEmonEvents').multiselect('refresh');
 }
 
+function validateForm() {
+    var erroMessage = "";
+    if ($('#ddlStation').val() == '--Select Station--')
+        erroMessage = 'Please select station';
+    if ($('input[id=id_RegressionName]').val() == '')
+        erroMessage += '\n Please enter regression name';
+    if ($('input[id=id_TotalIterations]').val() == '')
+        erroMessage += '\n Please enter total iterations';
+    if ($('#ddlToolName').val() == '')
+        erroMessage += '\n Please select tool name';
+    
+    if (erroMessage == "")
+        return true;
+    else{
+        alert(erroMessage);
+        return false;
+    }
+}
 
 function toggleRegression(obj){
     if (obj.childNodes[2].childNodes[0].className == 'ti-angle-up'){

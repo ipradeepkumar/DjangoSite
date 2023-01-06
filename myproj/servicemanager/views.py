@@ -359,10 +359,24 @@ def GetToolList():
 
 def deleteTask(request, guids):
     list = guids.split(',')
+    stationsList = []
     tasks = Task.objects.filter(GUID__in = list)
+    for t in tasks:
+        stationsList.append(t.Station)
     tasks.delete()
+
     iterations = TaskIteration.objects.filter(GUID__in = list)
     iterations.delete()
+    #if there are not pending or starting jobs for the station that is being deleted
+    #we can make that station active again for further use
+    for stn in stationsList:
+        stationsCount = Task.objects.filter(Station=stn, Status__in=['PENDING','STARTING']).count()
+        if (stationsCount == 0):
+            s = Station.objects.get(Name=stn)
+            s.IsActive = True
+            s.save()
+
+    
     response = {
             'status': '200', 'responseText': 'success'
         }

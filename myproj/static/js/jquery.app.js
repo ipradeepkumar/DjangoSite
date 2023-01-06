@@ -646,7 +646,8 @@ function deleteRecord(){
     if (confirm('Are you sure, you want to delete?')){
         guids = [];
         for(i = 0; i < checkBoxes.length; i++){
-            guids.push(checkBoxes[i].value);
+            if (checkBoxes[i].value != 'on')
+                guids.push(checkBoxes[i].value);
         }
 
             $.ajax({  

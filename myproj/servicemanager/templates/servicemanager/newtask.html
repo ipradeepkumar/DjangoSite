@@ -34,7 +34,7 @@ from TaskForm import TaskForm
                                     <div class="card-body regression">
                                         <div id="id_RegressionName" class="form-group row">
                                             <div class="col-2">
-                                            <label id="id_RegressionName">Regression Name:</label></div>
+                                            <label id="id_RegressionName">Regression Name:<span style="color:red">*</span></label></div>
                                             <div class="col-4">
                                                 <input type="text" name="RegressionName" class="form-control" autocomplete="off" placeholder="Please enter regression name" maxlength="100" id="id_RegressionName">
                                             </select>
@@ -49,14 +49,14 @@ from TaskForm import TaskForm
                                         </div>
                                         <div id="id_TotalIterations" class="form-group row">
                                             <div class="col-2">
-                                            <label id="id_TotalIterations">Total Iterations:</label></div>
+                                            <label id="id_TotalIterations">Total Iterations:<span style="color:red">*</span></label></div>
                                             <div class="col-4">
                                                 <input type="number" name="TotalIterations" min="0" class="form-control" autocomplete="off" placeholder="Please enter Iterations" id="id_TotalIterations" />
                                             </div>
                                         </div>
                                         <div id="id_ToolName" class="form-group row">
                                             <div class="col-2">
-                                            <label id="id_ToolName">Tool Name:</label></div>
+                                            <label id="id_ToolName">Tool Name:<span style="color:red">*</span></label></div>
                                             <div class="col-3">
                                                 <select name="ToolName" id="ddlToolName" class="form-control">
                                                     <option value="">--Select Tool--</option>
@@ -152,7 +152,7 @@ from TaskForm import TaskForm
                                     </div>
                                 </div>
                                 <div class="row mb-3"></div>
-                            <button type="submit" id="btnSubmit" style="display:none" class="btn btn-primary">Submit</button>
+                            <button type="submit" id="btnSubmit" onclick="return validateForm()" style="display:none" class="btn btn-primary">Submit</button>
                             <button type="button" id="btnClear" class="btn btn-primary" onclick="clearForm()">Clear</button>
                         </form>                                    
                     </div>
