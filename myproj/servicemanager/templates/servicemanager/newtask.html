@@ -21,6 +21,7 @@ from TaskForm import TaskForm
                                 <div id="id_Stations" class="form-group row">
                                     <div class="col-2">
                                     <label id="id_Stations">Station:<span style="color:red">*</span></label></div>
+                                    <textarea id="ToolJson" name="ToolJson" rows="25" cols="100" style="display:none"></textarea>
                                     <div class="col-10">
                                         <select name="Stations" class="form-control" id="ddlStation">
                                         </select>
@@ -57,10 +58,13 @@ from TaskForm import TaskForm
                                         <div id="id_ToolName" class="form-group row">
                                             <div class="col-2">
                                             <label id="id_ToolName">Tool Name:<span style="color:red">*</span></label></div>
-                                            <div class="col-3">
+                                            <div class="col-2">
                                                 <select name="ToolName" id="ddlToolName" class="form-control">
                                                     <option value="">--Select Tool--</option>
                                                 </select>
+                                            </div>
+                                            <div class="col-1" id="lnkPlaceHolder" style="white-space: nowrap;">
+                                                
                                             </div>
                                             <div class="col-2 text-right">
                                                 <label id="id_IsUploadResult">Upload Result:</label></div>
@@ -72,7 +76,7 @@ from TaskForm import TaskForm
                                                     <div class="col-1 px-0">
                                                         <input type="checkbox" id="id_DebugMode" class="form-control" name="DebugMode"></input>
                                                     </select>
-                                                    </div>
+                                                </div>
                                         </div>
                                     </div>
                                 </div>
@@ -154,6 +158,7 @@ from TaskForm import TaskForm
                                 <div class="row mb-3"></div>
                             <button type="submit" id="btnSubmit" onclick="return validateForm()" style="display:none" class="btn btn-primary">Submit</button>
                             <button type="button" id="btnClear" class="btn btn-primary" onclick="clearForm()">Clear</button>
+                            <button type="button" id="btnJson" class="btn btn-primary" onclick="showJson()">JSON</button>
                         </form>                                    
                     </div>
                 </div>  
@@ -161,6 +166,54 @@ from TaskForm import TaskForm
         </div>
     </div>
     <div>
+
+
+    <div class="modal fade bd-example-modal-lg" id="jobJson" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+        <form  id="jsonForm" class="form" role="form" action="{% url "SendJson" %}" method="POST">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">JSON</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    {% csrf_token %}
+                    <textarea id="jsonData" name="JsonData" rows="25" cols="100"></textarea>
+                </div>
+                <div class="modal-footer">
+                    <button type="submit" class="btn btn-primary">Send</button>
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </form>
+        </div>
+    </div> 
+
+    <div class="modal fade bd-example-modal-lg" id="toolJson" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+        
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">JSON</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    {% csrf_token %}
+                    <textarea id="toolData" name="ToolData" rows="25" cols="100"></textarea>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-primary" onclick="saveToolJson()">Save</button>
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                </div>
+            </div>
+       
+        </div>
+    </div>
+
 {% endblock %}
 
 {% block extrajs %}

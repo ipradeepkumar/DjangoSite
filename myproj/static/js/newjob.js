@@ -54,38 +54,38 @@ $(function(){
 
     });   
     //ajax call for fetching tools
-    $.ajax({  
-        type: "GET",  
-        url: "/api/tools",  
-        contentType: "application/json; charset=utf-8",  
-        dataType: "json",  
-        success: function (data) {  
+    // $.ajax({  
+    //     type: "GET",  
+    //     url: "/api/tools",  
+    //     contentType: "application/json; charset=utf-8",  
+    //     dataType: "json",  
+    //     success: function (data) {  
            
-            $.each(data, function (key, item) { 
-                $('#ddlToolName')
-                    .append($("<option></option>")
-                    .attr("value", item.Name)
-                    .text(item.Name));
-            }); //End of foreach Loop   
-            // $('#ddlToolName').multiselect(
-            //     {
-            //         includeSelectAllOption: true,
-            //         selectAllText: 'Select all',
-            //         enableFiltering: true,
-            //         enableCaseInsensitiveFiltering: true,
-            //     }
-            // );
-            // $('#ddlToolName').multiselect('rebuild');
-        }, //End of AJAX Success function  
+    //         $.each(data, function (key, item) { 
+    //             $('#ddlToolName')
+    //                 .append($("<option></option>")
+    //                 .attr("value", item.Name)
+    //                 .text(item.Name));
+    //         }); //End of foreach Loop   
+    //         // $('#ddlToolName').multiselect(
+    //         //     {
+    //         //         includeSelectAllOption: true,
+    //         //         selectAllText: 'Select all',
+    //         //         enableFiltering: true,
+    //         //         enableCaseInsensitiveFiltering: true,
+    //         //     }
+    //         // );
+    //         // $('#ddlToolName').multiselect('rebuild');
+    //     }, //End of AJAX Success function  
 
-        failure: function (data) {  
-            alert(data.responseText);  
-        }, //End of AJAX failure function  
-        error: function (data) {  
-            alert(data.responseText);  
-        } //End of AJAX error function  
+    //     failure: function (data) {  
+    //         alert(data.responseText);  
+    //     }, //End of AJAX failure function  
+    //     error: function (data) {  
+    //         alert(data.responseText);  
+    //     } //End of AJAX error function  
 
-    }); 
+    // }); 
 
     //ajax call for fetching platforms
     // $.ajax({  
@@ -295,6 +295,8 @@ function validateForm() {
         return false;
     }
 }
+
+
 
 function toggleRegression(obj){
     if (obj.childNodes[2].childNodes[0].className == 'ti-angle-up'){

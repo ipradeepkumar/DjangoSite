@@ -21,6 +21,9 @@ class Station(models.Model):
 class Tool(models.Model):
     ToolID = models.IntegerField(primary_key=True, unique=False)
     Name = models.CharField(max_length=150)
+    StationName = models.CharField(null=True, max_length=150)
+    JsonFile = models.CharField(max_length=150, null=True)
+
 
 class ToolEvent(models.Model):
     ToolEventID = models.IntegerField(primary_key=True, unique=False)
@@ -87,6 +90,7 @@ class Task(models.Model):
     AzureLink = models.CharField(max_length=250, null=True)
     IsUserExecution = models.BooleanField(null=True)
     IsEowynExecution = models.BooleanField(null=True)
+    ToolJson = models.TextField(null=True)
 
 class TaskIteration(models.Model):
     TaskID = models.IntegerField(null=True)

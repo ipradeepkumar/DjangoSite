@@ -129,6 +129,7 @@
 
                 $('#spnPlatform').html(val.split('^')[0]);
                 setEmonEventCounters();
+                setToolNames(val.split('^')[1]);
             }
             else{
                 $('.form > div:not(#id_Stations)').addClass('hideCss');
@@ -136,6 +137,27 @@
             }
 
        });
+
+       $('#ddlToolName').on('change', function(event){
+            var val = event.target.value;
+            if (val == "") { $('#lnkPlaceHolder').html(''); return;}
+            $.ajax({  
+                type: "GET",  
+                url: "/api/toolJson/" + val,  
+                contentType: "application/json; charset=utf-8",  
+                dataType: "json",  
+                success: function (data) {  
+                    $('#lnkPlaceHolder').html('<span style="text-decoration:underline;cursor:pointer;color:blue" onclick="showToolJson(\'' + data[0].fields.JsonFile +'\')" >Tool Json</span>');
+                }, //End of AJAX Success function  
+                failure: function (data) {  
+                    console.log(data.responseText);  
+                }, //End of AJAX failure function  
+                error: function (data) {  
+                    console.log(data.responseText);  
+                }
+            });
+     });
+
    
        $('#tblTasks thead tr:first')
        .before('<tr><th>Filters:</th><th></th><th id="thUser">User</th><th id="thSystem_Under_Test">System Under Test</th><th><p></p></th><th id="thTool">Tool</th><th><p></p></th><th id="thPlatform">Platform</th><th><p></p></th><th id="thStatus">Status</th><th><p></p></th><th><p></p></th><th><p></p></th><th><p></p></th><th><p></p></th><th><p></p></th><th><p></p></th></tr>');
@@ -518,7 +540,6 @@ function showIterationDetail(iterationID, taskID) {
     });   
 }
 
-
 function showIterationDetail(seletObj) {
     if (seletObj.value === '') return;
     iterationID = seletObj.value.split('^')[0];
@@ -637,6 +658,30 @@ function setEmonEventCounters(){
     }); 
 }
 
+function setToolNames(stationName){
+    $.ajax({  
+        type: "GET",  
+        url: "/api/toolByStation/" + stationName,  
+        contentType: "application/json; charset=utf-8",  
+        dataType: "json",  
+        success: function (data) {  
+            console.log(data);
+            $.each(data, function (key, item) { 
+                $('#ddlToolName')
+                    .append($("<option></option>")
+                    .attr("value", item.fields.Name)
+                    .text(item.fields.Name));
+            }); 
+        }, //End of AJAX Success function  
+        failure: function (data) {  
+            console.log(data.responseText);  
+        }, //End of AJAX failure function  
+        error: function (data) {  
+            console.log(data.responseText);  
+        }
+    });
+}
+
 function deleteRecord(){
     var checkBoxes = $('#tblTasks').find('input[type="checkbox"]:checked');
     if(checkBoxes.length == 0){
@@ -709,6 +754,77 @@ function filterData(){
                 refreshJobList();
             });
         
+}
+
+function sendJson() {
+    $.ajax({  
+        type: "POST",  
+        url: "SendJson",  
+        contentType: "application/json; charset=utf-8",  
+        dataType: "json",  
+        data: $('#jsonData').innerHTML,
+        success: function (data) {
+           alert('Task data posted to API');
+        }, //End of AJAX Success function  
+        failure: function (data) {  
+            alert(data.responseText);  
+        }, //End of AJAX failure function  
+        error: function (data) {  
+            alert(data.responseText);  
+        } //End of AJAX error function  
+
+    });   
+}
+
+function showJson() {
+    $.ajax({  
+        type: "GET",  
+        url: "ShowJson",  
+        contentType: "application/json; charset=utf-8",  
+        dataType: "json",  
+        success: function (data) {
+            let jsonObj = JSON.stringify(data);
+            let jsonPretty = JSON.parse(jsonObj);
+            //$('#jsonData')[0].innerHTML = JSON.stringify(jsonObj[0].fields, null, 2);
+            $('#jsonData')[0].innerHTML = JSON.stringify(jsonPretty, null, '\t');
+            $('#jobJson').modal('show'); 
+        }, //End of AJAX Success function  
+        failure: function (data) {  
+            alert(data.responseText);  
+        }, //End of AJAX failure function  
+        error: function (data) {  
+            alert(data.responseText);  
+        } //End of AJAX error function  
+
+    });   
+}
+
+function showToolJson(fileName) {
+    $.ajax({  
+        type: "GET",  
+        url: "ShowToolJson/" + fileName,  
+        contentType: "application/json; charset=utf-8",  
+        dataType: "json",  
+        success: function (data) {
+            let jsonObj = JSON.stringify(data);
+            let jsonPretty = JSON.parse(jsonObj);
+            //$('#jsonData')[0].innerHTML = JSON.stringify(jsonObj[0].fields, null, 2);
+            $('#toolData')[0].innerHTML = JSON.stringify(jsonPretty, null, '\t');
+            $('#toolJson').modal('show'); 
+        }, //End of AJAX Success function  
+        failure: function (data) {  
+            alert(data.responseText);  
+        }, //End of AJAX failure function  
+        error: function (data) {  
+            alert(data.responseText);  
+        } //End of AJAX error function  
+
+    });   
+}
+
+function saveToolJson(){
+    $('#ToolJson').text($('#toolData').val());
+    $('#toolJson').modal('toggle');
 }
 
 function getCookie(c_name)

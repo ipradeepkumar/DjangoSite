@@ -91,7 +91,8 @@ def newtask(request):
                     MaxFeatures = taskFormObj.cleaned_data['MaxFeatures'],
                     CreatedBy = request.user.username,
                     CreatedDate = datetime.utcnow(),
-                    Status = "PENDING"
+                    Status = "PENDING",
+                    ToolJson = taskFormObj.cleaned_data['ToolJson'].replace("\r\n\t","").replace("\r\n",""),
                     )
                 task.save()
                 station.IsActive = False
@@ -403,3 +404,36 @@ def filterData(request):
         return render(request, "servicemanager/jobhistory.html", {
             "tasks": taskList, "colNames" : Task._meta.fields, "iterations" : taskIterations, "Users": usrs
         })
+
+def ShowToolJson(request, fileName):
+   try:
+    dirPath = os.path.dirname(os.path.realpath(__file__))
+    filePath = os.path.join(dirPath, "api", "data", fileName)
+    with open(filePath, 'r') as taskfile:
+        stream = io.BytesIO(str.encode(taskfile.read()))
+        taskData = JSONParser().parse(stream=stream)
+        return JsonResponse(taskData)
+   except: 
+        return JsonResponse({ 'message': 'File not found' })
+
+def ShowJson(request):
+   try:
+    dirPath = os.path.dirname(os.path.realpath(__file__))
+    filePath = os.path.join(dirPath, "api", "data", "task.json")
+    with open(filePath, 'r') as taskfile:
+        stream = io.BytesIO(str.encode(taskfile.read()))
+        taskData = JSONParser().parse(stream=stream)
+        return JsonResponse(taskData)
+   except: 
+        return JsonResponse({ 'message': 'File not found' })
+
+def SendJson(request):
+   requests.post("http://127.0.0.1:8000/api/posttask/", data = { "taskJSON" : request.POST['JsonData'] } )
+   taskFormObj = TaskForm()
+   return render(request, "servicemanager/newtask.html", {
+        "taskForm": taskFormObj
+    })
+
+def SaveToolJson(request):
+   toolJson =  request.POST['ToolData']
+   

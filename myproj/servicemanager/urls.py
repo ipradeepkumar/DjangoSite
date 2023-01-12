@@ -14,4 +14,7 @@ urlpatterns  = [
     path("startprocess/<GUID>/<int:userExecution>/<int:eowynExecution>", views.StartProcess, name="startprocess"),
     path("deleteTask/<guids>", views.deleteTask, name="deleteTask"),
     path("filterData/", views.filterData, name="filterData"),
+    path("ShowJson", views.ShowJson, name="ShowJson"),
+    path("SendJson", views.SendJson, name="SendJson"),
+    path('ShowToolJson/<fileName>', views.ShowToolJson ,name="ShowToolJson")
 ] + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
