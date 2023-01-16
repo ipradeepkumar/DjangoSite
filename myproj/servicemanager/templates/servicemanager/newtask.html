@@ -204,8 +204,10 @@ from TaskForm import TaskForm
                 <div class="modal-body">
                     {% csrf_token %}
                     <textarea id="toolData" name="ToolData" rows="25" cols="100"></textarea>
+                    <span id="validJsonNotify"></span>
                 </div>
                 <div class="modal-footer">
+                    <button type="button" class="btn btn-primary" onclick="validateJSON()">Validate JSON</button>
                     <button type="button" class="btn btn-primary" onclick="saveToolJson()">Save</button>
                     <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
                 </div>

@@ -827,6 +827,24 @@ function saveToolJson(){
     $('#toolJson').modal('toggle');
 }
 
+function validateJSON(){
+    jsonStr = $('#toolData').val();
+    try {
+        var c = $.parseJSON(jsonStr);
+        $('#validJsonNotify').css('color','green');
+        $('#validJsonNotify').html('Valid JSON');
+        setTimeout(function(){
+            $('#validJsonNotify').html('');
+        }, 3000)
+      }
+      catch (err) {
+        $('#validJsonNotify').css('color','red');
+        $('#validJsonNotify').html('Invalid JSON. Error: ' + err);
+        setTimeout(function(){
+            $('#validJsonNotify').html('');
+        }, 3000)
+      }
+}
 function getCookie(c_name)
 {
     if (document.cookie.length > 0)
