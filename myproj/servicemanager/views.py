@@ -72,8 +72,8 @@ def newtask(request):
         else:
             if taskFormObj.is_valid():
                 
-                emonCounterData = EmonCounter.objects.filter(EmonCounterID__in = taskFormObj.cleaned_data['EmonCounters']).values_list('Name', flat=True)
-                emonEventData = EmonEvent.objects.filter(EmonEventID__in = taskFormObj.cleaned_data['EmonEvents']).values_list('Name', flat=True)
+                emonCounterData =  [ emoncounter['Name'] for emoncounter in EmonCounter.objects.filter(EmonCounterID__in = taskFormObj.cleaned_data['EmonCounters'])] #.values_list('Name', flat=True)
+                emonEventData = [ emonevent['Name'] for emonevent in EmonEvent.objects.filter(EmonEventID__in = taskFormObj.cleaned_data['EmonEvents'])] #.values_list('Name', flat=True)
                 task = Task(
                     Idea = taskFormObj.cleaned_data['Idea'],
                     Station= taskFormObj.cleaned_data['Stations'].split('^')[1],
@@ -118,8 +118,8 @@ def jobhistory(request):
         "tasks": taskList, "colNames" : Task._meta.fields, "iterations" : taskIterations, "Users": usrs
     })
 
-def jobhistory_detail(request, id):
-    pass
+# def jobhistory_detail(request, id):
+#     pass
 
 def customlogout(request):
     logout(request)
@@ -132,6 +132,7 @@ def StartProcess(request, GUID, userExecution, eowynExecution):
     #if we check for station active, we have tasks which are using the same station but never executed
     #in this case we can never start a task with same station which has been never executed
     #so checking for any task with same station and is in-progress
+    if(instance == None): pass
     station = Station.objects.get(Name = instance.Station)
    
     # try:

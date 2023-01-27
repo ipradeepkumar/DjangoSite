@@ -11,6 +11,7 @@ https://docs.djangoproject.com/en/4.0/ref/settings/
 """
 
 from pathlib import Path
+from servicemanager.custom_ldap_filter import custom_format_search_filters
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -49,7 +50,7 @@ MIDDLEWARE = [
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
-    'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    #'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
 
 ROOT_URLCONF = 'myproj.urls'
@@ -91,6 +92,7 @@ LDAP_AUTH_USER_FIELDS = {
 # returning a list of [ldap_search_filter]. The search filters will then be AND'd
 # together when creating the final search filter.
 LDAP_AUTH_FORMAT_SEARCH_FILTERS = "django_python3_ldap.utils.format_search_filters"
+#LDAP_AUTH_FORMAT_SEARCH_FILTERS = "servicemanager.custom_ldap_filter.custom_format_search_filters"
 
 
 # Path to a callable that takes a dict of {model_field_name: value}, and returns
@@ -111,8 +113,8 @@ LDAP_AUTH_FORMAT_SEARCH_FILTERS = "django_python3_ldap.utils.format_search_filte
 # LDAP_AUTH_CONNECT_TIMEOUT = None
 # LDAP_AUTH_RECEIVE_TIMEOUT = None
 
-LDAP_AUTH_BIND_DN = "dc=example,dc=com"
-LDAP_AUTH_BIND_PASSWORD = "password"
+LDAP_AUTH_BIND_DN = None
+LDAP_AUTH_BIND_PASSWORD = None
 
 # LDAP auth test settings.
 
@@ -198,8 +200,6 @@ AUTH_PASSWORD_VALIDATORS = [
 
 LANGUAGE_CODE = 'en-us'
 
-TIME_ZONE = 'UTC'
-
 USE_I18N = True
 
 USE_TZ = True
@@ -224,3 +224,5 @@ STATICFILES_DIRS = [
 # https://docs.djangoproject.com/en/4.0/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+TEST_RUNNER='servicemanager.test.nodbtestrunner.NoDbTestRunner'
