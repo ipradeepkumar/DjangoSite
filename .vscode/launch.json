@@ -21,7 +21,7 @@
             "request": "launch",
             "program": "${workspaceFolder}\\myproj\\manage.py",
             "args": [
-                "test", "servicemanager"
+                "test", "servicemanager","--testrunner=servicemanager.test.nodbtestrunner.NoDbTestRunner"
             ],
             "django": true
         }

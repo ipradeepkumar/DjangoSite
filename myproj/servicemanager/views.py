@@ -112,7 +112,7 @@ def find(task: Task, condition):
 @ldap_auth
 def jobhistory(request):
     taskList = Task.objects.all()
-    taskIterations = TaskIteration.objects.all().order_by("-id")
+    taskIterations = TaskIteration.objects.all().sort(key=lambda x: x["id"], reverse=True)
     usrs = models.User.objects.all().values('username')
     return render(request, "servicemanager/jobhistory.html", {
         "tasks": taskList, "colNames" : Task._meta.fields, "iterations" : taskIterations, "Users": usrs
@@ -132,7 +132,8 @@ def StartProcess(request, GUID, userExecution, eowynExecution):
     #if we check for station active, we have tasks which are using the same station but never executed
     #in this case we can never start a task with same station which has been never executed
     #so checking for any task with same station and is in-progress
-    if(instance == None): pass
+    if(True): 
+        pass
     station = Station.objects.get(Name = instance.Station)
    
     # try:
