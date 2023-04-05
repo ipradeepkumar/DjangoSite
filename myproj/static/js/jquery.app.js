@@ -672,6 +672,10 @@ function setToolNames(stationName){
                     .remove();
                 $('#ddlToolName')
                     .append($("<option></option>")
+                    .attr("value", "")
+                    .text("-- Select Tool--"));                  
+                $('#ddlToolName')
+                    .append($("<option></option>")
                     .attr("value", item.fields.Name)
                     .text(item.fields.Name));
             }); 
