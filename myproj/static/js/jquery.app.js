@@ -668,6 +668,9 @@ function setToolNames(stationName){
             console.log(data);
             $.each(data, function (key, item) { 
                 $('#ddlToolName')
+                    .find('option')
+                    .remove();
+                $('#ddlToolName')
                     .append($("<option></option>")
                     .attr("value", item.fields.Name)
                     .text(item.fields.Name));
