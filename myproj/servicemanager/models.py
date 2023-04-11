@@ -42,7 +42,7 @@ class Platform(models.Model):
 class EmonEvent(models.Model):
     EmonEventID = models.IntegerField()
     Name = models.CharField(max_length=150)
-    Platform = models.ForeignKey(Platform, on_delete=models.SET_NULL, null=True, related_name="emonevents")
+    Station = models.ForeignKey(Station, on_delete=models.SET_NULL, null=True, related_name="emonevents")
 
 class EmonCounter(models.Model):
     EmonCounterID = models.IntegerField()

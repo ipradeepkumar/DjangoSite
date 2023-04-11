@@ -128,7 +128,7 @@
                 $('#btnSubmit').show();
 
                 $('#spnPlatform').html(val.split('^')[0]);
-                setEmonEventCounters();
+                setEmonEventCounters(val.split('^')[1]);
                 setToolNames(val.split('^')[1]);
             }
             else{
@@ -604,10 +604,10 @@ function startProcess(GUID, uExecution, eExecution, status) {
 }
 
 
-function setEmonEventCounters(){
+function setEmonEventCounters(stationName){
     $.ajax({  
         type: "GET",  
-        url: "/api/event/" + 'cpx',//$('#ddlStation').find(":selected").val(),  
+        url: "/api/event/" + stationName,//$('#ddlStation').find(":selected").val(),  
         contentType: "application/json; charset=utf-8",  
         dataType: "json",  
         success: function (data) {  

@@ -100,8 +100,8 @@ def GetIterationJson(request, iterationID, taskID):
     return Response(iterationData.JSONData)
 
 @api_view(['GET'])
-def GetPlatformEvents(request, platformID):
-    platformEventData = EmonEvent.objects.filter(Platform__Name = platformID)
+def GetPlatformEvents(request, stationName):
+    platformEventData = EmonEvent.objects.filter(Station__Name = stationName)
     # assuming obj is a model instance
     serialized_obj = serializers.serialize('json', platformEventData)
     return HttpResponse(serialized_obj, content_type="application/json")
