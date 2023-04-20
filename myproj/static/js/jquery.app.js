@@ -610,6 +610,12 @@ function setEmonEventCounters(stationName){
         url: "/api/event/" + stationName,//$('#ddlStation').find(":selected").val(),  
         contentType: "application/json; charset=utf-8",  
         dataType: "json",  
+        beforeSend: function(){
+            $('#loading').show();
+        },
+        complete: function(){
+            $('#loading').hide();
+        },
         success: function (data) {  
             //isPlatformChanged = true;
             $('#ddlEmonEvents').find('option').remove();

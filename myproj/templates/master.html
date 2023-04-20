@@ -51,6 +51,9 @@
                         <a href="{% url "jobhistory" %}"><span>Job History</span></a>
                     </li>
                     <li class="">
+                        <a href="{% url "newstation" %}"><span>New Station</span></a>
+                    </li>
+                    <li class="">
                         <h3 class="navigation-title">Resources</h3>
                     </li>
                     <li class="">
@@ -107,7 +110,10 @@
             </div>
             <!-- header section end-->
             
-            <div class="container-fluid">                                   
+            <div class="container-fluid">   
+                <div id="loading" style="display:none">
+                    <img id="loading-image" src="{% static "1495.gif" %}" />
+                </div>                              
                 {% block content %}
                 {% endblock %}
             </div><!--end container-->
