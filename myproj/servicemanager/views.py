@@ -71,9 +71,12 @@ def newtask(request):
         })
         else:
             if taskFormObj.is_valid():
-                
-                emonCounterData =  [ emoncounter['Name'] for emoncounter in EmonCounter.objects.filter(EmonCounterID__in = taskFormObj.cleaned_data['EmonCounters'])] #.values_list('Name', flat=True)
-                emonEventData = [ emonevent['Name'] for emonevent in EmonEvent.objects.filter(EmonEventID__in = taskFormObj.cleaned_data['EmonEvents'])] #.values_list('Name', flat=True)
+                if (len(taskFormObj.cleaned_data['EmonEvents']) != 0 and len(taskFormObj.cleaned_data['EmonCounters']) != 0):
+                    emonCounterData =  [ emoncounter['Name'] for emoncounter in EmonCounter.objects.filter(EmonCounterID__in = taskFormObj.cleaned_data['EmonCounters'])] #.values_list('Name', flat=True)
+                    emonEventData = [ emonevent['Name'] for emonevent in EmonEvent.objects.filter(EmonEventID__in = taskFormObj.cleaned_data['EmonEvents'])] #.values_list('Name', flat=True)
+                else:
+                    emonCounterData =  [ emoncounter for emoncounter in EmonCounter.objects.all().values_list('Name', flat=True) ]
+                    emonEventData = [ emonevent for emonevent in EmonEvent.objects.all().values_list('Name', flat=True) ] 
                 task = Task(
                     Idea = taskFormObj.cleaned_data['Idea'],
                     Station= taskFormObj.cleaned_data['Stations'].split('^')[1],
@@ -100,6 +103,17 @@ def newtask(request):
                 # taskJson = serializers.serialize('json', [task])
                 return HttpResponseRedirect("jobhistory")
    
+# ALTER TABLE public.servicemanager_task 
+# DROP COLUMN "PlatformEvent";    
+
+# ALTER TABLE public.servicemanager_task 
+# DROP COLUMN "PlatformCounter"; 
+
+# ALTER TABLE public.servicemanager_task 
+# ADD COLUMN "PlatformEvent" Text;
+
+# ALTER TABLE public.servicemanager_task 
+# ADD COLUMN "PlatformCounter" Text;
 
     return render(request, "servicemanager/newtask.html", {
         "taskForm": taskFormObj
@@ -112,7 +126,8 @@ def find(task: Task, condition):
 @ldap_auth
 def jobhistory(request):
     taskList = Task.objects.all()
-    taskIterations = TaskIteration.objects.all().sort(key=lambda x: x["id"], reverse=True)
+    #taskIterations = TaskIteration.objects.all().sort(key=lambda x: x["id"], reverse=True)
+    taskIterations = TaskIteration.objects.all().order_by("-id")
     usrs = models.User.objects.all().values('username')
     return render(request, "servicemanager/jobhistory.html", {
         "tasks": taskList, "colNames" : Task._meta.fields, "iterations" : taskIterations, "Users": usrs
@@ -125,7 +140,7 @@ def customlogout(request):
     logout(request)
     return render(request, "servicemanager/logout.html")
 
-def StartProcess(request, GUID, userExecution, eowynExecution):
+def StartProcess(request, GUID, userExecution, eowynExecution): 
     instance = Task.objects.get_queryset().filter(GUID=GUID).first()
     #find any task with the same station is in-progress
     #if in-progress show an alert, else create a new task and start it
@@ -438,4 +453,7 @@ def SendJson(request):
 
 def SaveToolJson(request):
    toolJson =  request.POST['ToolData']
-   
+
+@ldap_auth
+def NewStation(request):
+    return render(request, "servicemanager/newstation.html")
