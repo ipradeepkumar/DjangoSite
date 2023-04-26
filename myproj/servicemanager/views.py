@@ -56,7 +56,8 @@ def index(request):
 def newtask(request):
     hostname = socket.gethostname()    
     IPAddr = socket.gethostbyname(hostname)  
-
+    emonEventData = []
+    emonCounterData = []
     if request.method == "GET":
         taskFormObj = TaskForm()
        
@@ -71,12 +72,14 @@ def newtask(request):
         })
         else:
             if taskFormObj.is_valid():
-                if (len(taskFormObj.cleaned_data['EmonEvents']) != 0 and len(taskFormObj.cleaned_data['EmonCounters']) != 0):
-                    emonCounterData =  [ emoncounter['Name'] for emoncounter in EmonCounter.objects.filter(EmonCounterID__in = taskFormObj.cleaned_data['EmonCounters'])] #.values_list('Name', flat=True)
-                    emonEventData = [ emonevent['Name'] for emonevent in EmonEvent.objects.filter(EmonEventID__in = taskFormObj.cleaned_data['EmonEvents'])] #.values_list('Name', flat=True)
-                else:
-                    emonCounterData =  [ emoncounter for emoncounter in EmonCounter.objects.all().values_list('Name', flat=True) ]
-                    emonEventData = [ emonevent for emonevent in EmonEvent.objects.all().values_list('Name', flat=True) ] 
+                if (taskFormObj.cleaned_data['IsEmon'] == True):
+                    if (len(taskFormObj.cleaned_data['EmonEvents']) != 0 and len(taskFormObj.cleaned_data['EmonCounters']) != 0):
+                        emonCounterData =  [ emoncounter['Name'] for emoncounter in EmonCounter.objects.filter(EmonCounterID__in = taskFormObj.cleaned_data['EmonCounters'])] #.values_list('Name', flat=True)
+                        emonEventData = [ emonevent['Name'] for emonevent in EmonEvent.objects.filter(EmonEventID__in = taskFormObj.cleaned_data['EmonEvents'])] #.values_list('Name', flat=True)
+                    else:
+                        emonCounterData =  [ emoncounter for emoncounter in EmonCounter.objects.all().values_list('Name', flat=True) ]
+                        emonEventData = [ emonevent for emonevent in EmonEvent.objects.all().values_list('Name', flat=True) ] 
+              
                 task = Task(
                     Idea = taskFormObj.cleaned_data['Idea'],
                     Station= taskFormObj.cleaned_data['Stations'].split('^')[1],

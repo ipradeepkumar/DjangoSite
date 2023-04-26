@@ -339,6 +339,8 @@ function toggleAdvance(obj){
     }
 
 }
-
+function ToggleInfo(){
+    $('#emonInfo').toggle();
+}
 
 

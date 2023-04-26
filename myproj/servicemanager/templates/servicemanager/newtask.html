@@ -90,10 +90,10 @@ from TaskForm import TaskForm
                                             <div class="col-2">
                                             <label id="id_IsEmon">Emon Tool:</label></div>
                                             <div class="col-2">
-                                                <input type="checkbox" id="chkEmon" class="form-control" name="IsEmon"></input>
+                                                <input type="checkbox" id="chkEmon" class="form-control" name="IsEmon" onclick="ToggleInfo()"></input>
                                             </div>
                                             <div class="col-8">
-                                                <i>Please do not select "Select All" option, by default system will consider all events and counters if none is selected </i>
+                                                <i id="emonInfo" style="display:none;color:red">Please do not select "Select All" option, by default system will consider all events and counters if none is selected </i>
                                             </div>
                                         </div>
                                         <div id="id_EmonEvents" class="form-group row">
