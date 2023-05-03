@@ -17,6 +17,7 @@ from django_python3_ldap import ldap
 from django.contrib.auth import logout, login, models 
 from multiprocessing import Process
 import requests
+import json
 
 
 # LDAP_URI = 'ldap://ldap.forumsys.com:389'
@@ -58,6 +59,7 @@ def newtask(request):
     IPAddr = socket.gethostbyname(hostname)  
     emonEventData = []
     emonCounterData = []
+  
     if request.method == "GET":
         taskFormObj = TaskForm()
        
@@ -73,12 +75,8 @@ def newtask(request):
         else:
             if taskFormObj.is_valid():
                 if (taskFormObj.cleaned_data['IsEmon'] == True):
-                    if (len(taskFormObj.cleaned_data['EmonEvents']) != 0 and len(taskFormObj.cleaned_data['EmonCounters']) != 0):
-                        emonCounterData =  [ emoncounter['Name'] for emoncounter in EmonCounter.objects.filter(EmonCounterID__in = taskFormObj.cleaned_data['EmonCounters'])] #.values_list('Name', flat=True)
-                        emonEventData = [ emonevent['Name'] for emonevent in EmonEvent.objects.filter(EmonEventID__in = taskFormObj.cleaned_data['EmonEvents'])] #.values_list('Name', flat=True)
-                    else:
-                        emonCounterData =  [ emoncounter for emoncounter in EmonCounter.objects.all().values_list('Name', flat=True) ]
-                        emonEventData = [ emonevent for emonevent in EmonEvent.objects.all().values_list('Name', flat=True) ] 
+                    emonCounterData =  [ emoncounter['Name'] for emoncounter in EmonCounter.objects.filter(EmonCounterID__in = taskFormObj.cleaned_data['EmonCounters'])] #.values_list('Name', flat=True)
+                    emonEventData = [ emonevent['Name'] for emonevent in EmonEvent.objects.filter(EmonEventID__in = taskFormObj.cleaned_data['EmonEvents'])] #.values_list('Name', flat=True)
               
                 task = Task(
                     Idea = taskFormObj.cleaned_data['Idea'],

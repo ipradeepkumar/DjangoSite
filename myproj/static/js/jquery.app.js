@@ -518,6 +518,13 @@ function showDetail(id) {
     });   
 }
 
+function showTestResult(taskId) {
+    //let jsonObj = JSON.parse(str);
+    //$('#jsonData')[0].innerHTML = JSON.stringify(jsonObj[0].fields, null, 2);
+    $('#jsonData')[0].innerHTML = JSON.parse(document.getElementById(taskId).textContent);
+    $('#jobJson').modal('show'); 
+}
+
 function showIterationDetail(iterationID, taskID) {
     $.ajax({  
         type: "GET",  

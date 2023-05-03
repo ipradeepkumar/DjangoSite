@@ -68,7 +68,7 @@
                                     <td>{{ task.ErrorMesage }}</td>
                                     <td>{% include './_iterationslist.html' with iterationsData=iterations taskID=task.id GUID=task.GUID %}</td>
                                     <td>{{ task.IterationResult }}</td>
-                                    <td style="white-space: nowrap;">{{ task.TestResults }}</td>
+                                    <td style="white-space: nowrap;">{{ task.TestResults|json_script:task.id }}{% if task.TestResults %}<a href='#' onclick="showTestResult({{ task.id }})"><p style="text-decoration:underline"> Result </p></a>{% else %} None {% endif %}</td>
                                     <td style="white-space: nowrap;">{{ task.AxonLog }}</td>
                                     <td><a href="{{task.AzureLink}}" target="_blank">{{ task.AzureLink }}</a></td>
                                 </tr>
