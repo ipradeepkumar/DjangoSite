@@ -22,7 +22,7 @@ class Tool(models.Model):
     ToolID = models.IntegerField(primary_key=True, unique=False)
     Name = models.CharField(max_length=150)
     StationName = models.CharField(null=True, max_length=150)
-    JsonFile = models.CharField(max_length=150, null=True)
+    JsonFile = models.TextField(null=True)
 
 
 class ToolEvent(models.Model):

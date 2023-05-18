@@ -196,7 +196,7 @@ from TaskForm import TaskForm
 
     <div class="modal fade bd-example-modal-lg" id="toolJson" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
         <div class="modal-dialog modal-lg">
-        
+            {% comment %} <form  id="toolJson" class="form" role="form" action="{% url "SaveToolJson" %}" method="POST"> {% endcomment %}
             <div class="modal-content">
                 <div class="modal-header">
                     <h5 class="modal-title">JSON</h5>
@@ -206,16 +206,17 @@ from TaskForm import TaskForm
                 </div>
                 <div class="modal-body">
                     {% csrf_token %}
+                    <input type="hidden" id="ToolName" name="ToolName" />
                     <textarea id="toolData" name="ToolData" rows="25" cols="100"></textarea>
                     <span id="validJsonNotify"></span>
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-primary" onclick="validateJSON()">Validate JSON</button>
-                    <button type="button" class="btn btn-primary" onclick="saveToolJson()">Save</button>
+                    <button type="submit" class="btn btn-primary" onclick="saveToolJson()">Save</button>
                     <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
                 </div>
             </div>
-       
+        {% comment %} </form> {% endcomment %}
         </div>
     </div>
 

@@ -17,6 +17,7 @@ from django_python3_ldap import ldap
 from django.contrib.auth import logout, login, models 
 from multiprocessing import Process
 import requests
+from django.views.decorators.csrf import csrf_exempt
 import json
 
 
@@ -101,6 +102,10 @@ def newtask(request):
                 task.save()
                 station.IsActive = False
                 station.save()
+
+                toolObj = Tool.objects.filter(Name = task.Tool).first()
+                toolObj.JsonFile = task.ToolJson
+                toolObj.save()
                 # taskJson = serializers.serialize('json', [task])
                 return HttpResponseRedirect("jobhistory")
    
@@ -451,9 +456,18 @@ def SendJson(request):
    return render(request, "servicemanager/newtask.html", {
         "taskForm": taskFormObj
     })
-
+@csrf_exempt
 def SaveToolJson(request):
-   toolJson =  request.POST['ToolData']
+   body = json.loads(request.body)
+
+   toolJson =  body['ToolData']
+   toolName = body['ToolName']
+   toolObj = Tool.objects.filter(Name = toolName).first();
+   toolObj.JsonFile = toolJson
+   toolObj.save()
+   return HttpResponse('')
+
+
 
 @ldap_auth
 def NewStation(request):

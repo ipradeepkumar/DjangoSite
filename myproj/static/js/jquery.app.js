@@ -147,7 +147,8 @@
                 contentType: "application/json; charset=utf-8",  
                 dataType: "json",  
                 success: function (data) {  
-                    $('#lnkPlaceHolder').html('<span style="text-decoration:underline;cursor:pointer;color:blue" onclick="showToolJson(\'' + data[0].fields.JsonFile +'\')" >Tool Json</span>');
+                    $('#ToolName').val(val);
+                    $('#lnkPlaceHolder').html('<span style="text-decoration:underline;cursor:pointer;color:blue" onclick="showToolJsonData(\'' + btoa(data[0].fields.JsonFile) + '\')" >Tool Json</span>');
                 }, //End of AJAX Success function  
                 failure: function (data) {  
                     console.log(data.responseText);  
@@ -819,6 +820,16 @@ function showJson() {
     });   
 }
 
+function showToolJsonData(jsonData) {
+    if (jsonData === "") { alert('No json data found'); }
+    let jsonObj = atob(jsonData);
+    let jsonPretty = JSON.parse(jsonObj);
+    //$('#jsonData')[0].innerHTML = JSON.stringify(jsonObj[0].fields, null, 2);
+    $('#toolData')[0].innerHTML = JSON.stringify(jsonPretty, null, '\t');
+    $('#toolJson').modal('show'); 
+}
+
+
 function showToolJson(fileName) {
     $.ajax({  
         type: "GET",  
@@ -845,6 +856,26 @@ function showToolJson(fileName) {
 function saveToolJson(){
     $('#ToolJson').text($('#toolData').val());
     $('#toolJson').modal('toggle');
+
+    $.ajax({  
+        type: "POST",  
+        url: "SaveToolJson",  
+        contentType: "application/json; charset=utf-8",  
+        dataType: "json",  
+        data: JSON.stringify({'ToolData': $('#toolData').val(), 'ToolName': $('#ToolName').val()}),
+        success: function (data) {
+          
+        }, //End of AJAX Success function  
+        failure: function (data) {  
+            alert(data.responseText);  
+        }, //End of AJAX failure function  
+        error: function (data) {  
+            alert(data.responseText);  
+        } //End of AJAX error function  
+
+    }); 
+
+   
 }
 
 function validateJSON(){
