@@ -148,6 +148,7 @@
                 dataType: "json",  
                 success: function (data) {  
                     $('#ToolName').val(val);
+                    $('#StationName').val(data[0].fields.StationName);
                     $('#lnkPlaceHolder').html('<span style="text-decoration:underline;cursor:pointer;color:blue" onclick="showToolJsonData(\'' + btoa(data[0].fields.JsonFile) + '\')" >Tool Json</span>');
                 }, //End of AJAX Success function  
                 failure: function (data) {  
@@ -506,6 +507,7 @@ function showDetail(id) {
         dataType: "json",  
         success: function (data) {  
             let jsonObj = JSON.parse(data);
+            jsonObj[0].fields.ToolJson = '<span style=\'color:blue;cursor:pointer\' onclick=showJobHistoryToolJson(\'' + btoa(jsonObj[0].fields.ToolJson) + '\')>User Tool Json</span>'; //JSON.parse(jsonObj[0].fields.ToolJson);
             $('#jsonData')[0].innerHTML = JSON.stringify(jsonObj[0].fields, null, 2);
             $('#jobJson').modal('show'); 
         }, //End of AJAX Success function  
@@ -818,6 +820,14 @@ function showJson() {
         } //End of AJAX error function  
 
     });   
+}
+
+function showJobHistoryToolJson(jsonString){
+    let jsonObj = atob(jsonString);
+    let jsonPretty = JSON.parse(jsonObj);
+    //$('#jsonData')[0].innerHTML = JSON.stringify(jsonObj[0].fields, null, 2);
+    $('#toolData')[0].innerHTML = JSON.stringify(jsonPretty, null, '\t');
+    $('#toolJson').modal('show'); 
 }
 
 function showToolJsonData(jsonData) {

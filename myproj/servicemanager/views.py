@@ -103,7 +103,7 @@ def newtask(request):
                 station.IsActive = False
                 station.save()
 
-                toolObj = Tool.objects.filter(Name = task.Tool).first()
+                toolObj = Tool.objects.filter(Name = task.Tool, StationName = task.Station).first()
                 toolObj.JsonFile = task.ToolJson
                 toolObj.save()
                 # taskJson = serializers.serialize('json', [task])
@@ -462,7 +462,7 @@ def SaveToolJson(request):
 
    toolJson =  body['ToolData']
    toolName = body['ToolName']
-   toolObj = Tool.objects.filter(Name = toolName).first();
+   toolObj = Tool.objects.filter(Name = toolName, StationName = body['StationName']).first();
    toolObj.JsonFile = toolJson
    toolObj.save()
    return HttpResponse('')

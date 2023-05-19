@@ -37,7 +37,7 @@ from TaskForm import TaskForm
                                             <div class="col-2">
                                             <label id="id_RegressionName">Regression Name:<span style="color:red">*</span></label></div>
                                             <div class="col-4">
-                                                <input type="text" name="RegressionName" class="form-control" autocomplete="off" placeholder="Please enter regression name" maxlength="100" id="id_RegressionName">
+                                                <input type="text" name="RegressionName" class="form-control" autocomplete="on" placeholder="Please enter regression name" maxlength="100" id="id_RegressionName">
                                             </select>
                                             </div>
                                             <div class="col-2 text-right">
@@ -207,6 +207,7 @@ from TaskForm import TaskForm
                 <div class="modal-body">
                     {% csrf_token %}
                     <input type="hidden" id="ToolName" name="ToolName" />
+                    <input type="hidden" id="StationName" name="StationName" />
                     <textarea id="toolData" name="ToolData" rows="25" cols="100"></textarea>
                     <span id="validJsonNotify"></span>
                 </div>
