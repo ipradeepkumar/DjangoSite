@@ -6,7 +6,7 @@ from django.shortcuts import render
 from django.views.generic.detail import DetailView
 import time
 from servicemanager.api.serializers import TaskSerializer
-from .forms import TaskForm
+from .forms import TaskEncoder, TaskForm, TaskListForm
 from .models import Idea, Platform, Station, Task, TaskExecutionLog, TaskIteration, TaskStatus, Tool, EmonCounter, EmonEvent
 from datetime import datetime
 from rest_framework.parsers import JSONParser
@@ -19,7 +19,7 @@ from multiprocessing import Process
 import requests
 from django.views.decorators.csrf import csrf_exempt
 import json
-
+from array import array
 
 # LDAP_URI = 'ldap://ldap.forumsys.com:389'
 # LDAP_DN = 'dc=example,dc=com'
@@ -76,8 +76,8 @@ def newtask(request):
         else:
             if taskFormObj.is_valid():
                 if (taskFormObj.cleaned_data['IsEmon'] == True):
-                    emonCounterData =  [ emoncounter['Name'] for emoncounter in EmonCounter.objects.filter(EmonCounterID__in = taskFormObj.cleaned_data['EmonCounters'])] #.values_list('Name', flat=True)
-                    emonEventData = [ emonevent['Name'] for emonevent in EmonEvent.objects.filter(EmonEventID__in = taskFormObj.cleaned_data['EmonEvents'])] #.values_list('Name', flat=True)
+                    emonCounterData =  [ emoncounter.Name for emoncounter in EmonCounter.objects.filter(EmonCounterID__in = taskFormObj.cleaned_data['EmonCounters'])] #.values_list('Name', flat=True)
+                    emonEventData = [ emonevent.Name for emonevent in EmonEvent.objects.filter(EmonEventID__in = taskFormObj.cleaned_data['EmonEvents'])] #.values_list('Name', flat=True)
               
                 task = Task(
                     Idea = taskFormObj.cleaned_data['Idea'],
@@ -112,7 +112,7 @@ def newtask(request):
 # ALTER TABLE public.servicemanager_task 
 # DROP COLUMN "PlatformEvent";    
 
-# ALTER TABLE public.servicemanager_task 
+# ALTER TABLE public.servicemanager_task  
 # DROP COLUMN "PlatformCounter"; 
 
 # ALTER TABLE public.servicemanager_task 
@@ -138,6 +138,57 @@ def jobhistory(request):
     return render(request, "servicemanager/jobhistory.html", {
         "tasks": taskList, "colNames" : Task._meta.fields, "iterations" : taskIterations, "Users": usrs
     })
+
+@ldap_auth
+def jobhistorynewpageload(request):
+    usrs = models.User.objects.all().values('username')
+    return render(request, "servicemanager/jobhistorynew.html", { "Users": usrs })
+
+@ldap_auth
+def jobhistorynew(request):
+    taskList = Task.objects.filter(CreatedBy = request.user.username)
+    taskListForm = []
+    for i in range(len(taskList)):
+        taskForm = {
+        'TaskID': taskList[i].id if taskList[i].id is not None else '',
+        'Station': taskList[i].Station,
+        'IsDebugMode': taskList[i].IsDebugMode,
+        'RegressionName': taskList[i].RegressionName,
+        'Tool': taskList[i].Tool,
+        'ToolEvent': taskList[i].ToolEvent if taskList[i].ToolEvent is not None else '',
+        'ToolCounter': taskList[i].ToolCounter if taskList[i].ToolCounter is not None else '',
+        'Platform': taskList[i].Platform,
+        'IsEmon': taskList[i].IsEmon,
+        'PlatformEvent': taskList[i].PlatformEvent,
+        'PlatformCounter': taskList[i].PlatformCounter,
+        'Idea': taskList[i].Idea,
+        'IsUploadResults': taskList[i].IsUploadResults,
+        'TotalIterations': taskList[i].TotalIterations,
+        'Splitter': taskList[i].Splitter,
+        'MinImpurityDecrease': taskList[i].MinImpurityDecrease,
+        'MaxFeatures': taskList[i].MaxFeatures,
+        'CreatedBy': taskList[i].CreatedBy,
+        'CreatedDate': taskList[i].CreatedDate,
+        'ModifiedBy': taskList[i].ModifiedBy if taskList[i].ModifiedBy is not None else '',
+        'ModifiedDate': taskList[i].ModifiedDate if taskList[i].ModifiedDate is not None else '',
+        'ErrorCode': taskList[i].ErrorCode if taskList[i].ErrorCode is not None else '',
+        'ErrorMessage': taskList[i].ErrorMessage if taskList[i].ErrorMessage is not None else '',
+        'Status': taskList[i].Status,
+        'GUID': taskList[i].GUID,
+        'CurrentIteration': taskList[i].CurrentIteration ,
+        'IterationResult': taskList[i].IterationResult if taskList[i].IterationResult is not None else '',
+        'TestResults': taskList[i].TestResults if taskList[i].TestResults is not None else '',
+        'AxonLog': taskList[i].AxonLog if taskList[i].AxonLog is not None else '',
+        'AzureLink': taskList[i].AzureLink if taskList[i].AzureLink is not None else '',
+        'IsUserExecution': taskList[i].IsUserExecution if taskList[i].IsUserExecution is not None else '',
+        'IsEowynExecution': taskList[i].IsEowynExecution if taskList[i].IsEowynExecution is not None else '',
+        'ToolJson': taskList[i].ToolJson if taskList[i].ToolJson is not None else '',
+        'TaskIterations': list(TaskIteration.objects.filter(GUID = str(taskList[i].GUID)))
+        }
+        taskListForm.append(taskForm)
+
+    taskJson = json.dumps(taskListForm, cls= TaskEncoder)
+    return JsonResponse({ "data": json.loads(taskJson) }, safe=False)
 
 # def jobhistory_detail(request, id):
 #     pass
@@ -427,6 +478,128 @@ def filterData(request):
         return render(request, "servicemanager/jobhistory.html", {
             "tasks": taskList, "colNames" : Task._meta.fields, "iterations" : taskIterations, "Users": usrs
         })
+
+def filterDataNew(request, fromDate, toDate):
+    try:
+        if (fromDate != ''):
+            fromDate = datetime.strptime(fromDate + ' 12:00:00','%m-%d-%Y %H:%M:%S')
+        
+        if(toDate != ''):
+            toDate = datetime.strptime(toDate + ' 12:00:00','%m-%d-%Y %H:%M:%S')
+        else:
+            toDate = datetime.strptime(fromDate + ' 12:00:00','%m-%d-%Y %H:%M:%S')
+
+        taskList = Task.objects.filter(CreatedDate__date__range=(fromDate, toDate))
+        taskListForm = []
+        for i in range(len(taskList)):
+            taskForm = {
+            'TaskID': taskList[i].id if taskList[i].id is not None else '',
+            'Station': taskList[i].Station,
+            'IsDebugMode': taskList[i].IsDebugMode,
+            'RegressionName': taskList[i].RegressionName,
+            'Tool': taskList[i].Tool,
+            'ToolEvent': taskList[i].ToolEvent if taskList[i].ToolEvent is not None else '',
+            'ToolCounter': taskList[i].ToolCounter if taskList[i].ToolCounter is not None else '',
+            'Platform': taskList[i].Platform,
+            'IsEmon': taskList[i].IsEmon,
+            'PlatformEvent': taskList[i].PlatformEvent,
+            'PlatformCounter': taskList[i].PlatformCounter,
+            'Idea': taskList[i].Idea,
+            'IsUploadResults': taskList[i].IsUploadResults,
+            'TotalIterations': taskList[i].TotalIterations,
+            'Splitter': taskList[i].Splitter,
+            'MinImpurityDecrease': taskList[i].MinImpurityDecrease,
+            'MaxFeatures': taskList[i].MaxFeatures,
+            'CreatedBy': taskList[i].CreatedBy,
+            'CreatedDate': taskList[i].CreatedDate,
+            'ModifiedBy': taskList[i].ModifiedBy if taskList[i].ModifiedBy is not None else '',
+            'ModifiedDate': taskList[i].ModifiedDate if taskList[i].ModifiedDate is not None else '',
+            'ErrorCode': taskList[i].ErrorCode if taskList[i].ErrorCode is not None else '',
+            'ErrorMessage': taskList[i].ErrorMessage if taskList[i].ErrorMessage is not None else '',
+            'Status': taskList[i].Status,
+            'GUID': taskList[i].GUID,
+            'CurrentIteration': taskList[i].CurrentIteration ,
+            'IterationResult': taskList[i].IterationResult if taskList[i].IterationResult is not None else '',
+            'TestResults': taskList[i].TestResults if taskList[i].TestResults is not None else '',
+            'AxonLog': taskList[i].AxonLog if taskList[i].AxonLog is not None else '',
+            'AzureLink': taskList[i].AzureLink if taskList[i].AzureLink is not None else '',
+            'IsUserExecution': taskList[i].IsUserExecution if taskList[i].IsUserExecution is not None else '',
+            'IsEowynExecution': taskList[i].IsEowynExecution if taskList[i].IsEowynExecution is not None else '',
+            'ToolJson': taskList[i].ToolJson if taskList[i].ToolJson is not None else '',
+            'TaskIterations': list(TaskIteration.objects.filter(GUID = str(taskList[i].GUID)))
+            }
+            taskListForm.append(taskForm)
+
+        taskJson = json.dumps(taskListForm, cls= TaskEncoder)
+        return JsonResponse({ "data": json.loads(taskJson) }, safe=False)
+    except Exception as e:
+        return JsonResponse({ "data": e }, safe=False)
+
+def deleteTaskNew(request, guids):
+    list = guids.split(',')
+    stationsList = []
+    tasks = Task.objects.filter(GUID__in = list)
+    for t in tasks:
+        stationsList.append(t.Station)
+    tasks.delete()
+
+    iterations = TaskIteration.objects.filter(GUID__in = list)
+    iterations.delete()
+    #if there are not pending or starting jobs for the station that is being deleted
+    #we can make that station active again for further use
+    for stn in stationsList:
+        stationsCount = Task.objects.filter(Station=stn, Status__in=['PENDING','STARTING']).count()
+        if (stationsCount == 0):
+            s = Station.objects.get(Name=stn)
+            s.IsActive = True
+            s.save()
+    
+    taskList = Task.objects.filter(CreatedBy = request.user.username)
+    taskListForm = []
+    for i in range(len(taskList)):
+        taskForm = {
+        'TaskID': taskList[i].id if taskList[i].id is not None else '',
+        'Station': taskList[i].Station,
+        'IsDebugMode': taskList[i].IsDebugMode,
+        'RegressionName': taskList[i].RegressionName,
+        'Tool': taskList[i].Tool,
+        'ToolEvent': taskList[i].ToolEvent if taskList[i].ToolEvent is not None else '',
+        'ToolCounter': taskList[i].ToolCounter if taskList[i].ToolCounter is not None else '',
+        'Platform': taskList[i].Platform,
+        'IsEmon': taskList[i].IsEmon,
+        'PlatformEvent': taskList[i].PlatformEvent,
+        'PlatformCounter': taskList[i].PlatformCounter,
+        'Idea': taskList[i].Idea,
+        'IsUploadResults': taskList[i].IsUploadResults,
+        'TotalIterations': taskList[i].TotalIterations,
+        'Splitter': taskList[i].Splitter,
+        'MinImpurityDecrease': taskList[i].MinImpurityDecrease,
+        'MaxFeatures': taskList[i].MaxFeatures,
+        'CreatedBy': taskList[i].CreatedBy,
+        'CreatedDate': taskList[i].CreatedDate,
+        'ModifiedBy': taskList[i].ModifiedBy if taskList[i].ModifiedBy is not None else '',
+        'ModifiedDate': taskList[i].ModifiedDate if taskList[i].ModifiedDate is not None else '',
+        'ErrorCode': taskList[i].ErrorCode if taskList[i].ErrorCode is not None else '',
+        'ErrorMessage': taskList[i].ErrorMessage if taskList[i].ErrorMessage is not None else '',
+        'Status': taskList[i].Status,
+        'GUID': taskList[i].GUID,
+        'CurrentIteration': taskList[i].CurrentIteration ,
+        'IterationResult': taskList[i].IterationResult if taskList[i].IterationResult is not None else '',
+        'TestResults': taskList[i].TestResults if taskList[i].TestResults is not None else '',
+        'AxonLog': taskList[i].AxonLog if taskList[i].AxonLog is not None else '',
+        'AzureLink': taskList[i].AzureLink if taskList[i].AzureLink is not None else '',
+        'IsUserExecution': taskList[i].IsUserExecution if taskList[i].IsUserExecution is not None else '',
+        'IsEowynExecution': taskList[i].IsEowynExecution if taskList[i].IsEowynExecution is not None else '',
+        'ToolJson': taskList[i].ToolJson if taskList[i].ToolJson is not None else '',
+        'TaskIterations': list(TaskIteration.objects.filter(GUID = str(taskList[i].GUID)))
+        }
+        taskListForm.append(taskForm)
+
+    taskJson = json.dumps(taskListForm, cls= TaskEncoder)
+    return JsonResponse({ "data": json.loads(taskJson) }, safe=False)
+    
+    
+
 
 def ShowToolJson(request, fileName):
    try:

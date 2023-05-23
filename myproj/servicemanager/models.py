@@ -57,6 +57,14 @@ class TaskStatus(models.Model):
     TaskStatusID = models.IntegerField()
     Name = models.CharField(max_length=50)
 
+class TaskIteration(models.Model):
+    TaskID = models.IntegerField(null=True)
+    GUID = models.UUIDField(primary_key=False)
+    Iteration = models.IntegerField(null=True)
+    JSONData = models.JSONField(null=True)
+    CreatedDate =  models.DateTimeField(null=True)
+    CreatedBy = models.CharField(max_length=50, null=True)
+
 class Task(models.Model):
     TaskID = models.IntegerField(null=True)
     Station = models.CharField(max_length=250, null=True)
@@ -91,14 +99,6 @@ class Task(models.Model):
     IsUserExecution = models.BooleanField(null=True)
     IsEowynExecution = models.BooleanField(null=True)
     ToolJson = models.TextField(null=True)
-
-class TaskIteration(models.Model):
-    TaskID = models.IntegerField(null=True)
-    GUID = models.UUIDField(primary_key=False)
-    Iteration = models.IntegerField(null=True)
-    JSONData = models.JSONField(null=True)
-    CreatedDate =  models.DateTimeField(null=True)
-    CreatedBy = models.CharField(max_length=50, null=True)
 
 class TaskExecutionLog(models.Model):
     TaskID = models.IntegerField(null=True)

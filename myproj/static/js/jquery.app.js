@@ -159,7 +159,251 @@
                 }
             });
      });
+     $('#btnFilter').on('click',function(){
+        let fromDate = $('#txtFromDate').val();
+        let toDate = $('#txtToDate').val();
+        if(fromDate == '' && toDate == ''){
+            alert('Please enter either from date or to date to filter.');
+            return;
+        }
+        else if (toDate == ''){
+            toDate = fromDate;
+        }
+        else if (fromDate == '')
+        {
+            fromDate = toDate;
+        }
+        tasksTableNew.ajax.url('filterDataNew/' + fromDate.replace(/\//g,'-') + '/' + toDate.replace(/\//g,'-')).load(function(e){
+            console.log(e);
+        }, false);
+     });
+     $('#btnDelete').on('click',function(){
+        let guids = [];
+        var checkBoxes = $('#tblTasksNew').find('input[type="checkbox"]:checked');
+        if(checkBoxes.length == 0){
+            alert('Please select a row to delete.');
+            return;
+        }
+        if (confirm('Are you sure, you want to delete?')){
+            
+            for(let i = 0; i < checkBoxes.length; i++){
+                if (checkBoxes[i].value != 'on')
+                    guids.push(checkBoxes[i].value);
+            }
+            
+            tasksTableNew.ajax.url('deleteTaskNew/' + guids).load(function(e){
+                    console.log(e);
+                }, false);
+        }
+     });
+     /*******************************************************************************************************************/
+     $('#tblTasksNew thead tr:first')
+       .before('<tr><th>Filters:</th><th></th><th id="thUser">User</th><th id="thSystem_Under_Test">System Under Test</th><th><p></p></th><th id="thTool">Tool</th><th><p></p></th><th id="thPlatform">Platform</th><th><p></p></th><th id="thStatus">Status</th><th><p></p></th><th><p></p></th><th><p></p></th><th><p></p></th><th><p></p></th><th><p></p></th><th><p></p></th></tr>');
+        
+       var tasksTableNew = $('#tblTasksNew').DataTable({
+            scrollX: false,
+            processing: false,
+            ajax: {
+                url: 'jobhistorynew',
+            },
+            "autoWidth": true,
+            "order": [[8, 'desc']],
+            columns:[
+                {   data: 'TaskID', 
+                    render: function(data, type, row, meta){
+                        if (row.Status == 'COMPLETE' || row.Status == 'COMPLETED' || row.Status == 'ERROR' || row.Status == 'PENDING' || row.Status == 'STOPPED')
+                            return "<input type='checkbox' value='" + row.GUID +"' class='chknew'></input>"
+                        else
+                            return "";
+                    }
+                },
+                { data: 'TaskID',
+                  render: function(data, type, row, meta){
 
+                    if (row.Status == 'COMPLETE' || row.Status == 'COMPLETED' || row.Status == 'ERROR' || row.Status == 'PENDING' || row.Status == 'STOPPED')
+                        return "<a href='#' onclick=\"startProcess('" + row.GUID + "', 1, 1, 'start')\" class='ti-control-play'>&nbsp;Start</a>";
+                    else if (row.Status == 'IN-PROGRESS')
+                        return "<a href='#' onclick=\"startProcess('" + row.GUID + "', 0, 1, 'stop')\" class='ti-control-stop'>&nbsp;Stop</a>";
+                    else if (row.Status == 'STARTING')
+                        return "<span style='font-weight:bold;color:green'>Starting...</span>";
+                    else if(row.Status == 'STOPPING')
+                            return "<span style='font-weight:bold;color:red'>Stopping...</span>";
+                  }
+                },
+                { data: 'CreatedBy'
+                },
+                { data: 'Station'
+                },
+                { data: 'RegressionName',
+                  render: function(data, type, row, meta){
+                    return "<a href='#' onclick='showDetail(" + row.TaskID + ")'><p style='text-decoration:underline'>" + row.RegressionName + "</p></a>";
+                  }
+                },
+                { data: 'Tool'
+                },
+                { data: 'TotalIterations',
+                  render:function(data, type, row, meta){
+                    return "<span>" + row.CurrentIteration + " / " + row.TotalIterations + "</span>";
+                  }
+                },
+                { data: 'Platform'
+                },
+                { data: 'CreatedDate'
+                },
+                { data: 'Status'
+                },
+                { data: 'ModifiedDate'
+                },
+                { data: 'ErrorCode'
+                },
+                { data: 'IterationResult',
+                  render: function(data, type, row, meta){
+                    let optionStr = '';
+                    $.each(row.TaskIterations, function(index, value){
+                        if (value.GUID == row.GUID){
+                            optionStr += "<option value='" + value.Iteration + "^" + value.TaskID +"'>" + value.Iteration + "</option>";
+                        }
+                    });
+                    return "<select class='form-control sm-2 w-75' style='font-size:14px;' name='iteration' id='iteration' onchange='showIterationDetail(this)>" +
+                                    "<option value=''></option>" +
+                                   optionStr 
+                            "</select>";
+                  }
+                },
+                { data: 'IterationResult'
+                },
+                { data: 'TestResults'
+                },
+                { data: 'AxonLog'
+                },
+                { data: 'AzureLink'
+                }
+            ],
+            columnDefs:[
+
+            ],
+            'rowCallback': function(row, data, index){
+                if(data.Status.toUpperCase() == "PENDING"){
+                    $(row).find('td:eq(9)').css('background-color', 'orange');
+                    $(row).find('td:eq(9)').css('color', 'black');
+                }
+                if(data.Status.toUpperCase() == 'IN-PROGRESS'){
+                    $(row).find('td:eq(9)').css('background-color', 'yellow');
+                    $(row).find('td:eq(9)').css('color', 'black');
+                }
+                if(data.Status.toUpperCase() == 'COMPLETE' || data.Status.toUpperCase() == 'COMPLETED' || data.Status.toUpperCase() == 'STARTING'){
+                    $(row).find('td:eq(9)').css('color', 'white');
+                    $(row).find('td:eq(9)').css('background-color', 'green');
+                }
+                if(data.Status.toUpperCase() == 'ERROR' || data.Status.toUpperCase() == 'STOPPING' || data.Status.toUpperCase() == 'STOPPED'){
+                    $(row).find('td:eq(9)').css('color', 'white');
+                    $(row).find('td:eq(9)').css('background-color', 'red');
+                }
+              },
+
+              initComplete: function () {
+                this.api()
+                    .columns()
+                    .every(function () {
+                        var column = this;
+                        if ($(column.header()).html() == 'System Under Test' || $(column.header()).html() == 'Tool' || 
+                                        $(column.header()).html() == 'Platform' || $(column.header()).html() == 'Status' || $(column.header()).html() == 'User'){
+                         
+                        var select = $('<select style="border-radius:5px;border:1px solid #ced4da" data-size="3"><option value="">--Select All--</option></select>')
+                        .appendTo($('#tblTasksNew #th' + $(column.header()).html().replaceAll(' ','_')).empty())
+                        .on('change', function () {
+                            var val = $.fn.dataTable.util.escapeRegex($(this).val());
+                            column.search(val ? '^' + val + '$' : '', true, false).draw();
+                            
+                        });
+                        if ($(column.header()).html() == 'User'){
+                            var users = $('#users').html().trim().split(',');
+                            var loggedinUser = $('#loggedInUser').html();
+                            for(var i=0; i < users.length; i++){
+                                if (users[i].trim() != '' )
+                                    select.append('<option value="' + users[i].trim() + '"' + (loggedinUser == users[i].trim() ?  'selected' : '') +'>' + users[i].trim() + '</option>');
+                            }
+                            column.search('^' + loggedinUser + '$', true, false).draw();
+                        }
+                        else{
+                            column
+                                .data()
+                                .unique()
+                                .sort()
+                                .each(function (d, j) {
+                                        if (d != '')
+                                            select.append('<option value="' + d + '">' + d + '</option>');
+                                });
+
+                            }
+                        
+                        }
+                    });
+                    //$("#thUser select option[value='']").remove();
+                    $('#thUser select').selectpicker({
+                        liveSearch: true,
+                        maxOptions: 3,
+                        liveSearchStyle: 'contains'
+                    });
+                    $('#thSystem_Under_Test select').selectpicker({
+                        liveSearch: true,
+                        maxOptions: 3,
+                        liveSearchStyle: 'contains'
+                    });
+                    $('#thTool select').selectpicker({
+                        liveSearch: true,
+                        maxOptions: 3,
+                        liveSearchStyle: 'contains'
+                    });
+                    $('#thPlatform select').selectpicker({
+                        liveSearch: true,
+                        maxOptions: 3,
+                        liveSearchStyle: 'contains'
+                    });
+                    $('#thStatus select').selectpicker({
+                        liveSearch: true,
+                        maxOptions: 3,
+                        liveSearchStyle: 'contains'
+                    });
+            }
+
+              
+        });
+
+       
+
+        tasksTableNew.on( 'xhr', function () {
+            var json = tasksTableNew.ajax.json();
+            tasksTableNew.order([8, 'desc']).draw();
+            console.log( json );
+        } );
+
+        $('#refreshGrid').on('click', function(){
+            tasksTableNew.ajax.reload();
+        });
+
+        $('#tblTasksNew,.chknew').on('click',function(){
+            if ($('#tblTasksNew input:checked').length - 1 == $('#tblTasksNew input:checkbox').length - 1){
+                $('#chkSelectAllNew').prop('checked', true);
+            }
+            else{
+                $('#chkSelectAllNew').prop('checked', false);
+            }
+
+            if ($('.chknew:checkbox:checked').length == $('#tblTasksNew .chknew').length)
+                $('#chkSelectAllNew').prop('checked', true);
+
+            });
+
+            $('#chkSelectAllNew').on('click', function(){
+                if (this.checked){
+                    $('#tblTasksNew input:checkbox').prop('checked', true);
+                }
+                else{
+                    $('#tblTasksNew input:checkbox').prop('checked', false);
+                }
+            });
+     /*******************************************************************************************************************/
    
        $('#tblTasks thead tr:first')
        .before('<tr><th>Filters:</th><th></th><th id="thUser">User</th><th id="thSystem_Under_Test">System Under Test</th><th><p></p></th><th id="thTool">Tool</th><th><p></p></th><th id="thPlatform">Platform</th><th><p></p></th><th id="thStatus">Status</th><th><p></p></th><th><p></p></th><th><p></p></th><th><p></p></th><th><p></p></th><th><p></p></th><th><p></p></th></tr>');
@@ -321,8 +565,19 @@
             $('#txtFromDate').val('');
             $('#txtToDate').val('');
             tasksTable.draw();
-            $('#tblTasks_filter').find("input")[0].value = '';
-            $('#tblTasks input:checkbox').prop('checked', false);
+            tasksTableNew.draw();
+            if ($('#tblTasks').length){
+                $('#tblTasks_filter').find("input")[0].value = '';
+                if($('#tblTasks input:checkbox').length > 0)
+                    $('#tblTasks input:checkbox').prop('checked', false);
+            }
+
+            if ($('#tblTasksNew').length){
+                $('#tblTasksNew_filter').find("input")[0].value = '';
+                if($('#tblTasksNew input:checkbox').length > 0)
+                    $('#tblTasksNew input:checkbox').prop('checked', false);
+            }
+
 
             
         });
@@ -336,6 +591,8 @@
             }
         });
 
+       
+
         $('.chk').on('click', function(){
             if ($('#tblTasks input:checked').length - 1 == $('#tblTasks input:checkbox').length - 1){
                 $('#chkSelectAll').prop('checked', true);
@@ -347,10 +604,9 @@
             if ($('.chk:checkbox:checked').length == $('#tblTasks .chk').length)
                 $('#chkSelectAll').prop('checked', true);
 
-
-
         });
 
+        
     });
 
    

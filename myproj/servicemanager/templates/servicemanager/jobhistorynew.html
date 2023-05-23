@@ -1,0 +1,138 @@
+{% extends 'master.html' %}
+{% load static%}
+{% load tz %}
+
+
+{%block title %}Job History {%endblock%}
+{% block content %}
+<div class="page-head">
+    <h4 class="mt-2 mb-2">Job History</h4>
+</div>
+<div class="basic-table">
+    <div class="row">
+        <div class="col-lg-12 col-sm-12">
+            <div class="card m-b-30">
+                <div class="card-body">
+                    
+                    
+                    <div class="row m-b-30">
+                        <div class="col-sm-6 col-lg-6">
+                                From:&nbsp;<input type="text" id="txtFromDate" name="txtFromDate" style="border-radius:5px" autocomplete="off" />&nbsp;&nbsp;
+                                To:&nbsp;<input type="text" id="txtToDate" name="txtToDate" style="border-radius:5px" autocomplete="off"/>&nbsp;&nbsp;
+                                <button style="float:right" type="button" id="btnFilter" class="btn btn-dark btn-sm">Filter</button>
+                        </div>
+                    </div>
+                    <button style="float:right" id="refreshGrid" type="button" class="btn btn-dark btn-sm">Refresh</button>
+                    <button style="float:left" type="button" id="btnClear" class="btn btn-dark btn-sm mr-1">Clear</button>
+                    <button style="float:left" type="button" id="btnDelete" class="btn btn-dark btn-sm">Delete</button>
+                    <span id="users" style="display:none">
+                        {% for u in Users %}
+                            {{u.username}},
+                        {% endfor%}
+                    </span>
+                    <span id="loggedInUser" style="display:none">{{request.user.username}}</span>
+                    <table id="tblTasksNew" class="table-responsive hover table table-striped table-bordered" style="border-radius:10px;width:100%">
+                        <thead>
+                            <tr>
+                                <th><input type="checkbox" id="chkSelectAllNew" class="chkallNew"></th>
+                                <th>Action</th>
+                                <th>User</th>
+                                <th>System Under Test</th>
+                                <th>Regression Name</th>
+                                <th>Tool</th>
+                                <th>Total Iterations</th>
+                                <th>Platform</th>
+                                <th>Created Date</th>
+                                <th>Status</th>
+                                <th>Modified Date</th>
+                                <th>ErrorMessage</th>
+                                <th>Frodo Suggestions</th>
+                                <th>Iteration Result</th>
+                                <th>Test Results</th>
+                                <th>Axon Log</th>
+                                <th>Azure Link</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr class="odd">
+                                <td valign="top" class="dataTables_empty">Loading...</td>
+                            </tr>    
+                        </tbody>
+                     </table>
+                    
+                    </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<div class="modal fade bd-example-modal-lg" id="jobJson" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Regression JSON</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <pre id="jsonData"></pre>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div> 
+
+<div class="modal fade bd-example-modal-lg" id="iterationJson" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Iteration JSON</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <pre id="iterationjsonData"></pre>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div> 
+
+<div class="modal fade bd-example-modal-lg" id="toolJson" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">User Tool JSON</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <textarea id="toolData" name="ToolData" rows="25" cols="100"></textarea>
+                <span id="validJsonNotify"></span>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary" onclick="validateJSON()">Validate JSON</button>
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+{% endblock %}
+{% block extrajs %}
+
+{% endblock %}
+
+
+
