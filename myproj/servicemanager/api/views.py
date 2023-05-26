@@ -1,6 +1,7 @@
 import os
 import io
-from django.http import HttpResponse
+import json
+from django.http import HttpResponse, JsonResponse
 from rest_framework.response import Response
 from rest_framework.decorators import api_view
 from rest_framework.parsers import JSONParser
@@ -127,6 +128,16 @@ def GetToolJson(request, toolName):
     # assuming obj is a model instance
     serialized_obj = serializers.serialize('json', toolData)
     return HttpResponse(serialized_obj, content_type="application/json")
+
+@api_view(['GET'])
+def PrepareDataTable(request):
+    dirPath = os.path.dirname(os.path.realpath(__file__))
+    filePath = os.path.join(dirPath, "data", "pycaret_datafram.json")
+    with open(filePath, 'r') as toolfile:
+        jsonString = toolfile.read().replace("'","\"")
+        jsonString = jsonString.replace("None","\"None\"")
+        jsonDict = json.loads(jsonString)
+    return Response(jsonDict)
 
 
 

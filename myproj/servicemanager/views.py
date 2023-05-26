@@ -107,7 +107,7 @@ def newtask(request):
                 toolObj.JsonFile = task.ToolJson
                 toolObj.save()
                 # taskJson = serializers.serialize('json', [task])
-                return HttpResponseRedirect("jobhistory")
+                return HttpResponseRedirect("jobhistorynewpageload")
    
 # ALTER TABLE public.servicemanager_task 
 # DROP COLUMN "PlatformEvent";    
@@ -183,7 +183,7 @@ def jobhistorynew(request):
         'IsUserExecution': taskList[i].IsUserExecution if taskList[i].IsUserExecution is not None else '',
         'IsEowynExecution': taskList[i].IsEowynExecution if taskList[i].IsEowynExecution is not None else '',
         'ToolJson': taskList[i].ToolJson if taskList[i].ToolJson is not None else '',
-        'TaskIterations': list(TaskIteration.objects.filter(GUID = str(taskList[i].GUID)))
+        'TaskIterations': list(TaskIteration.objects.filter(GUID = str(taskList[i].GUID)).values())
         }
         taskListForm.append(taskForm)
 
@@ -489,7 +489,7 @@ def filterDataNew(request, fromDate, toDate):
         else:
             toDate = datetime.strptime(fromDate + ' 12:00:00','%m-%d-%Y %H:%M:%S')
 
-        taskList = Task.objects.filter(CreatedDate__date__range=(fromDate, toDate))
+        taskList = Task.objects.filter(CreatedDate__date__range=(fromDate, toDate), CreatedBy = request.user.username)
         taskListForm = []
         for i in range(len(taskList)):
             taskForm = {
@@ -526,7 +526,7 @@ def filterDataNew(request, fromDate, toDate):
             'IsUserExecution': taskList[i].IsUserExecution if taskList[i].IsUserExecution is not None else '',
             'IsEowynExecution': taskList[i].IsEowynExecution if taskList[i].IsEowynExecution is not None else '',
             'ToolJson': taskList[i].ToolJson if taskList[i].ToolJson is not None else '',
-            'TaskIterations': list(TaskIteration.objects.filter(GUID = str(taskList[i].GUID)))
+            'TaskIterations': list(TaskIteration.objects.filter(GUID = str(taskList[i].GUID)).values())
             }
             taskListForm.append(taskForm)
 
@@ -591,7 +591,7 @@ def deleteTaskNew(request, guids):
         'IsUserExecution': taskList[i].IsUserExecution if taskList[i].IsUserExecution is not None else '',
         'IsEowynExecution': taskList[i].IsEowynExecution if taskList[i].IsEowynExecution is not None else '',
         'ToolJson': taskList[i].ToolJson if taskList[i].ToolJson is not None else '',
-        'TaskIterations': list(TaskIteration.objects.filter(GUID = str(taskList[i].GUID)))
+        'TaskIterations': list(TaskIteration.objects.filter(GUID = str(taskList[i].GUID)).values())
         }
         taskListForm.append(taskForm)
 
@@ -635,7 +635,8 @@ def SaveToolJson(request):
 
    toolJson =  body['ToolData']
    toolName = body['ToolName']
-   toolObj = Tool.objects.filter(Name = toolName, StationName = body['StationName']).first();
+   stationName = body['StationName']
+   toolObj = Tool.objects.filter(Name = toolName, StationName = stationName).first();
    toolObj.JsonFile = toolJson
    toolObj.save()
    return HttpResponse('')

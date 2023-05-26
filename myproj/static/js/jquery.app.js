@@ -93,16 +93,16 @@
 
    });
 
-
-
-
-
     // right slidebar
 
     $(function(){
         $.slidebars();
-        $('#txtFromDate').datepicker();
-        $('#txtToDate').datepicker();
+        $('#txtFromDate').datepicker(
+            { autoclose: true }
+        );
+        $('#txtToDate').datepicker(
+            { autoclose: true }
+        );
         $('#id_Counters').multiselect(
             {
                 includeSelectAllOption: true,
@@ -206,13 +206,12 @@
             ajax: {
                 url: 'jobhistorynew',
             },
-            "autoWidth": true,
             "order": [[8, 'desc']],
             columns:[
                 {   data: 'TaskID', 
                     render: function(data, type, row, meta){
                         if (row.Status == 'COMPLETE' || row.Status == 'COMPLETED' || row.Status == 'ERROR' || row.Status == 'PENDING' || row.Status == 'STOPPED')
-                            return "<input type='checkbox' value='" + row.GUID +"' class='chknew'></input>"
+                            return "<span style='padding-left:5px'>&nbsp;</span><input type='checkbox' value='" + row.GUID +"' class='chknew'></input>"
                         else
                             return "";
                     }
@@ -248,7 +247,8 @@
                 },
                 { data: 'Platform'
                 },
-                { data: 'CreatedDate'
+                { data: 'CreatedDate',
+                  render:  DataTable.render.datetime('D MMM YYYY, hh:mm a'),
                 },
                 { data: 'Status'
                 },
@@ -264,7 +264,7 @@
                             optionStr += "<option value='" + value.Iteration + "^" + value.TaskID +"'>" + value.Iteration + "</option>";
                         }
                     });
-                    return "<select class='form-control sm-2 w-75' style='font-size:14px;' name='iteration' id='iteration' onchange='showIterationDetail(this)>" +
+                    return "<select class='form-control sm-2 w-75' style='font-size:14px;' name='iteration' id='iteration' onchange='showIterationDetail(this)'>" +
                                     "<option value=''></option>" +
                                    optionStr 
                             "</select>";
@@ -272,15 +272,36 @@
                 },
                 { data: 'IterationResult'
                 },
-                { data: 'TestResults'
+                { data: 'TestResults',
+                  render: function(data, type, row, meta){
+                    if (row.TestResults != ''){
+                        return "<script id='"+ row.TaskID +"' type='application/json'>" + row.TestResults + "</script>" +
+                        "<a href='#' onclick='showTestResult(" + row.TaskID + ")' >result</a>";
+                    }
+                    else
+                        return "<span></span>";
+
+                  }
                 },
-                { data: 'AxonLog'
+                { data: 'AxonLog',
+                render: function(data, type, row, meta){
+                    if (row.AxonLog != ''){
+                        return "<a href='" + row.AxonLog +"' target='_blank'>View</a>";
+                    }
+                    else return "";
+                }
                 },
-                { data: 'AzureLink'
+                { data: 'AzureLink',
+                  render: function(data, type, row, meta){
+                    if (row.AzureLink != ''){
+                        return "<a href='" + row.AzureLink +"' target='_blank'>View</a>";
+                    }
+                        else return "";
+                }
                 }
             ],
             columnDefs:[
-
+               
             ],
             'rowCallback': function(row, data, index){
                 if(data.Status.toUpperCase() == "PENDING"){
@@ -309,12 +330,11 @@
                         if ($(column.header()).html() == 'System Under Test' || $(column.header()).html() == 'Tool' || 
                                         $(column.header()).html() == 'Platform' || $(column.header()).html() == 'Status' || $(column.header()).html() == 'User'){
                          
-                        var select = $('<select style="border-radius:5px;border:1px solid #ced4da" data-size="3"><option value="">--Select All--</option></select>')
+                        var select = $('<select style="border-radius:5px;border:1px solid #ced4da;" data-width="auto" data-size="3"><option value="">--Select All--</option></select>')
                         .appendTo($('#tblTasksNew #th' + $(column.header()).html().replaceAll(' ','_')).empty())
                         .on('change', function () {
                             var val = $.fn.dataTable.util.escapeRegex($(this).val());
                             column.search(val ? '^' + val + '$' : '', true, false).draw();
-                            
                         });
                         if ($(column.header()).html() == 'User'){
                             var users = $('#users').html().trim().split(',');
@@ -370,8 +390,6 @@
               
         });
 
-       
-
         tasksTableNew.on( 'xhr', function () {
             var json = tasksTableNew.ajax.json();
             tasksTableNew.order([8, 'desc']).draw();
@@ -379,6 +397,7 @@
         } );
 
         $('#refreshGrid').on('click', function(){
+            tasksTableNew.ajax.url('jobhistorynew')
             tasksTableNew.ajax.reload();
         });
 
@@ -390,7 +409,7 @@
                 $('#chkSelectAllNew').prop('checked', false);
             }
 
-            if ($('.chknew:checkbox:checked').length == $('#tblTasksNew .chknew').length)
+            if ($('.chknew:checkbox:checked').length == $('#tblTasksNew .chknew').length && $('#tblTasksNew .chknew').length != 0)
                 $('#chkSelectAllNew').prop('checked', true);
 
             });
@@ -495,7 +514,6 @@
                         .on('change', function () {
                             var val = $.fn.dataTable.util.escapeRegex($(this).val());
                             column.search(val ? '^' + val + '$' : '', true, false).draw();
-                            
                         });
                         if ($(column.header()).html() == 'User'){
                             var users = $('#users').html().trim().split(',');
@@ -578,7 +596,8 @@
                     $('#tblTasksNew input:checkbox').prop('checked', false);
             }
 
-
+            tasksTableNew.ajax.url('jobhistorynew')
+            tasksTableNew.ajax.reload();
             
         });
 
@@ -1128,7 +1147,7 @@ function saveToolJson(){
         url: "SaveToolJson",  
         contentType: "application/json; charset=utf-8",  
         dataType: "json",  
-        data: JSON.stringify({'ToolData': $('#toolData').val(), 'ToolName': $('#ToolName').val()}),
+        data: JSON.stringify({'ToolData': $('#toolData').val(), 'ToolName': $('#ToolName').val(), 'StationName': $('#StationName').val() }),
         success: function (data) {
           
         }, //End of AJAX Success function  

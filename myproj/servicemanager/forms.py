@@ -27,6 +27,7 @@ class ChoiceFieldNoValidation(forms.ChoiceField):
 class MultipleChoiceFieldNoValidation(forms.MultipleChoiceField):
     def validate(self, value):
        pass
+    
 class TaskEncoder(DjangoJSONEncoder):
     def default(self, obj):
         if isinstance(obj, datetime):
