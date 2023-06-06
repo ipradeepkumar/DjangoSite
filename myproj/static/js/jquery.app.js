@@ -267,7 +267,7 @@
                     return "<select class='form-control sm-2 w-75' style='font-size:14px;' name='iteration' id='iteration' onchange='showIterationDetail(this)'>" +
                                     "<option value=''></option>" +
                                    optionStr 
-                            "</select>";
+                            + "</select>";
                   }
                 },
                 { data: 'IterationResult'
@@ -330,11 +330,18 @@
                         if ($(column.header()).html() == 'System Under Test' || $(column.header()).html() == 'Tool' || 
                                         $(column.header()).html() == 'Platform' || $(column.header()).html() == 'Status' || $(column.header()).html() == 'User'){
                          
-                        var select = $('<select style="border-radius:5px;border:1px solid #ced4da;" data-width="auto" data-size="3"><option value="">--Select All--</option></select>')
+                        var select = $('<select style="border-radius:5px;border:1px solid #ced4da;" data-width="auto" data-size="3" id="' + $(column.header()).html() +'"><option value="">--Select All--</option></select>')
                         .appendTo($('#tblTasksNew #th' + $(column.header()).html().replaceAll(' ','_')).empty())
                         .on('change', function () {
-                            var val = $.fn.dataTable.util.escapeRegex($(this).val());
-                            column.search(val ? '^' + val + '$' : '', true, false).draw();
+                            let val = $.fn.dataTable.util.escapeRegex($(this).val());
+                            if ($(this)[0].id == "User"){
+                                val = val == "" ? "all" : val;
+                                tasksTableNew.ajax.url('jobhistorynewuser/' + val);
+                                tasksTableNew.ajax.reload();
+                            }
+                            else{
+                                column.search(val ? '^' + val + '$' : '', true, false).draw();
+                            }
                         });
                         if ($(column.header()).html() == 'User'){
                             var users = $('#users').html().trim().split(',');
@@ -389,7 +396,7 @@
 
               
         });
-
+        
         tasksTableNew.on( 'xhr', function () {
             var json = tasksTableNew.ajax.json();
             tasksTableNew.order([8, 'desc']).draw();
@@ -509,13 +516,15 @@
                         if ($(column.header()).html() == 'System Under Test' || $(column.header()).html() == 'Tool' || 
                                         $(column.header()).html() == 'Platform' || $(column.header()).html() == 'Status' || $(column.header()).html() == 'User'){
                          
-                        var select = $('<select style="border-radius:5px;border:1px solid #ced4da" data-size="3"><option value="">--Select All--</option></select>')
+                        var select = $('<select style="border-radius:5px;border:1px solid #ced4da" data-size="3" id="' + $(column.header()).html() +'"><option value="">--Select All--</option></select>')
                         .appendTo($('#tblTasks #th' + $(column.header()).html().replaceAll(' ','_')).empty())
-                        .on('change', function () {
-                            var val = $.fn.dataTable.util.escapeRegex($(this).val());
-                            column.search(val ? '^' + val + '$' : '', true, false).draw();
+                        .on('change', function (e) {
+                            
+                                var val = $.fn.dataTable.util.escapeRegex($(this).val());
+                                column.search(val ? '^' + val + '$' : '', true, false).draw();
                         });
                         if ($(column.header()).html() == 'User'){
+                            
                             var users = $('#users').html().trim().split(',');
                             var loggedinUser = $('#loggedInUser').html();
                             for(var i=0; i < users.length; i++){
@@ -542,7 +551,8 @@
                     $('#thUser select').selectpicker({
                         liveSearch: true,
                         maxOptions: 3,
-                        liveSearchStyle: 'contains'
+                        liveSearchStyle: 'contains',
+
                     });
                     $('#thSystem_Under_Test select').selectpicker({
                         liveSearch: true,

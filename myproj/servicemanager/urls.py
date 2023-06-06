@@ -9,6 +9,7 @@ urlpatterns  = [
     path("jobhistory", views.jobhistory, name="jobhistory"),
     path("jobhistorynew", views.jobhistorynew, name="jobhistorynew"),
     path("jobhistorynewpageload", views.jobhistorynewpageload, name="jobhistorynewpageload"),
+    path("jobhistorynewuser/<user>", views.jobhistorynewuser, name="jobhistorynewuser"),
     #path("jobhistory/<int:id>", views.jobhistory_detail, name="jobhistory_detail"),
     path("testldap", views.test_ldap, name="testldap"),
     path("login", views.doLogin, name="dologin"),

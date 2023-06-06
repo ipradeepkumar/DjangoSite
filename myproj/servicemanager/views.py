@@ -190,6 +190,56 @@ def jobhistorynew(request):
     taskJson = json.dumps(taskListForm, cls= TaskEncoder)
     return JsonResponse({ "data": json.loads(taskJson) }, safe=False)
 
+@ldap_auth
+def jobhistorynewuser(request, user):
+    if (user != 'all'):
+     taskList = Task.objects.filter(CreatedBy = user)
+    else:
+     taskList = Task.objects.all()
+    taskListForm = []
+    for i in range(len(taskList)):
+        taskForm = {
+        'TaskID': taskList[i].id if taskList[i].id is not None else '',
+        'Station': taskList[i].Station,
+        'IsDebugMode': taskList[i].IsDebugMode,
+        'RegressionName': taskList[i].RegressionName,
+        'Tool': taskList[i].Tool,
+        'ToolEvent': taskList[i].ToolEvent if taskList[i].ToolEvent is not None else '',
+        'ToolCounter': taskList[i].ToolCounter if taskList[i].ToolCounter is not None else '',
+        'Platform': taskList[i].Platform,
+        'IsEmon': taskList[i].IsEmon,
+        'PlatformEvent': taskList[i].PlatformEvent,
+        'PlatformCounter': taskList[i].PlatformCounter,
+        'Idea': taskList[i].Idea,
+        'IsUploadResults': taskList[i].IsUploadResults,
+        'TotalIterations': taskList[i].TotalIterations,
+        'Splitter': taskList[i].Splitter,
+        'MinImpurityDecrease': taskList[i].MinImpurityDecrease,
+        'MaxFeatures': taskList[i].MaxFeatures,
+        'CreatedBy': taskList[i].CreatedBy,
+        'CreatedDate': taskList[i].CreatedDate,
+        'ModifiedBy': taskList[i].ModifiedBy if taskList[i].ModifiedBy is not None else '',
+        'ModifiedDate': taskList[i].ModifiedDate if taskList[i].ModifiedDate is not None else '',
+        'ErrorCode': taskList[i].ErrorCode if taskList[i].ErrorCode is not None else '',
+        'ErrorMessage': taskList[i].ErrorMessage if taskList[i].ErrorMessage is not None else '',
+        'Status': taskList[i].Status,
+        'GUID': taskList[i].GUID,
+        'CurrentIteration': taskList[i].CurrentIteration ,
+        'IterationResult': taskList[i].IterationResult if taskList[i].IterationResult is not None else '',
+        'TestResults': taskList[i].TestResults if taskList[i].TestResults is not None else '',
+        'AxonLog': taskList[i].AxonLog if taskList[i].AxonLog is not None else '',
+        'AzureLink': taskList[i].AzureLink if taskList[i].AzureLink is not None else '',
+        'IsUserExecution': taskList[i].IsUserExecution if taskList[i].IsUserExecution is not None else '',
+        'IsEowynExecution': taskList[i].IsEowynExecution if taskList[i].IsEowynExecution is not None else '',
+        'ToolJson': taskList[i].ToolJson if taskList[i].ToolJson is not None else '',
+        'TaskIterations': list(TaskIteration.objects.filter(GUID = str(taskList[i].GUID)).values())
+        }
+        taskListForm.append(taskForm)
+
+    taskJson = json.dumps(taskListForm, cls= TaskEncoder)
+    return JsonResponse({ "data": json.loads(taskJson) }, safe=False)
+
+
 # def jobhistory_detail(request, id):
 #     pass
 
