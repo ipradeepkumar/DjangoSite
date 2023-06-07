@@ -539,7 +539,8 @@ def filterDataNew(request, fromDate, toDate):
         else:
             toDate = datetime.strptime(fromDate + ' 12:00:00','%m-%d-%Y %H:%M:%S')
 
-        taskList = Task.objects.filter(CreatedDate__date__range=(fromDate, toDate), CreatedBy = request.user.username)
+        #taskList = Task.objects.filter(CreatedDate__date__range=(fromDate, toDate), CreatedBy = request.user.username)
+        taskList = Task.objects.filter(CreatedDate__date__range=[fromDate, toDate], CreatedBy = request.user.username)
         taskListForm = []
         for i in range(len(taskList)):
             taskForm = {

@@ -159,11 +159,13 @@
                 }
             });
      });
-     $('#btnFilter').on('click',function(){
+     $('#btnFilter').on('click',function(e){
+      
         let fromDate = $('#txtFromDate').val();
         let toDate = $('#txtToDate').val();
         if(fromDate == '' && toDate == ''){
-            alert('Please enter either from date or to date to filter.');
+            tasksTableNew.ajax.url('jobhistorynew')
+            tasksTableNew.ajax.reload();
             return;
         }
         else if (toDate == ''){
@@ -337,8 +339,9 @@
                             let val = $.fn.dataTable.util.escapeRegex($(this).val());
                             if ($(this)[0].id == "User"){
                                 val = val == "" ? "all" : val;
-                                tasksTableNew.ajax.url('jobhistorynewuser/' + val);
-                                tasksTableNew.ajax.reload();
+                                tasksTableNew.ajax.url('jobhistorynewuser/' + val).load(function(data){
+                                    
+                                }, false);
                             }
                             else{
                                 column.search(val ? '^' + val + '$' : '', true, false).draw();
@@ -351,7 +354,7 @@
                                 if (users[i].trim() != '' )
                                     select.append('<option value="' + users[i].trim() + '"' + (loggedinUser == users[i].trim() ?  'selected' : '') +'>' + users[i].trim() + '</option>');
                             }
-                            column.search('^' + loggedinUser + '$', true, false).draw();
+                            //column.search('^' + loggedinUser + '$', true, false).draw();
                         }
                         else{
                             column
@@ -400,7 +403,7 @@
         
         tasksTableNew.on( 'xhr', function () {
             var json = tasksTableNew.ajax.json();
-            tasksTableNew.order([8, 'desc']).draw();
+            //tasksTableNew.order([8, 'desc']).draw();
             console.log( json );
         } );
 
@@ -581,7 +584,8 @@
         tasksTable.order([8, 'desc']).draw();
 
         $('#btnClear').on('click', function(){
-            $('#thUser select').val('').selectpicker('refresh');
+            let loggedinUser = $('#loggedInUser').html();
+            $('#thUser select').val(loggedinUser).selectpicker('refresh');
             $('#thSystem_Under_Test select').val('').selectpicker('refresh');
             $('#thTool select').val('').selectpicker('refresh');
             $('#thStatus select').val('').selectpicker('refresh');
