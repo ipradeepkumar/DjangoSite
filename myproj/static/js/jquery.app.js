@@ -176,6 +176,7 @@
         tasksTableNew.ajax.url('filterDataNew/' + fromDate.replace(/\//g,'-') + '/' + toDate.replace(/\//g,'-')).load(function(e){
             console.log(e);
         }, false);
+        tasksTableNew.ajax.reload();
      });
      $('#btnDelete').on('click',function(){
         let guids = [];
