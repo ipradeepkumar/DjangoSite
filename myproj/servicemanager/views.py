@@ -1,6 +1,7 @@
 import socket 
 import os
 import io
+import uuid
 from django.http import HttpResponseRedirect, HttpResponse, JsonResponse
 from django.shortcuts import render
 from django.views.generic.detail import DetailView
@@ -540,7 +541,7 @@ def filterDataNew(request, fromDate, toDate):
             toDate = datetime.strptime(fromDate + ' 12:00:00','%m-%d-%Y %H:%M:%S')
 
         #taskList = Task.objects.filter(CreatedDate__date__range=(fromDate, toDate), CreatedBy = request.user.username)
-        taskList = Task.objects.filter(CreatedDate__date__range=[fromDate, toDate], CreatedBy = request.user.username)
+        taskList = Task.objects.filter(CreatedDate__date__range=[fromDate, toDate])
         taskListForm = []
         for i in range(len(taskList)):
             taskForm = {
@@ -642,7 +643,7 @@ def deleteTaskNew(request, guids):
         'IsUserExecution': taskList[i].IsUserExecution if taskList[i].IsUserExecution is not None else '',
         'IsEowynExecution': taskList[i].IsEowynExecution if taskList[i].IsEowynExecution is not None else '',
         'ToolJson': taskList[i].ToolJson if taskList[i].ToolJson is not None else '',
-        'TaskIterations': list(TaskIteration.objects.filter(GUID = str(taskList[i].GUID)).values())
+        'TaskIterations': ''
         }
         taskListForm.append(taskForm)
 
