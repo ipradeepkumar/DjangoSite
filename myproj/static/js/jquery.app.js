@@ -408,6 +408,8 @@
         } );
 
         $('#refreshGrid').on('click', function(){
+            let loggedinUser = $('#loggedInUser').html();
+            $('#thUser select').val(loggedinUser).selectpicker('refresh');
             tasksTableNew.ajax.url('jobhistorynew')
             tasksTableNew.ajax.reload();
         });
