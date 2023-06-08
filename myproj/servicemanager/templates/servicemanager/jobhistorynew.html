@@ -38,6 +38,7 @@
                         {% endfor%}
                     </span>
                     <span id="loggedInUser" style="display:none">{{request.user.username}}</span>
+                    <input type="hidden" id="hdnSeletedUser" />
                     <table id="tblTasksNew" class="table-responsive hover table table-striped table-bordered" style="border-radius:10px;width:100%;">
                         <thead>
                             <tr>

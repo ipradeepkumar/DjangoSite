@@ -175,7 +175,7 @@
         {
             fromDate = toDate;
         }
-        tasksTableNew.ajax.url('filterDataNew/' + fromDate.replace(/\//g,'-') + '/' + toDate.replace(/\//g,'-')).load(function(e){
+        tasksTableNew.ajax.url('filterDataNew/' + fromDate.replace(/\//g,'-') + '/' + toDate.replace(/\//g,'-') + '/' + $('#hdnSeletedUser').val()).load(function(e){
             console.log(e);
         }, false);
         tasksTableNew.ajax.reload();
@@ -213,24 +213,40 @@
             columns:[
                 {   data: 'TaskID', 
                     render: function(data, type, row, meta){
-                        if (row.Status == 'COMPLETE' || row.Status == 'COMPLETED' || row.Status == 'ERROR' || row.Status == 'PENDING' || row.Status == 'STOPPED')
-                            return "<span style='padding-left:5px'>&nbsp;</span><input type='checkbox' value='" + row.GUID +"' class='chknew'></input>"
+                        var loggedinUser = $('#loggedInUser').html();
+                        if (loggedinUser == row.CreatedBy){
+                            if (row.Status == 'COMPLETE' || row.Status == 'COMPLETED' || row.Status == 'ERROR' || row.Status == 'PENDING' || row.Status == 'STOPPED')
+                                return "<span style='padding-left:5px'>&nbsp;</span><input type='checkbox' value='" + row.GUID +"' class='chknew'></input>"
+                            else
+                                return "";
+                            }
                         else
-                            return "";
+                        {
+                            return "<span style='font-weight:bold;color:red'>Not Available</span>";
+                        }
                     }
                 },
                 { data: 'TaskID',
-                  render: function(data, type, row, meta){
-
-                    if (row.Status == 'COMPLETE' || row.Status == 'COMPLETED' || row.Status == 'ERROR' || row.Status == 'PENDING' || row.Status == 'STOPPED')
-                        return "<a href='#' onclick=\"startProcess('" + row.GUID + "', 1, 1, 'start')\" class='ti-control-play'>&nbsp;Start</a>";
-                    else if (row.Status == 'IN-PROGRESS')
-                        return "<a href='#' onclick=\"startProcess('" + row.GUID + "', 0, 1, 'stop')\" class='ti-control-stop'>&nbsp;Stop</a>";
-                    else if (row.Status == 'STARTING')
-                        return "<span style='font-weight:bold;color:green'>Starting...</span>";
-                    else if(row.Status == 'STOPPING')
-                            return "<span style='font-weight:bold;color:red'>Stopping...</span>";
+                  render: function(data, type, row, meta)
+                  {
+                    var loggedinUser = $('#loggedInUser').html();
+                    if (loggedinUser == row.CreatedBy){
+                        
+                        if (row.Status == 'COMPLETE' || row.Status == 'COMPLETED' || row.Status == 'ERROR' || row.Status == 'PENDING' || row.Status == 'STOPPED')
+                            return "<a href='#' onclick=\"startProcess('" + row.GUID + "', 1, 1, 'start')\" class='ti-control-play'>&nbsp;Start</a>";
+                        else if (row.Status == 'IN-PROGRESS')
+                            return "<a href='#' onclick=\"startProcess('" + row.GUID + "', 0, 1, 'stop')\" class='ti-control-stop'>&nbsp;Stop</a>";
+                        else if (row.Status == 'STARTING')
+                            return "<span style='font-weight:bold;color:green'>Starting...</span>";
+                        else if(row.Status == 'STOPPING')
+                                return "<span style='font-weight:bold;color:red'>Stopping...</span>";
+                  
+                    }
+                    else{
+                        return "<span style='font-weight:bold;color:red'>Not Available</span>";
+                    }
                   }
+
                 },
                 { data: 'CreatedBy'
                 },
@@ -339,6 +355,7 @@
                             let val = $.fn.dataTable.util.escapeRegex($(this).val());
                             if ($(this)[0].id == "User"){
                                 val = val == "" ? "all" : val;
+                                $('#hdnSeletedUser').val(val);
                                 tasksTableNew.ajax.url('jobhistorynewuser/' + val).load(function(data){
                                     
                                 }, false);

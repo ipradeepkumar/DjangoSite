@@ -108,7 +108,7 @@ def newtask(request):
                 toolObj.JsonFile = task.ToolJson
                 toolObj.save()
                 # taskJson = serializers.serialize('json', [task])
-                return HttpResponseRedirect("jobhistorynewpageload")
+                return HttpResponseRedirect("")
    
 # ALTER TABLE public.servicemanager_task 
 # DROP COLUMN "PlatformEvent";    
@@ -258,13 +258,12 @@ def StartProcess(request, GUID, userExecution, eowynExecution):
     if(True): 
         pass
     station = Station.objects.get(Name = instance.Station)
-   
     # try:
     #     inProgressTask = Task.objects.get(Station=instance.Station, Status='IN-PROGRESS')
     # except Task.DoesNotExist:
     #     inProgressTask = None
     # if (inProgressTask != None):
-    if (station.IsActive == False and (instance.Status == 'PENDING' or instance.Status == 'COMPLETED' or instance.Status == 'STOPPED' or instance.Status == 'ERROR')):
+    if (station.IsActive == False and (instance.Status == 'COMPLETED' or instance.Status == 'STOPPED' or instance.Status == 'ERROR')):
         response = {
                 'status': '404', 'responseText': 'Job with this station is already active. Please try after sometime.'
             }
@@ -530,7 +529,7 @@ def filterData(request):
             "tasks": taskList, "colNames" : Task._meta.fields, "iterations" : taskIterations, "Users": usrs
         })
 
-def filterDataNew(request, fromDate, toDate):
+def filterDataNew(request, fromDate, toDate, user):
     try:
         if (fromDate != ''):
             fromDate = datetime.strptime(fromDate + ' 12:00:00','%m-%d-%Y %H:%M:%S')
@@ -540,8 +539,11 @@ def filterDataNew(request, fromDate, toDate):
         else:
             toDate = datetime.strptime(fromDate + ' 12:00:00','%m-%d-%Y %H:%M:%S')
 
-        #taskList = Task.objects.filter(CreatedDate__date__range=(fromDate, toDate), CreatedBy = request.user.username)
-        taskList = Task.objects.filter(CreatedDate__date__range=[fromDate, toDate])
+        #taskList = Task.objects.filter(CreatedDate__date__range=(fromDate, toDate), )
+        if (user == 'all'):
+            taskList = Task.objects.filter(CreatedDate__date__range=[fromDate, toDate])
+        else:
+            taskList = Task.objects.filter(CreatedDate__date__range=[fromDate, toDate], CreatedBy = request.user.username if user == request.user.username else user)
         taskListForm = []
         for i in range(len(taskList)):
             taskForm = {
