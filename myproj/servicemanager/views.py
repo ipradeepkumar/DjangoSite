@@ -250,20 +250,28 @@ def customlogout(request):
 
 def StartProcess(request, GUID, userExecution, eowynExecution): 
     instance = Task.objects.get_queryset().filter(GUID=GUID).first()
+    #if user is about to stop the job, we are immediately stopping the job
+    #other wise we are not setting the status immediately
+    if (userExecution == False):
+        instance.Status = 'STOPPING'
+        instance.IsUserExecution = False
+        instance.save()
+   
+
     #find any task with the same station is in-progress
     #if in-progress show an alert, else create a new task and start it
     #if we check for station active, we have tasks which are using the same station but never executed
     #in this case we can never start a task with same station which has been never executed
     #so checking for any task with same station and is in-progress
-    if(True): 
-        pass
+    #if(True): 
+        #pass
     station = Station.objects.get(Name = instance.Station)
-    # try:
-    #     inProgressTask = Task.objects.get(Station=instance.Station, Status='IN-PROGRESS')
-    # except Task.DoesNotExist:
-    #     inProgressTask = None
-    # if (inProgressTask != None):
-    if (station.IsActive == False and (instance.Status == 'COMPLETED' or instance.Status == 'STOPPED' or instance.Status == 'ERROR')):
+    try:
+        inProgressTask = Task.objects.get(Station=instance.Station, Status='IN-PROGRESS')
+    except Task.DoesNotExist:
+        inProgressTask = None
+    if (inProgressTask != None):
+    #if (station.IsActive == False and (instance.Status == 'COMPLETED' or instance.Status == 'STOPPED' or instance.Status == 'ERROR')):
         response = {
                 'status': '404', 'responseText': 'Job with this station is already active. Please try after sometime.'
             }
@@ -288,11 +296,10 @@ def StartProcess(request, GUID, userExecution, eowynExecution):
                     instance.save()
                 elif(userExecution == False):
                     SaveTaskExecutionLog(request, instance, 'STOPPED')
-                    instance.Status = 'STOPPING'
-                    instance.save()
+                    
 
-                if (userExecution):
-                    req = requests.post("http://127.0.0.1:8000/api/posttask/", data = { "GUID" : instance.GUID } )
+                #if (userExecution):
+                req = requests.post("http://127.0.0.1:8000/api/posttask/", data = { "GUID" : instance.GUID } )
                 
                 response = {
                     'status': '200', 'responseText': 'success'
@@ -322,7 +329,7 @@ def PrepareNewTask(task: Task, request: requests.Request):
         MaxFeatures = task.MaxFeatures,
         CreatedBy = request.user.username,
         CreatedDate = datetime.utcnow(),
-        Status = "PENDING"
+        Status = "IN-PROGRESS"
     )
     return t
     
